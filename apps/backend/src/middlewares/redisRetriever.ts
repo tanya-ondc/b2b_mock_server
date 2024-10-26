@@ -38,9 +38,9 @@ export const redisRetriever = async (
 		
 
 
-		console.log("storing in redis", `${transaction_id}-${action}-to-server-`);
+		console.log("storing in redis", `${transaction_id}-${action}-to-server`);
 		await redis.set(
-			`${transaction_id}-${action}-to-server-`,
+			`${transaction_id}-${action}-to-server`,
 			JSON.stringify({
 				request: req.body,
 			})
