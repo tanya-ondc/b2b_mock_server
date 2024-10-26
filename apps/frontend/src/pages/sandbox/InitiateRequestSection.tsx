@@ -406,56 +406,56 @@ export const InitiateRequestSection = () => {
 										) {
 											return null;
 										}
-										if (domain === "logistics" && action === "init") {
-											if (index > 0) return <></>;
+										// if (domain === "logistics" && action === "init") {
+										// 	if (index > 0) return <></>;
 
-											return (
-												<React.Fragment key={"react-" + action + "-" + index}>
-													<Input
-														type="text"
-														key={"input-" + action + "-" + index}
-														value={transactionId}
-														placeholder={field.placeholder}
-														onChange={(e) => {
-															setTransactionId(
-																(e.target as HTMLInputElement).value
-															);
-															handleFieldChange(field.name, e.target.value);
-														}}
-													/>
-													<Button onClick={handleTransactionIdSubmit}>
-														Submit
-													</Button>
-													{showCatalogSelect && (
-														<React.Fragment>
-															<Select
-																id="matchingItemsDropdown"
-																value={selectedItemId || ""}
-																onChange={(
-																	_event: React.SyntheticEvent | null,
-																	newValue: string | null
-																) =>
-																	handleSelectionChange(
-																		_event,
-																		newValue as string
-																	)
-																}
-																placeholder="Select an item"
-															>
-																<Option value="" disabled>
-																	Select an item
-																</Option>
-																{matchingItems.map((item) => (
-																	<Option key={item.id} value={item.id}>
-																		{item.id}
-																	</Option>
-																))}
-															</Select>
-														</React.Fragment>
-													)}
-												</React.Fragment>
-											);
-										}
+										// 	return (
+										// 		<React.Fragment key={"react-" + action + "-" + index}>
+										// 			<Input
+										// 				type="text"
+										// 				key={"input-" + action + "-" + index}
+										// 				value={transactionId}
+										// 				placeholder={field.placeholder}
+										// 				onChange={(e) => {
+										// 					setTransactionId(
+										// 						(e.target as HTMLInputElement).value
+										// 					);
+										// 					handleFieldChange(field.name, e.target.value);
+										// 				}}
+										// 			/>
+										// 			<Button onClick={handleTransactionIdSubmit}>
+										// 				Submit
+										// 			</Button>
+										// 			{showCatalogSelect && (
+										// 				<React.Fragment>
+										// 					<Select
+										// 						id="matchingItemsDropdown"
+										// 						value={selectedItemId || ""}
+										// 						onChange={(
+										// 							_event: React.SyntheticEvent | null,
+										// 							newValue: string | null
+										// 						) =>
+										// 							handleSelectionChange(
+										// 								_event,
+										// 								newValue as string
+										// 							)
+										// 						}
+										// 						placeholder="Select an item"
+										// 					>
+										// 						<Option value="" disabled>
+										// 							Select an item
+										// 						</Option>
+										// 						{matchingItems.map((item) => (
+										// 							<Option key={item.id} value={item.id}>
+										// 								{item.id}
+										// 							</Option>
+										// 						))}
+										// 					</Select>
+										// 				</React.Fragment>
+										// 			)}
+										// 		</React.Fragment>
+										// 	);
+										// }
 
 										return (
 											<React.Fragment key={`field-${action}-${index}`}>
