@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect } from "react";
 import Fade from "@mui/material/Fade";
 import Paper from "@mui/material/Paper";
@@ -306,8 +307,8 @@ export const InitiateRequestSection = () => {
 						? error.response?.data?.error?.message.error?.message
 						: Array.isArray(
 								error.response?.data?.error?.message?.error?.message
-						  ) &&
-						  error.response?.data?.error?.message?.error?.message.length > 0
+						) &&
+						error.response?.data?.error?.message?.error?.message.length > 0
 						? `${error.response?.data?.error?.message?.error?.message[0]?.message} in ${error.response?.data?.error?.message?.error?.message[0]?.details}`
 						: error.response?.data?.error?.message.error?.message
 				);
@@ -319,7 +320,7 @@ export const InitiateRequestSection = () => {
 					error.response?.data?.sync?.error.message === "string"
 						? error.response?.data?.sync?.error.message
 						: Array.isArray(error.response?.data?.sync?.error.message) &&
-						  error.response?.data?.sync?.error.message.length > 0
+						error.response?.data?.sync?.error.message.length > 0
 						? `${error.response?.data?.sync?.error.message[0].message} in ${error.response?.data?.sync?.error.message[0]?.details}`
 						: error.response?.data?.sync?.error.message
 				);
@@ -331,7 +332,7 @@ export const InitiateRequestSection = () => {
 					error.response?.data?.error?.message === "string"
 						? error.response?.data?.error?.message
 						: Array.isArray(error.response?.data?.error?.message) &&
-						  error.response?.data?.error?.message.length > 0
+						error.response?.data?.error?.message.length > 0
 						? `${error.response?.data?.error?.message[0]?.message} in ${error.response?.data?.error?.message[0]?.details}`
 						: error.response?.data?.error?.message
 				);
@@ -406,56 +407,56 @@ export const InitiateRequestSection = () => {
 										) {
 											return null;
 										}
-										// if (domain === "logistics" && action === "init") {
-										// 	if (index > 0) return <></>;
+										if (domain === "logistics" && action === "init") {
+											if (index > 0) return <></>;
 
-										// 	return (
-										// 		<React.Fragment key={"react-" + action + "-" + index}>
-										// 			<Input
-										// 				type="text"
-										// 				key={"input-" + action + "-" + index}
-										// 				value={transactionId}
-										// 				placeholder={field.placeholder}
-										// 				onChange={(e) => {
-										// 					setTransactionId(
-										// 						(e.target as HTMLInputElement).value
-										// 					);
-										// 					handleFieldChange(field.name, e.target.value);
-										// 				}}
-										// 			/>
-										// 			<Button onClick={handleTransactionIdSubmit}>
-										// 				Submit
-										// 			</Button>
-										// 			{showCatalogSelect && (
-										// 				<React.Fragment>
-										// 					<Select
-										// 						id="matchingItemsDropdown"
-										// 						value={selectedItemId || ""}
-										// 						onChange={(
-										// 							_event: React.SyntheticEvent | null,
-										// 							newValue: string | null
-										// 						) =>
-										// 							handleSelectionChange(
-										// 								_event,
-										// 								newValue as string
-										// 							)
-										// 						}
-										// 						placeholder="Select an item"
-										// 					>
-										// 						<Option value="" disabled>
-										// 							Select an item
-										// 						</Option>
-										// 						{matchingItems.map((item) => (
-										// 							<Option key={item.id} value={item.id}>
-										// 								{item.id}
-										// 							</Option>
-										// 						))}
-										// 					</Select>
-										// 				</React.Fragment>
-										// 			)}
-										// 		</React.Fragment>
-										// 	);
-										// }
+											return (
+												<React.Fragment key={"react-" + action + "-" + index}>
+													<Input
+														type="text"
+														key={"input-" + action + "-" + index}
+														value={transactionId}
+														placeholder={field.placeholder}
+														onChange={(e) => {
+															setTransactionId(
+																(e.target as HTMLInputElement).value
+															);
+															handleFieldChange(field.name, e.target.value);
+														}}
+													/>
+													<Button onClick={handleTransactionIdSubmit}>
+														Submit
+													</Button>
+													{showCatalogSelect && (
+														<React.Fragment>
+															<Select
+																id="matchingItemsDropdown"
+																value={selectedItemId || ""}
+																onChange={(
+																	_event: React.SyntheticEvent | null,
+																	newValue: string | null
+																) =>
+																	handleSelectionChange(
+																		_event,
+																		newValue as string
+																	)
+																}
+																placeholder="Select an item"
+															>
+																<Option value="" disabled>
+																	Select an item
+																</Option>
+																{matchingItems.map((item) => (
+																	<Option key={item.id} value={item.id}>
+																		{item.id}
+																	</Option>
+																))}
+															</Select>
+														</React.Fragment>
+													)}
+												</React.Fragment>
+											);
+										}
 
 										return (
 											<React.Fragment key={`field-${action}-${index}`}>
@@ -470,7 +471,7 @@ export const InitiateRequestSection = () => {
 														}
 													/>
 												) : field.type === "select" ||
-												  (field.type === "text" &&
+												(field.type === "text" &&
 														field.name === "cancellationReasonId") ? (
 													field.domainDepended ? (
 														(() => {
@@ -558,7 +559,7 @@ export const InitiateRequestSection = () => {
 																				)}
 																			</>
 																		) : field.name === "city" &&
-																		  domain === "retail" ? (
+																		domain === "retail" ? (
 																			<>
 																				{cityOptions.map(
 																					(option, index: number) => (
