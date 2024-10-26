@@ -379,9 +379,7 @@ export const childOrderResponseBuilder = async (
 			};
 
 			await redis.set(
-				`${
-					(async.context! as any).transaction_id
-				}-${action}-from-server-${id}-${ts.toISOString()}`, // saving ID with on_confirm child process (duplicate keys are not allowed)
+				`${(async.context! as any).transaction_id}-${action}-from-server-${id}-${ts.toISOString()}`, // saving ID with on_confirm child process (duplicate keys are not allowed)
 				JSON.stringify(log)
 			);
 		} catch (error) {
@@ -403,9 +401,7 @@ export const childOrderResponseBuilder = async (
 				response: response,
 			};
 			await redis.set(
-				`${
-					(async.context! as any).transaction_id
-				}-${action}-from-server-${id}-${ts.toISOString()}`,
+				`${(async.context! as any).transaction_id}-${action}-from-server-${id}-${ts.toISOString()}`,
 				JSON.stringify(log)
 			);
 

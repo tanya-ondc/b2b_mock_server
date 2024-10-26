@@ -157,16 +157,12 @@ export const responseBuilder = async (
 				).length;
 				if (domain === "services") {
 					await redis.set(
-						`${
-							(async.context! as any).transaction_id
-						}-${action}-from-server-${id}-${ts.toISOString()}`,
+						`${(async.context! as any).transaction_id}-${action}-from-server-${id}-${ts.toISOString()}`,
 						JSON.stringify(log)
 					);
 				} else {
 					await redis.set(
-						`${
-							(async.context! as any).transaction_id
-						}-${logIndex}-${action}-from-server-${id}-${ts.toISOString()}`,
+						`${(async.context! as any).transaction_id}-${logIndex}-${action}-from-server-${id}-${ts.toISOString()}`,
 						JSON.stringify(log)
 					);
 				}
@@ -191,9 +187,7 @@ export const responseBuilder = async (
 				};
 
 				await redis.set(
-					`${
-						(async.context! as any).transaction_id
-					}-${action}-from-server-${id}-${ts.toISOString()}`,
+					`${(async.context! as any).transaction_id}-${action}-from-server-${id}-${ts.toISOString()}`,
 					JSON.stringify(log)
 				);
 			} catch (error) {
@@ -215,9 +209,7 @@ export const responseBuilder = async (
 					response: response,
 				};
 				await redis.set(
-					`${
-						(async.context! as any).transaction_id
-					}-${action}-from-server-${id}-${ts.toISOString()}`,
+					`${(async.context! as any).transaction_id}-${action}-from-server-${id}-${ts.toISOString()}`,
 					JSON.stringify(log)
 				);
 

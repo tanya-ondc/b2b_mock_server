@@ -42,7 +42,7 @@ export const initiateSearchController = async (
 				var file = fs.readFileSync(
 					path.join(
 						LOGISTICS_EXAMPLES_PATH,
-						"/B2B_Dom_Logistics_yaml/search/search_by_air_delivery.yaml"
+						"/B2B_Dom_Logistics_yaml/search/search_without_category.yaml"
 					)
 				);
 				search = YAML.parse(file.toString());
