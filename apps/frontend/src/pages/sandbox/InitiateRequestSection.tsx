@@ -86,7 +86,6 @@ export const InitiateRequestSection = () => {
 	) => {
 		setSelectedItemId(newValue as string | "");
 		setFormState((prev) => ({ ...prev, ["itemID"]: newValue }));
-		console.log(`Selected item ID: ${newValue}`);
 	};
 
 	const handleTransactionIdSubmit = async () => {
@@ -235,7 +234,6 @@ export const InitiateRequestSection = () => {
 
 	const handleSubmit = async () => {
 		try {
-			console.log("formStateeeeeeee", formState);
 			const response = await axios.post(
 				`${
 					import.meta.env.VITE_SERVER_URL
@@ -307,8 +305,8 @@ export const InitiateRequestSection = () => {
 						? error.response?.data?.error?.message.error?.message
 						: Array.isArray(
 								error.response?.data?.error?.message?.error?.message
-						) &&
-						error.response?.data?.error?.message?.error?.message.length > 0
+						  ) &&
+						  error.response?.data?.error?.message?.error?.message.length > 0
 						? `${error.response?.data?.error?.message?.error?.message[0]?.message} in ${error.response?.data?.error?.message?.error?.message[0]?.details}`
 						: error.response?.data?.error?.message.error?.message
 				);
@@ -320,7 +318,7 @@ export const InitiateRequestSection = () => {
 					error.response?.data?.sync?.error.message === "string"
 						? error.response?.data?.sync?.error.message
 						: Array.isArray(error.response?.data?.sync?.error.message) &&
-						error.response?.data?.sync?.error.message.length > 0
+						  error.response?.data?.sync?.error.message.length > 0
 						? `${error.response?.data?.sync?.error.message[0].message} in ${error.response?.data?.sync?.error.message[0]?.details}`
 						: error.response?.data?.sync?.error.message
 				);
@@ -332,7 +330,7 @@ export const InitiateRequestSection = () => {
 					error.response?.data?.error?.message === "string"
 						? error.response?.data?.error?.message
 						: Array.isArray(error.response?.data?.error?.message) &&
-						error.response?.data?.error?.message.length > 0
+						  error.response?.data?.error?.message.length > 0
 						? `${error.response?.data?.error?.message[0]?.message} in ${error.response?.data?.error?.message[0]?.details}`
 						: error.response?.data?.error?.message
 				);
@@ -345,7 +343,6 @@ export const InitiateRequestSection = () => {
 			}
 		}
 	};
-	console.log("versionnn", version);
 	return (
 		<Fade in={true} timeout={2500}>
 			<Paper
@@ -471,12 +468,11 @@ export const InitiateRequestSection = () => {
 														}
 													/>
 												) : field.type === "select" ||
-												(field.type === "text" &&
+												  (field.type === "text" &&
 														field.name === "cancellationReasonId") ? (
 													field.domainDepended ? (
 														(() => {
 															const options = field.options as any;
-															console.log("optionss", options, "fielld", field);
 															// Special case for scenario field
 															if (field.name === "scenario") {
 																if (
@@ -559,7 +555,7 @@ export const InitiateRequestSection = () => {
 																				)}
 																			</>
 																		) : field.name === "city" &&
-																		domain === "retail" ? (
+																		  domain === "retail" ? (
 																			<>
 																				{cityOptions.map(
 																					(option, index: number) => (
@@ -603,10 +599,6 @@ export const InitiateRequestSection = () => {
 																domain == "logistics" &&
 																action == "search"
 															) {
-																console.log(
-																	"searchhhhhhhhhhhhhhhhhhhh",
-																	field.name
-																);
 																return (
 																	<>
 																		{field.name !== "version" && (
@@ -639,16 +631,32 @@ export const InitiateRequestSection = () => {
 																							UN:SIN
 																						</Option>
 																					)
+																				) : field.name === "deliveryType" &&
+																				  formState.domain === "ONDC:LOG10" ? (
+																					<>
+																						<Option value="air">Air</Option>
+																						<Option value="surface">
+																							Surface
+																						</Option>
+																					</>
+																				) : field.name === "deliveryType" &&
+																				  formState.domain !== "ONDC:LOG10" ? (
+																					<>
+																						<Option value="air">Air</Option>
+																						<Option value="ocean">Ocean</Option>
+																					</>
 																				) : Array.isArray(field.options) ? (
 																					field.options.map(
-																						(option, optionIndex: number) => (
-																							<Option
-																								value={option}
-																								key={`${option}-${optionIndex}`}
-																							>
-																								{option}
-																							</Option>
-																						)
+																						(option, optionIndex: number) => {
+																							return (
+																								<Option
+																									value={option}
+																									key={`${option}-${optionIndex}`}
+																								>
+																									{option}
+																								</Option>
+																							);
+																						}
 																					)
 																				) : null}
 																			</Select>

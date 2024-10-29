@@ -17,7 +17,7 @@ export const initiateInitController = async (
 		const { transactionId } = req.body;
 		const transactionKeys = await redis.keys(`${transactionId}-*`);
 		const ifTransactionExist = transactionKeys.filter((e) =>
-			e.includes("on_search-from-server")
+			e.includes("on_search-from-server") || e.includes("on_search-to-server")
 		);
 		if (ifTransactionExist.length === 0) {
 			return send_nack(res, "On Search doesn't exist");

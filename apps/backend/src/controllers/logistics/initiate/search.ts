@@ -10,7 +10,6 @@ import path from "path";
 import YAML from "yaml";
 import { v4 as uuidv4 } from "uuid";
 
-
 const getFutureDates = (days: number): string[] => {
 	const dates: string[] = [];
 	const today = new Date();
@@ -35,25 +34,54 @@ export const initiateSearchController = async (
 	next: NextFunction
 ) => {
 	try {
-		const { bpp_uri, city, domain } = req.body;
+		const { bpp_uri, city, domain, deliveryType } = req.body;
 		var search;
 		switch (domain) {
 			case "ONDC:LOG10":
-				var file = fs.readFileSync(
-					path.join(
-						LOGISTICS_EXAMPLES_PATH,
-						"/B2B_Dom_Logistics_yaml/search/search_without_category.yaml"
-					)
-				);
+				{
+					if (deliveryType == "air") {
+						var file = fs.readFileSync(
+							path.join(
+								LOGISTICS_EXAMPLES_PATH,
+								"/B2B_Dom_Logistics_yaml/search/search_by_air_delivery.yaml"
+							)
+						);
+					} else if (deliveryType == "surface") {
+						var file = fs.readFileSync(
+							path.join(
+								LOGISTICS_EXAMPLES_PATH,
+								"/B2B_Dom_Logistics_yaml/search/search_by_surface_delivery.yaml"
+							)
+						);
+					} else {
+						var file = fs.readFileSync(
+							path.join(
+								LOGISTICS_EXAMPLES_PATH,
+								"/B2B_Dom_Logistics_yaml/search/search_without_category.yaml"
+							)
+						);
+					}
+				}
 				search = YAML.parse(file.toString());
 				break;
 			case "ONDC:LOG11":
-				var file = fs.readFileSync(
-					path.join(
-						LOGISTICS_EXAMPLES_PATH,
-						"/B2B_Int_Logistics_yaml/search/search_by_air_delivery.yaml"
-					)
-				);
+				{
+					if (deliveryType == "air") {
+						var file = fs.readFileSync(
+							path.join(
+								LOGISTICS_EXAMPLES_PATH,
+								"/B2B_Int_Logistics_yaml/search/search_by_air_delivery.yaml"
+							)
+						);
+					} else {
+						var file = fs.readFileSync(
+							path.join(
+								LOGISTICS_EXAMPLES_PATH,
+								"/B2B_Int_Logistics_yaml/search/search_by_ocean_delivery.yaml"
+							)
+						);
+					}
+				}
 				search = YAML.parse(file.toString());
 				break;
 			default:
@@ -73,7 +101,6 @@ export const initiateSearchController = async (
 		var endTime = new Date();
 		endTime.setDate(endTime.getDate() + 2);
 		search = search.value;
-		console.log("searchhhh",JSON.stringify(search.message.intent.fulfillment.stops[0]))
 		search = {
 			...search,
 			context: {
@@ -109,7 +136,6 @@ export const initiateSearchController = async (
 						...search.message.intent.fulfillment,
 						stops: [
 							{
-
 								...search.message.intent?.fulfillment?.stops[0],
 								time: {
 									range: {
@@ -118,8 +144,8 @@ export const initiateSearchController = async (
 									},
 								},
 							},
-							{						
-							...search.message.intent?.fulfillment?.stops[1],
+							{
+								...search.message.intent?.fulfillment?.stops[1],
 							},
 						],
 					},
@@ -128,8 +154,17 @@ export const initiateSearchController = async (
 				},
 			},
 		};
-		console.log("Seaaavvvvvvh",JSON.stringify(search))
-		await send_response(res, next, search, transaction_id, "search", "","", bpp_uri);
+
+		await send_response(
+			res,
+			next,
+			search,
+			transaction_id,
+			"search",
+			"",
+			"",
+			bpp_uri
+		);
 	} catch (error) {
 		return next(error);
 	}
