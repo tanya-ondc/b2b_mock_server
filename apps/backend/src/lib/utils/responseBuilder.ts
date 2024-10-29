@@ -1459,6 +1459,7 @@ export const updateFulfillments = (
 					code: FULFILLMENT_STATES.SERVICEABLE,
 				},
 			};
+			delete fulfillmentObj.tags
 		} else {
 			fulfillmentObj.stops = fulfillments[0]?.stops.map((ele: any) => {
 				action;
