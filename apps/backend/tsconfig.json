@@ -12,6 +12,6 @@
     "rootDir": "./src",
     "sourceMap": true
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "config/**/*.yaml"],
   "exclude": ["node_modules"]
 }

@@ -1,4 +1,4 @@
-l2_validations: true
-l2_domains:
-  - name: "services"
-    path: "SRV10"
+l2_validations:
+  services:
+    - ondc_srv11: true
+      version: 2.0.0

@@ -1,7 +1,7 @@
 //new code no changes done
 
 import { NextFunction, Request, Response } from "express";
-import { redis } from "../lib/utils";
+import { logger, redis } from "../lib/utils";
 
 export const redisRetriever = async (
 	req: Request,
@@ -13,7 +13,7 @@ export const redisRetriever = async (
 		return;
 	}
 	const {
-		context: { transaction_id, action },
+		context: { transaction_id, action },message
 	} = req.body;
 	// let transaction = await redis.get(`${transaction_id}-${action}-to-server`);
 	// let logs: TransactionType;
@@ -28,10 +28,16 @@ export const redisRetriever = async (
 	// logs = {
 	// 	request: req.body,
 	// };
+	
 
 	let ts = new Date().toISOString();
-
+	
 	if (action !== "status" && action !== "on_status") {
+		
+		
+		
+
+
 		console.log("storing in redis", `${transaction_id}-${action}-to-server`);
 		await redis.set(
 			`${transaction_id}-${action}-to-server`,

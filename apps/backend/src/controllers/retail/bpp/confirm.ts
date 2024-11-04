@@ -15,6 +15,8 @@ export const confirmController = (
 ) => {
   try {
     const { scenario } = req.query;
+    
+
     switch (scenario) {
       case "cancelled":
         confirmDomesticRejected(req, res, next);
@@ -35,6 +37,7 @@ const confirmDomesticController = (
 ) => {
   try {
     const { context, message } = req.body;
+    const {version}=req.query
     const start = new Date(message.order.created_at);
     start.setHours(start.getHours() + 1);
     const end = new Date(message.order.created_at);
@@ -49,6 +52,11 @@ const confirmDomesticController = (
     const responseMessage = {
       order: {
         ...message.order,
+        items:[{
+          id:message.order.items[0].id,
+          fulfillment_ids:message.order.items[0].fulfillment_ids,
+          quantity:message.order.items[0].quantity
+        }],
         state: "Accepted",
         provider: {
           ...message.order.provider,

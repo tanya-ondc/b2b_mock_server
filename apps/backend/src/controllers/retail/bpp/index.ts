@@ -16,7 +16,7 @@ bppRouter.post(
 	"/search",
 	async (req, res, next) => {
 		try {
-			const { message } = req.body;
+			const { context, message } = req.body;
 			const buyerIdTag = message.intent.tags.find(
 				(tag: any) => tag.descriptor.code === "buyer_id"
 			);
@@ -34,9 +34,16 @@ bppRouter.post(
 			} else {
 				version = "b2c" as VersionType; // Type assertion
 			}
+			if (
+				context?.location?.city?.code?.toLowerCase() === "un:sin" ||
+				context?.location?.city?.code?.toLowerCase() === "std:999"
+			) {
+				version = "b2c";
+			}
 		} catch (err) {
 			logger.error("eerrr", err);
 		}
+
 		const validationResult = jsonSchemaValidator({
 			domain: "retail",
 			action: "search",
@@ -53,42 +60,46 @@ bppRouter.post(
 
 bppRouter.post(
 	"/init",
-	jsonSchemaValidator({ domain: "retail", action: "init" }),
+	jsonSchemaValidator({ domain: "retail", action: "init", VERSION: version }),
 	redisRetriever,
 	initController
 );
 
 bppRouter.post(
 	"/select",
-	jsonSchemaValidator({ domain: "retail", action: "select" }),
+	jsonSchemaValidator({ domain: "retail", action: "select", VERSION: version }),
 	redisRetriever,
 	selectController
 );
 
 bppRouter.post(
 	"/confirm",
-	jsonSchemaValidator({ domain: "retail", action: "confirm" }),
+	jsonSchemaValidator({
+		domain: "retail",
+		action: "confirm",
+		VERSION: version,
+	}),
 	redisRetriever,
 	confirmController
 );
 
 bppRouter.post(
 	"/update",
-	jsonSchemaValidator({ domain: "retail", action: "update" }),
+	jsonSchemaValidator({ domain: "retail", action: "update", VERSION: version }),
 	redisRetriever,
 	updateController
 );
 
 bppRouter.post(
 	"/status",
-	jsonSchemaValidator({ domain: "retail", action: "status" }),
+	jsonSchemaValidator({ domain: "retail", action: "status", VERSION: version }),
 	redisRetriever,
 	statusController
 );
 
 bppRouter.post(
 	"/cancel",
-	jsonSchemaValidator({ domain: "retail", action: "cancel" }),
+	jsonSchemaValidator({ domain: "retail", action: "cancel", VERSION: version }),
 	redisRetriever,
 	cancelController
 );

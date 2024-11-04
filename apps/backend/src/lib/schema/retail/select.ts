@@ -393,6 +393,15 @@ export const selectSchema = {
 								required: ["type"],
 							},
 						},
+						offers:{
+							type:"object",
+							properties:{
+								id:{
+									type:"string"
+								}
+							},
+							required:["id"]
+						},
 						tags: {
 							type: "array",
 							items: {
@@ -436,7 +445,7 @@ export const selectSchema = {
 						},
 					},
 					additionalProperties: false,
-					required: ["provider", "items", "fulfillments", "payments", "tags"],
+					required: ["provider", "items", "fulfillments", "payments"],
 				},
 			},
 			required: ["order"],
