@@ -14,10 +14,7 @@ import {
 	send_response,
 } from "../../../lib/utils";
 import { ERROR_MESSAGES } from "../../../lib/utils/responseMessages";
-import {
-	ACTTION_KEY,
-	ON_ACTION_KEY,
-} from "../../../lib/utils/actionOnActionKeys";
+import { ACTTION_KEY, ON_ACTION_KEY } from "../../../lib/utils/actionOnActionKeys";
 
 export const initiateUpdateController = async (
 	req: Request,
@@ -45,8 +42,8 @@ export const initiateUpdateController = async (
 		// Need to reconstruct this logic
 
 		scenario = update_target ? update_target : "payments";
-		console.log("scenario", scenario);
-		if (scenario === "payments") {
+		console.log("scenario", scenario)
+		if (scenario === "payments"){
 			//FETCH ON UPDATE IF UPDATE PAYMENT FLOW COME
 			const on_update = await redisFetchToServer(
 				ON_ACTION_KEY.ON_UPDATE,
@@ -55,10 +52,9 @@ export const initiateUpdateController = async (
 			if (!on_update) {
 				return send_nack(res, ERROR_MESSAGES.ON_UPDATE_DOES_NOT_EXISTED);
 			}
-			console.log("----->", on_update);
+			console.log("----->" , on_update)
 			message = on_update.message;
 		}
-		// message.order.status = req.body.message.order.status;
 
 		switch (scenario) {
 			case "payments":
@@ -107,14 +103,7 @@ export const initiateUpdateController = async (
 		// 	})
 		// );
 
-		await send_response(
-			res,
-			next,
-			update,
-			transactionId,
-			ACTTION_KEY.UPDATE,
-			(scenario = scenario)
-		);
+		await send_response(res, next, update, transactionId, ACTTION_KEY.UPDATE, scenario = scenario);
 
 		// return res.json({
 		// 	message: {
@@ -181,7 +170,7 @@ function requoteRequest(message: any, update_target: string) {
 
 function rescheduleRequest(message: any, update_target: string) {
 	let {
-		order: { items, payments, fulfillments, quote, status },
+		order: { items, payments, fulfillments, quote },
 	} = message;
 
 	items = items.map(
@@ -200,15 +189,14 @@ function rescheduleRequest(message: any, update_target: string) {
 	);
 
 	fulfillments.map((itm: any) => {
-		itm.state.descriptor.code = "PENDING";
+		itm.state.descriptor.code = "Pending";
 	});
 
 	const responseMessage = {
 		update_target: "fulfillments",
 		order: {
 			id: message.order.id,
-			// status: "ACCEPTED",
-			status,
+			status: "Accepted",
 			provider: message.order.provider,
 			items,
 			payments,
@@ -224,9 +212,10 @@ function rescheduleRequest(message: any, update_target: string) {
 	return responseMessage;
 }
 
-function updatePaymentController(message: any, update_target: string) {
-	let { id, status, provider, items, payments, fulfillments, quote } =
-		message.order;
+function updatePaymentController(message: any, update_target: string){
+	let {
+		items, payments, fulfillments, quote,
+	} = message;
 
 	payments = payments.map((ele: any) => {
 		ele.status = "PAID";
@@ -236,10 +225,9 @@ function updatePaymentController(message: any, update_target: string) {
 	const responseMessage = {
 		update_target,
 		order: {
-			id,
-			// status: "COMPLETED",
-			status,
-			provider,
+			id: message.id,
+			status: "Completed",
+			provider: message.provider,
 			items,
 			payments,
 			fulfillments: fulfillments.map((itm: any) => ({
@@ -254,9 +242,9 @@ function updatePaymentController(message: any, update_target: string) {
 	return responseMessage;
 }
 
-function modifyItemsRequest(message: any, update_target: string) {
+function modifyItemsRequest(message: any, update_target: string){
 	let {
-		order: { items, payments, quote },
+		order: { items, payments, fulfillments, quote },
 	} = message;
 
 	//LOGIC CHANGED ACCORDING TO SANDBOX QUERIES

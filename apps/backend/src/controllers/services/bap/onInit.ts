@@ -31,7 +31,7 @@ const onInitConsultationController = (req: Request, res: Response, next: NextFun
 		
 		const response = YAML.parse(file.toString());
 		const timestamp = new Date().toISOString();
-	console.log("yyyyyyyyy")
+	
 		const responseMessage = {
 			order: {
 				id: uuidv4(),
@@ -85,7 +85,7 @@ const onInitConsultationController = (req: Request, res: Response, next: NextFun
 const onInitServiceCustomizedController = (req: Request, res: Response, next: NextFunction) => {
 	const { context, providersItems, message: { order: { provider, locations, items, billing, fulfillments, payments } } } = req.body;
 	const { stops, ...remainingfulfillments } = fulfillments[0]
-	console.log("noooooooooo")
+
 	const file = fs.readFileSync(
 		path.join(SERVICES_EXAMPLES_PATH, "confirm/confirm_consultation.yaml")
 	);

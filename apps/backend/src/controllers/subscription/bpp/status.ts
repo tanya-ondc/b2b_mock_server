@@ -88,7 +88,7 @@ const statusRequest = async (
 		const responseMessage: any = {
 			order: {
 				id: message.order.id,
-				status: ORDER_STATUS.IN_PROGRESS.toUpperCase(),
+				status: ORDER_STATUS.IN_PROGRESS,
 				provider: {
 					...message.order.provider,
 					rateable: undefined,

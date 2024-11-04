@@ -48,7 +48,7 @@ export const confirmConsultationController = async (
 		const responseMessage = {
 			order: {
 				...order,
-				status: ORDER_STATUS.ACCEPTED.toUpperCase(),
+				status: ORDER_STATUS.ACCEPTED,
 				fulfillments: updatedFulfillments,
 				provider: {
 					...order.provider,
@@ -141,7 +141,7 @@ export const confirmServiceCustomizationController = (
             // state hard coded
             state: {
               descriptor: {
-                code: "PENDING",
+                code: "Pending",
               },
             },
             rateable: true,

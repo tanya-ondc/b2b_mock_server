@@ -3,7 +3,6 @@ import {
 	send_response,
 	send_nack,
 	redisFetchFromServer,
-	redisFetchToServer,
 } from "../../../lib/utils";
 import { v4 as uuidv4 } from "uuid";
 
@@ -15,7 +14,7 @@ export const initiateUpdateController = async (
 ) => {
 	try {
 		const {  transactionId } = req.body;
-		const onConfirm = await redisFetchToServer("on_confirm", transactionId);
+		const onConfirm = await redisFetchFromServer("on_confirm", transactionId);
 		if (!onConfirm) {
 			return send_nack(res, "On Confirm doesn't exist");
 		}

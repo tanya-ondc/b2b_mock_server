@@ -24,14 +24,16 @@ export const cancelController = async (
       return send_nack(res, "On Confirm doesn't exist");
     }
     // getting on_search data for payment_ids
-    const search = await redisFetchFromServer("on_search",transaction_id);
-    console.log('search', search)
-
+    const search = await redis.mget(`${transaction_id}-on_search-from-server`);
+    const parsedSearch = search.map((ele: any) => {
+      return JSON.parse(ele as string);
+    });
+    // console.log("Search ::", parsedSearch[0].request.message.catalog.providers)
 
     const provider_id = on_confirm.message.order.provider.id;
 
     const item_payment_ids =
-    search?.message?.catalog?.providers?.map((itm: any) => {
+      parsedSearch[0].request.message.catalog.providers.map((itm: any) => {
         if (itm.id === provider_id) {
           const result = itm.items.reduce(
             (accumulator: Item_payment_id, currentItem: any) => {
@@ -44,9 +46,9 @@ export const cancelController = async (
         }
       });
 
-    // if (!item_payment_ids) {
-    //   return send_nack(res, "Payment and Provider ID related mismatch");
-    // }
+    if (!item_payment_ids) {
+      return send_nack(res, "Payment and Provider ID related mismatch");
+    }
 
     if (on_confirm.message.order.id != req.body.message.order_id) {
       return send_nack(res, "Order id does not exist");

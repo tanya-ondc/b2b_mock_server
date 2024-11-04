@@ -322,19 +322,18 @@ export const initSchema = {
 							required: ["name", "address"],
 						},
 						payments: {
-							type: "array",
-							items: {
-								type: "object",
-								properties: {
-									collected_by: {
-										type: "string",
-									},
-									type: {
-										type: "string",
-									},
-									tags: {
-										type: "array",
-										items: {
+							type: "object",
+							properties: {
+								collected_by: {
+									type: "string",
+								},
+								type: {
+									type: "string",
+								},
+								tags: {
+									type: "array",
+									items: [
+										{
 											type: "object",
 											properties: {
 												descriptor: {
@@ -342,40 +341,42 @@ export const initSchema = {
 													properties: {
 														code: {
 															type: "string",
-															enum: "PAYMENT_TERMS",
+															enum: PAYMENT_TERMS,
 														},
 													},
 													required: ["code"],
 												},
 												list: {
 													type: "array",
-													items: {
-														type: "object",
-														properties: {
-															descriptor: {
-																type: "object",
-																properties: {
-																	code: {
-																		type: "string",
-																		enum: "PAYMENT_BPP_TERMS",
+													items: [
+														{
+															type: "object",
+															properties: {
+																descriptor: {
+																	type: "object",
+																	properties: {
+																		code: {
+																			type: "string",
+																			enum: PAYMENT_BPP_TERMS,
+																		},
 																	},
+																	required: ["code"],
 																},
-																required: ["code"],
+																value: {
+																	type: "string",
+																},
 															},
-															value: {
-																type: "string",
-															},
+															required: ["descriptor", "value"],
 														},
-														required: ["descriptor", "value"],
-													},
+													],
 												},
 											},
 											required: ["descriptor", "list"],
 										},
-									},
+									],
 								},
-								required: ["type"],
 							},
+							required: ["type"],
 						},
 						xinput: {
 							type: "object",

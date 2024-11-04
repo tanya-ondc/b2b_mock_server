@@ -685,10 +685,10 @@ export const onInitSchema = {
 							},
 						},
 					},
-					additionalProperties: true,
+					additionalProperties: false,
 					required: [
 						"provider",
-						
+						"provider_location",
 						"items",
 						"billing",
 						"fulfillments",

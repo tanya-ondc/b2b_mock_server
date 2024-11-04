@@ -71,7 +71,7 @@ const cancelRequest = async (
 		const responseMessage = {
 			order: {
 				id: req.body.message.order_id,
-				status: ORDER_STATUS.CANCELLED.toUpperCase(),
+				status: ORDER_STATUS.CANCELLED,
 				cancellation: {
 					cancelled_by: ORDER_CACELLED_BY.CONSUMER,
 					reason: {

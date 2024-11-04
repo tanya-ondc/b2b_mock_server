@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect } from "react";
 import Fade from "@mui/material/Fade";
 import Paper from "@mui/material/Paper";
@@ -86,6 +85,7 @@ export const InitiateRequestSection = () => {
 	) => {
 		setSelectedItemId(newValue as string | "");
 		setFormState((prev) => ({ ...prev, ["itemID"]: newValue }));
+		console.log(`Selected item ID: ${newValue}`);
 	};
 
 	const handleTransactionIdSubmit = async () => {
@@ -234,6 +234,7 @@ export const InitiateRequestSection = () => {
 
 	const handleSubmit = async () => {
 		try {
+			console.log("formStateeeeeeee", formState);
 			const response = await axios.post(
 				`${
 					import.meta.env.VITE_SERVER_URL
@@ -343,6 +344,7 @@ export const InitiateRequestSection = () => {
 			}
 		}
 	};
+	console.log("versionnn", version);
 	return (
 		<Fade in={true} timeout={2500}>
 			<Paper
@@ -473,6 +475,7 @@ export const InitiateRequestSection = () => {
 													field.domainDepended ? (
 														(() => {
 															const options = field.options as any;
+															console.log("optionss", options, "fielld", field);
 															// Special case for scenario field
 															if (field.name === "scenario") {
 																if (
@@ -599,6 +602,10 @@ export const InitiateRequestSection = () => {
 																domain == "logistics" &&
 																action == "search"
 															) {
+																console.log(
+																	"searchhhhhhhhhhhhhhhhhhhh",
+																	field.name
+																);
 																return (
 																	<>
 																		{field.name !== "version" && (
@@ -631,32 +638,16 @@ export const InitiateRequestSection = () => {
 																							UN:SIN
 																						</Option>
 																					)
-																				) : field.name === "deliveryType" &&
-																				  formState.domain === "ONDC:LOG10" ? (
-																					<>
-																						<Option value="air">Air</Option>
-																						<Option value="surface">
-																							Surface
-																						</Option>
-																					</>
-																				) : field.name === "deliveryType" &&
-																				  formState.domain !== "ONDC:LOG10" ? (
-																					<>
-																						<Option value="air">Air</Option>
-																						<Option value="ocean">Ocean</Option>
-																					</>
 																				) : Array.isArray(field.options) ? (
 																					field.options.map(
-																						(option, optionIndex: number) => {
-																							return (
-																								<Option
-																									value={option}
-																									key={`${option}-${optionIndex}`}
-																								>
-																									{option}
-																								</Option>
-																							);
-																						}
+																						(option, optionIndex: number) => (
+																							<Option
+																								value={option}
+																								key={`${option}-${optionIndex}`}
+																							>
+																								{option}
+																							</Option>
+																						)
 																					)
 																				) : null}
 																			</Select>

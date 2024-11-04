@@ -7,8 +7,6 @@ import {
 	B2C_EXAMPLES_PATH,
   B2B_EXAMPLES_PATH,
 	RETAIL_BAP_MOCKSERVER_URL,
-	redis,
-	logger,
 } from "../../../lib/utils";
 import fs from "fs";
 import path from "path";
@@ -25,6 +23,7 @@ export const initiateSelectController = async (
 	try {
 		const { scenario, transactionId } = req.body;
 		const { version } = req.query;
+
 		const on_search = await redisFetchToServer(
 			ON_ACTION_KEY.ON_SEARCH,
 			transactionId
@@ -32,8 +31,6 @@ export const initiateSelectController = async (
 		if (!on_search) {
 			return send_nack(res, ERROR_MESSAGES.ON_SEARCH_DOES_NOT_EXISTED);
 		}
-
-		
 		return intializeRequest(res, next, on_search, scenario, version);
 	} catch (error) {
 		return next(error);
@@ -53,6 +50,7 @@ const intializeRequest = async (
 
 		let file: any = "";
 
+		console.log("versionnnnnnnnn",version)
     switch(version){
       case "b2c":
         file = fs.readFileSync(
@@ -69,118 +67,55 @@ const intializeRequest = async (
     }
 		
 		const response = YAML.parse(file.toString());
-		// console.log("Yaml",JSON.stringify(response))
+
 
 		if (scenario !== "rfq") {
 			delete response?.value?.message?.order?.items[0]?.tags;
 		}
-
-		let select;
-		
-		if(version==="b2b") {
-			const selectb2b = {
-				context: {
-					...context,
-					timestamp: new Date().toISOString(),
-					action: "select",
-					message_id: uuidv4(),
-					ttl: scenario === "rfq" ? "P1D" : "PT30S",
-					bap_id: MOCKSERVER_ID,
-					bap_uri: RETAIL_BAP_MOCKSERVER_URL,
-				},
-				message: {
-					order: {
-						provider: {
-							id: message.catalog.providers[0].id,
-							locations: [
-								{
-									id: message.catalog.providers[0].items[0].location_ids[0],
-								},
-							],
-							 ttl: scenario === "rfq" ? "P1D" : "PT30S",
-						},
-						items: [
+		const select = {
+			context: {
+				...context,
+				timestamp: new Date().toISOString(),
+				action: "select",
+				message_id: uuidv4(),
+				ttl: scenario === "rfq" ? "P1D" : "PT30S",
+				bap_id: MOCKSERVER_ID,
+				bap_uri: RETAIL_BAP_MOCKSERVER_URL,
+			},
+			message: {
+				order: {
+					provider: {
+						id: message.catalog.providers[0].id,
+						locations: [
 							{
-								  ...response?.value?.message?.order?.items[0],
-								id: message.catalog.providers[0].items[0].id,
-								location_ids: [
-									message.catalog.providers[0].items[0].location_ids[0],
-								],
-								fulfillment_ids: [
-									message.catalog.providers[0].items[0].fulfillment_ids[0],
-								],
-								 quantity:response?.value?.message?.order?.items[0].quantity,
+								id: message.catalog.providers[0].items[0].location_ids[0],
 							},
 						],
-						fulfillments: [
-							{
-								
-								 ...message.catalog.fulfillments[0],
-								  type: message.catalog.providers[0].items[0].fulfillment_ids[0],
-								
-							},
-						],
-						payments: [{type:message.catalog.payments[0].type}],
-						  tags: response.value.message.order.tags,
+						ttl: scenario === "rfq" ? "P1D" : "PT30S",
 					},
-				},
-			};
-			select=selectb2b
-		}
-		else{
-			const selectB2c = {
-				context: {
-					...context,
-					timestamp: new Date().toISOString(),
-					action: "select",
-					message_id: uuidv4(),
-					ttl: scenario === "rfq" ? "P1D" : "PT30S",
-					bap_id: MOCKSERVER_ID,
-					bap_uri: RETAIL_BAP_MOCKSERVER_URL,
-				},
-				message: {
-					order: {
-						provider: {
-							id: message.catalog.providers[0].id,
-							locations: [
-								{
-									id: message.catalog.providers[0].items[0].location_ids[0],
-								},
+					items: [
+						{
+							...response?.value?.message?.order?.items[0],
+							id: message.catalog.providers[0].items[0].id,
+							location_ids: [
+								message.catalog.providers[0].items[0].location_ids[0],
 							],
-							// ttl: scenario === "rfq" ? "P1D" : "PT30S",
+							fulfillment_ids: [
+								message.catalog.providers[0].items[0].fulfillment_ids[0],
+							],
 						},
-						items: [
-							{
-								//  ...response?.value?.message?.order?.items[0],
-								id: message.catalog.providers[0].items[0].id,
-								location_ids: [
-									message.catalog.providers[0].items[0].location_ids[0],
-								],
-								fulfillment_ids: [
-									message.catalog.providers[0].items[0].fulfillment_ids[0],
-								],
-								 quantity:response?.value?.message?.order?.items[0].quantity,
-							},
-						],
-						offers:{		
-							id:message.catalog.providers[0].offers[0].id
+					],
+					fulfillments: [
+						{
+							...message.catalog.fulfillments[0],
+							type: message.catalog.providers[0].items[0].fulfillment_ids[0],
 						},
-						fulfillments: [
-							{
-								 ...response?.value?.message?.order?.fulfillments[0]
-								// ...message.catalog.fulfillments[0],
-								//  type: message.catalog.providers[0].items[0].fulfillment_ids[0],
-								
-							},
-						],
-						payments: [{type:message.catalog.payments[0].type}],
-						//  tags: response.value.message.order.tags,
-					},
+					],
+					payments: [message.catalog.payments[0]],
+					tags: response.value.message.order.tags,
 				},
-			};
-			select=selectB2c
-		}
-			
+			},
+		};
 		await send_response(
 			res,
 			next,

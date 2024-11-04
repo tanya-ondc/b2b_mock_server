@@ -17,7 +17,7 @@ export const initiateConfirmController = async (
 		const { transactionId } = req.body;
 		var transactionKeys = await redis.keys(`${transactionId}-*`);
 		var ifTransactionExist = transactionKeys.filter((e) =>
-			e.includes("on_init-from-server") || e.includes("on_init-to-server")
+			e.includes("on_init-from-server")
 		);
 		if (ifTransactionExist.length === 0) {
 			return send_nack(res, "On Init doesn't exist");
