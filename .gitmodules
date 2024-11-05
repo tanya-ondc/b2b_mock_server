@@ -5,77 +5,20 @@
 [submodule "packages/openapi/domain-repos/@services/draft-services"]
 	path = packages/openapi/domain-repos/@services/draft-services
 	url = https://github.com/ONDC-Official/ONDC-SRV-Specifications
+	branch = draft-services
+[submodule "apps/backend/domain-repos/@retail-b2b/release-2.0.2"]
+	path = apps/backend/domain-repos/@retail-b2b/release-2.0.2
+	url = https://github.com/ONDC-Official/ONDC-RET-Specifications.git
+	branch = release-2.0.2
+[submodule "packages/openapi/domain-repos/@retail-b2b/release-2.0.2"]
+	path = packages/openapi/domain-repos/@retail-b2b/release-2.0.2
+	url = https://github.com/ONDC-Official/ONDC-RET-Specifications.git
+	branch = release-2.0.2
+[submodule "apps/backend/domain-repos/@services/draft-agri-services"]
+	path = apps/backend/domain-repos/@services/draft-agri-services
+	url = https://github.com/ONDC-Official/ONDC-SRV-Specifications
 	branch = draft-agri_services
-
 [submodule "packages/openapi/domain-repos/@services/draft-agri-services"]
 	path = packages/openapi/domain-repos/@services/draft-agri-services
 	url = https://github.com/ONDC-Official/ONDC-SRV-Specifications
 	branch = draft-agri_services
-
-[submodule "apps/backend/domain-repos/@services/draft-healthcare-service"]
-	path = apps/backend/domain-repos/@services/draft-healthcare-service
-	url = https://github.com/ONDC-Official/ONDC-SRV-Specifications
-	branch = draft-healthcare
-
-
-[submodule "apps/backend/domain-repos/@services/draft-agri_equipment"]
-	path = apps/backend/domain-repos/@services/draft-agri_equipment
-	url = https://github.com/ONDC-Official/ONDC-SRV-Specifications
-	branch = draft-agri_equipment
-
-
-
-[submodule "packages/openapi/domain-repos/@services/draft-agri_equipment"]
-	path = packages/openapi/domain-repos/@services/draft-agri_equipment
-	url = https://github.com/ONDC-Official/ONDC-SRV-Specifications
-	branch = draft-agri_equipment
-
-[submodule "packages/openapi/domain-repos/@services/draft-healthcare-services"]
-	path = packages/openapi/domain-repos/@services/draft-healthcare-services
-	url = https://github.com/ONDC-Official/ONDC-SRV-Specifications
-	branch = draft-healthcare
-	
-[submodule "apps/backend/domain-repos/@services/draft-agri_equipment"]
-	path = apps/backend/domain-repos/@services/draft-agri_equipment
-	url = https://github.com/ONDC-Official/ONDC-SRV-Specifications
-	branch = draft-agri_equipment
-
-[submodule "packages/openapi/domain-repos/@services/draft-agri_equipment"]
-	path = packages/openapi/domain-repos/@services/draft-agri_equipment
-	url = https://github.com/ONDC-Official/ONDC-SRV-Specifications
-	branch = draft-agri_equipment
-
-[submodule "apps/backend/domain-repos/@services/draft-agri_bids_and_auction"]
-	path = apps/backend/domain-repos/@services/draft-agri_bids_and_auction
-	url = https://github.com/ONDC-Official/ONDC-SRV-Specifications
-	branch = draft-agri_bids_and_auction
-
-[submodule "packages/openapi/domain-repos/@services/draft-agri_bids_and_auction"]
-	path = packages/openapi/domain-repos/@services/draft-agri_bids_and_auction
-	url = https://github.com/ONDC-Official/ONDC-SRV-Specifications
-	branch = draft-agri_bids_and_auction
-  
-[submodule "apps/backend/domain-repos/@retail-b2b/b2c_exports_2.0"]
-	path = apps/backend/domain-repos/@retail-b2b/b2c_exports_2.0
-	url = https://github.com/ONDC-Official/ONDC-RET-Specifications
-	branch = b2c_exports_2.0
-[submodule "packages/openapi/domain-repos/@retail-b2b/b2c_exports_2.0"]
-	path = packages/openapi/domain-repos/@retail-b2b/b2c_exports_2.0
-	url = https://github.com/ONDC-Official/ONDC-RET-Specifications
-	branch = b2c_exports_2.0
-[submodule "packages/openapi/domain-repos/@mec/draft-print_media"]
-	path = packages/openapi/domain-repos/@mec/draft-print_media
-	url = https://github.com/ONDC-Official/ONDC-MEC-Specifications
-	branch = draft-print_media
-[submodule "apps/backend/domain-repos/@mec/draft-print_media"]
-	path = apps/backend/domain-repos/@mec/draft-print_media
-	url = https://github.com/ONDC-Official/ONDC-MEC-Specifications
-	branch = draft-print_media
-[submodule "apps/backend/domain-repos/@logistics/draft-2.x"]
-	path = apps/backend/domain-repos/@logistics/draft-2.x
-	url = https://github.com/ONDC-Official/ONDC-LOG-Specifications.git
-	branch = draft-2.x
-[submodule "packages/openapi/domain-repos/@logistics/draft-2.x"]
-	path = packages/openapi/domain-repos/@logistics/draft-2.x
-	url = https://github.com/ONDC-Official/ONDC-LOG-Specifications.git
-	branch = draft-2.x
