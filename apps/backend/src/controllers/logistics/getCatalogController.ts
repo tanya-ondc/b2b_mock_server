@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { redisFetchFromServer } from "../../lib/utils";
+import { redisFetchFromServer, redisFetchToServer } from "../../lib/utils";
 import { Fulfillment, Item } from "../../lib/utils";
 export const getCatalogController = async (
 	req: Request,
@@ -8,7 +8,7 @@ export const getCatalogController = async (
 ) => {
 	try {
 		const transaction_id = req.body.transactionId;
-		const response = await redisFetchFromServer("on_search", transaction_id);
+		const response = await redisFetchToServer("on_search", transaction_id);
 		const { context, message } = response;
 
 		// Ensure message and fulfillments are valid

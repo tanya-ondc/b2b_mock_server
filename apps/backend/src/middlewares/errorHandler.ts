@@ -12,7 +12,7 @@ export const globalErrorHandler = (err: Error, _req: Request, res: Response, _ne
 				},
 			},
 			error: {
-				message: "Error occured while pinging backend",
+				message: JSON.stringify(err.message),
 			},
 		},
 		sync: {
