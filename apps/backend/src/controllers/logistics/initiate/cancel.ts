@@ -3,6 +3,7 @@ import {
   send_response,
   send_nack,
   redisFetchFromServer,
+  redisFetchToServer,
 } from "../../../lib/utils";
 import { v4 as uuidv4 } from "uuid";
 
@@ -13,7 +14,7 @@ export const initiateCancelController = async (
 ) => {
   try {
     const { transactionId, cancellationReasonId } = req.body;
-    const on_confirm = await redisFetchFromServer("on_confirm", transactionId);
+    const on_confirm = await redisFetchToServer("on_confirm", transactionId);
     if (!on_confirm) {
       return send_nack(res, "On Confirm doesn't exist");
     }

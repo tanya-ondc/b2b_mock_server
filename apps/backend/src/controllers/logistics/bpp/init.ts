@@ -223,15 +223,15 @@ export const initController = async (
 						payments: [
 							{
 								id: "P1",
-								collected_by: req.body.message.order.payments.collected_by,
+								collected_by: req.body.message.order.payments[0].collected_by,
 								params: {
 									amount: "6000",
 									currency: "INR",
 									bank_account_number: "xxxxxxxx",
 									virtual_payment_address: "xxx@xxxx",
 								},
-								type: req.body.message.order.payments.type,
-								tags: req.body.message.order.payments.tags,
+								type: req.body.message.order.payments[0].type,
+								tags: req.body.message.order.payments[0].tags,
 							},
 						],
 						xinput: {

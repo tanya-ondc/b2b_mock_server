@@ -6,6 +6,7 @@ import {
 	B2B_EXAMPLES_PATH,
 	B2C_EXAMPLES_PATH,
 	logger,
+	redis,
 	responseBuilder,
 } from "../../../lib/utils";
 
@@ -15,7 +16,8 @@ export const searchController = async (
 	next: NextFunction
 ) => {
 	try {
-		const domain = req.body.context.domain;
+		
+		const {domain,transaction_id,action }= req.body.context;
 		const message = req.body.message;
 		let { version } = req.body;
 
@@ -37,6 +39,13 @@ export const searchController = async (
 		}
 
 		console.log("🚀 ~ version:", version);
+
+		try{
+			console.log("abs",`${transaction_id}-version-${version}`)
+			await redis.set(
+				`${transaction_id}-version-${version}`,"");
+		}catch(err:any){
+		}
 
 		var onSearch;
 
