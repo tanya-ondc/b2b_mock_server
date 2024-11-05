@@ -20,7 +20,6 @@ import { ON_ACTION_KEY } from "../../../lib/utils/actionOnActionKeys";
 import { ERROR_MESSAGES } from "../../../lib/utils/responseMessages";
 import axios from "axios";
 import { AxiosError } from "axios";
-import { ORDER_STATUS } from "../../../lib/utils/apiConstants";
 
 export const initController = async (
 	req: Request,

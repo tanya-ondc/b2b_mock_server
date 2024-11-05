@@ -58,8 +58,8 @@ export const getNodesAndEdges = (formattedResponse: any, theme: Theme) => {
 		domain === "logistics"
 			? PREV_ACTION_LOGISTICS
 			: formattedResponse &&
-			  formattedResponse[5] &&
-			  formattedResponse[5]?.request?.message?.order?.payments[0].tags[0]
+			formattedResponse[5] &&
+			formattedResponse[5]?.request?.message?.order?.payments[0].tags[0]
 					.list[0].value
 			? PREV_SUBSCRIPTION_EMANDATE_ACTION
 			: PREV_ACTION;
@@ -208,8 +208,10 @@ export const _getNodesAndEdges = (formattedResponse: any, theme: Theme) => {
 	// 		new Date(b.request.context.timestamp)
 	// );
 	formattedResponse = formattedResponse.sort(
-    (a: any, b: any) => new Date(a.request.context.timestamp).getTime() - new Date(b.request.context.timestamp).getTime()
-  );
+		(a: any, b: any) =>
+			new Date(a.request.context.timestamp).getTime() -
+			new Date(b.request.context.timestamp).getTime()
+	);
 
 	formattedResponse.forEach(
 		(
@@ -220,7 +222,7 @@ export const _getNodesAndEdges = (formattedResponse: any, theme: Theme) => {
 					context: { message_id: string };
 					message: { order: { ref_order_ids: string[] } };
 				};
-				timestamp: string
+				timestamp: string;
 			},
 			index: number
 		) => {
@@ -288,14 +290,25 @@ export const copyToClipboard = (body: object, callback?: CopyCallbackFn) => {
 		});
 };
 
-export const checker = (arr: string[], target: string[], domain?: string,version?:string) => {
-	if(domain === "services" || domain === "logistics" || domain === "subscription"){
-		target = target.filter(item => item !== "version")
+export const checker = (
+	arr: string[],
+	target: string[],
+	domain?: string,
+	version?: string
+) => {
+	if (
+		domain === "services" ||
+		domain === "logistics" ||
+		domain === "subscription"
+	) {
+		target = target.filter((item) => item !== "version");
 	}
 
-	if(domain === "retail" && version === "b2c"){
+	if (domain === "retail" && version === "b2c") {
 		target = target.filter((item) => item !== "scenario");
-
 	}
+	if (domain !== "logistics")
+		target = target.filter((item) => item !== "deliveryType");
+
 	return target.every((v) => arr.includes(v));
-}
+};
