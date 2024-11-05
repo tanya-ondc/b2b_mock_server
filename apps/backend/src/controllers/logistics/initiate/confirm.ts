@@ -3,8 +3,6 @@ import {
 	send_response,
 	redis,
 	send_nack,
-	redisFetchToServer,
-	redisFetchFromServer,
 } from "../../../lib/utils";
 
 import { v4 as uuidv4 } from "uuid";
@@ -19,32 +17,35 @@ export const initiateConfirmController = async (
 		const { transactionId } = req.body;
 		var transactionKeys = await redis.keys(`${transactionId}-*`);
 		var ifTransactionExist = transactionKeys.filter((e) =>
-			e.includes("on_init-from-server") || e.includes("on_init-to-server")
+			e.includes("on_init-from-server")
 		);
 		if (ifTransactionExist.length === 0) {
 			return send_nack(res, "On Init doesn't exist");
 		}
-		var transaction = await redisFetchToServer("on_init",transactionId);
-		const onInit = transaction;
+		var transaction = await redis.mget(ifTransactionExist);
+		var parsedTransaction = transaction.map((ele) => {
+			return JSON.parse(ele as string);
+		});
+		const onInit = parsedTransaction[0].request;
 		if (Object.keys(onInit).includes("error")) {
 			return send_nack(res, "On Init had errors");
 		}
 		transactionKeys = await redis.keys(`${transactionId}-*`);
-		// ifTransactionExist = transactionKeys.filter((e) =>
-		// 	e.includes("init-to-server")
-		// );
-		// if (ifTransactionExist.length === 0) {
-		// 	return send_nack(res, "Init doesn't exist");
-		// }
-		transaction = await redisFetchFromServer("init",transactionId);
-		// parsedTransaction = transaction.map((ele) => {
-		// 	return JSON.parse(ele as string);
-		// });
+		ifTransactionExist = transactionKeys.filter((e) =>
+			e.includes("init-to-server")
+		);
+		if (ifTransactionExist.length === 0) {
+			return send_nack(res, "Init doesn't exist");
+		}
+		transaction = await redis.mget(ifTransactionExist);
+		parsedTransaction = transaction.map((ele) => {
+			return JSON.parse(ele as string);
+		});
 	
-		// const initTransaction = parsedTransaction.find(
-		// 	(tx) => tx?.request?.context && tx?.request?.context?.action === 'init'
-		// );
-   const Init = transaction
+		const initTransaction = parsedTransaction.find(
+			(tx) => tx?.request?.context && tx?.request?.context?.action === 'init'
+		);
+   const Init = initTransaction.request
 		if (Object.keys(Init).includes("error")) {
 			return send_nack(res, "Init had errors");
 		}

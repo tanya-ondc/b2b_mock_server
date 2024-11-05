@@ -53,7 +53,7 @@ export const analyseController = async (req: Request, res: Response) => {
 					id: _key ? _key[1] : "0",
 					type: "from_server",
 					action: (parsed.request as any).context.action,
-					timestamp: _key ? _key[2] : (parsed.request as any).context.timestamp,
+					timestamp: _key ? _key[2] : (parsed.request as any).context.timeStamp,
 				};
 			})
 		);
@@ -76,6 +76,5 @@ export const analyseController = async (req: Request, res: Response) => {
 	//     })
 	//   );
 	// }
-	console.log('storedTransaction.flat()', storedTransaction.flat())
 	return res.json(storedTransaction.flat());
 };

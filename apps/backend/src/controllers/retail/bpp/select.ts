@@ -24,21 +24,16 @@ export const selectController = async (
   try {
     const { scenario, version } = req.query;
     const { transaction_id } = req.body.context;
-	
-	const VERSION=await redis.keys(`${transaction_id}-version-*`)
-	const parts = VERSION[0].split('-');
-	const versionn = parts[parts.length - 1];
 
     const transactionKeys = await redis.keys(`${transaction_id}-*`);
-
     const ifToTransactionExist = transactionKeys.filter((e) =>
       e.includes("on_search-to-server")
     );
+
     const ifFromTransactionExist = transactionKeys.filter((e) =>
       e.includes("on_search-from-server")
     );
-	
-	
+
     if (
       ifFromTransactionExist.length === 0 &&
       ifToTransactionExist.length === 0
@@ -54,7 +49,6 @@ export const selectController = async (
     const parsedTransaction = transaction.map((ele) => {
       return JSON.parse(ele as string);
     });
-
 
     const providers = parsedTransaction[0].request.message.catalog.providers;
     req.body.providersItems = providers[0];
@@ -108,88 +102,43 @@ export const selectDomesticController = (
 		const { context, message, providersItems } = req.body;
 		const { ttl, ...provider } = message.order.provider;
 
-		let responseMessage;
-		if(version==="b2b"){
-			let responseMessageB2B = {
-				order: {
-					provider,
-					payments: [message.order.payments[0]],
-					items: message.order.items.map(
-						({
-							location_ids,
-							add_ons,
-							...remaining
-						}: {
-							location_ids: string[];
-							add_ons: any;
-							remaining: any;
-						}) => ({
-							...remaining,
-						})
-					),
-					fulfillments: message.order.fulfillments.map(
-						({ id, ...each }: { id: string; each: any }) => ({
-							id,
-							tracking: false,
-							"@ondc/org/provider_name": "ONDC Mock Server",
-							"@ondc/org/category": "Express Delivery",
-							"@ondc/org/TAT": "P7D",
-							state: {
-								descriptor: {
-									code: "Serviceable",
-								},
+		let responseMessage = {
+			order: {
+				provider,
+				payments: [message.order.payments[0]],
+				items: message.order.items.map(
+					({
+						location_ids,
+						add_ons,
+						...remaining
+					}: {
+						location_ids: string[];
+						add_ons: any;
+						remaining: any;
+					}) => ({
+						...remaining,
+					})
+				),
+				fulfillments: message.order.fulfillments.map(
+					({ id, ...each }: { id: string; each: any }) => ({
+						id,
+						tracking: false,
+						"@ondc/org/provider_name": "ONDC Mock Server",
+						"@ondc/org/category": "Express Delivery",
+						"@ondc/org/TAT": "P7D",
+						state: {
+							descriptor: {
+								code: "Serviceable",
 							},
-							...each
-						})
-					),
-					quote: quoteCreator(message.order.items),
-				},
-			};
-			responseMessage=responseMessageB2B
-		}
-		else{
-			let responseMessageB2c = {
-				order: {
-					provider,
-					payments: [message.order.payments[0]],
-					items: message.order.items.map(
-						({
-							location_ids,
-							add_ons,
-							...remaining
-						}: {
-							location_ids: string[];
-							add_ons: any;
-							remaining: any;
-						}) => ({
-							...remaining,
-						})
-					),
-					fulfillments: message.order.fulfillments.map(
-						({ id, ...each }: { id: string; each: any }) => ({
-							id,
-							tracking: false,
-							"@ondc/org/provider_name": "ONDC Mock Server",
-							"@ondc/org/category": "Express Delivery",
-							"@ondc/org/TAT": "P7D",
-							state: {
-								descriptor: {
-									code: "Serviceable",
-								},
-							},
-						})
-					),
-					quote:
-						version === "b2c"
-							? quoteCreatorB2c(message?.order?.items, providersItems?.items)
-							: quoteCreator(message.order.items),
-				},
-			};
-			responseMessage=responseMessageB2c
-		}
-		
-
-		
+						},
+					})
+				),
+				quote:
+					version === "b2c"
+						? quoteCreatorB2c(message?.order?.items, providersItems?.items)
+						: quoteCreator(message.order.items),
+			},
+		};
 		try {
 			responseMessage.order.quote.breakup.forEach((element: Breakup) => {
 				if (element["@ondc/org/title_type"] === "item") {

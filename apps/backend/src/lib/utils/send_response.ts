@@ -32,23 +32,10 @@ async function send_response(
 
     const header = await createAuthHeader(res_obj);
     // res_obj.bpp_uri = bpp_uri
-
-  //Approach 1
-    if(version ==='b2b' || version === 'b2c'){
-      console.log("keys",`${transaction_id}-${action}-from-server-${version}-${id}-${time_now}`)
-    
-      await redis.set(
-        `${transaction_id}-${action}-from-server-${version}-${id}-${time_now}`,
-        JSON.stringify({ request: { ...res_obj } })
-      );
-    }
-    else{
-      await redis.set(
-        `${transaction_id}-${action}-from-server-${id}-${time_now}`,
-        JSON.stringify({ request: { ...res_obj } })
-      );
-    }
-    
+    await redis.set(
+      `${transaction_id}-${action}-from-server-${id}-${time_now}`,
+      JSON.stringify({ request: { ...res_obj } })
+    );
 
     const headers: headers = {
       authorization: header,

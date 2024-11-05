@@ -89,8 +89,6 @@ const initConsultationController = (
 			},
 		} = req.body;
 
-		console.log("ITEMS before :::::::", items)
-
 		let file: any = fs.readFileSync(
 			path.join(SERVICES_EXAMPLES_PATH, "on_init/on_init_consultation.yaml")
 		);
@@ -163,7 +161,7 @@ const initConsultationController = (
 						"",
 						fulfillments[0]?.type
 				  );
-		console.log("ITEMS :::::::::::::::", items)
+
 		const responseMessage = {
 			order: {
 				provider: remainingProvider,
@@ -172,7 +170,7 @@ const initConsultationController = (
 				billing,
 				fulfillments: updatedFulfillments,
 				quote: quoteData,
-				cancellation_terms: response?.value?.message?.order?.cancellation_terms,
+
 				//UPDATE PAYMENT OBJECT WITH REFUNDABLE SECURITY
 
 				payments: [

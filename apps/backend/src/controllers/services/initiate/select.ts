@@ -133,9 +133,6 @@ const intializeRequest = async (
 
 			// selecting elements based on categories selected
 			items = items.filter((itm: Item) => {
-				if (parent_item.id === itm.id) {
-					return false;
-				}
 				let flag = 0;
 				itm?.category_ids?.forEach((id: string) => {
 					if (id in count_cat && count_cat[id] < 2) {
@@ -260,7 +257,7 @@ const intializeRequest = async (
 					})),
 					fulfillments: [
 						{
-							// ...fulfillments?.[0],
+							...fulfillments?.[0],
 							type: fulfillments?.[0].type,
 							stops: [
 								{

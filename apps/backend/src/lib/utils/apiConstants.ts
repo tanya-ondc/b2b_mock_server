@@ -162,9 +162,9 @@ export const FULFILLMENT_LABELS = {
 
 export const FULFILLMENT_STATES = {
 	SERVICEABLE: "Serviceable",
-	PENDING: "PENDING",
-	CANCELLED: "CANCELLED",
-	COMPLETED: "COMPLETED",
+	PENDING: "Pending",
+	CANCELLED: "Cancelled",
+	COMPLETED: "Completed",
 };
 
 export const SCENARIO = {
@@ -173,7 +173,7 @@ export const SCENARIO = {
 
 export const PAYMENT_STATUS = {
 	PAID: "PAID",
-	NON_PAID: "NOT-PAID",
+	NON_PAID: "NON-PAID",
 };
 
 export const PAYMENT_TYPE = {
