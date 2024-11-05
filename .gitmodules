@@ -1,0 +1,8 @@
+[submodule "apps/backend/domain-repos/@services/draft-services"]
+	path = apps/backend/domain-repos/@services/draft-services
+	url = https://github.com/ONDC-Official/ONDC-SRV-Specifications
+	branch = draft-services
+[submodule "packages/openapi/domain-repos/@services/draft-services"]
+	path = packages/openapi/domain-repos/@services/draft-services
+	url = https://github.com/ONDC-Official/ONDC-SRV-Specifications
+	branch = draft-services
