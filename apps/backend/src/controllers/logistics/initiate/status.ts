@@ -18,7 +18,7 @@ export const initiateStatusController = async (
 
     const transactionKeys = await redis.keys(`${transactionId}-*`);
     const ifTransactionExist = transactionKeys.filter((e) =>
-      e.includes("on_confirm-from-server")
+      e.includes("on_confirm-from-server") || e.includes("on_confirm-to-server")
     );
 
     if (ifTransactionExist.length === 0) {

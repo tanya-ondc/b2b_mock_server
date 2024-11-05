@@ -23,10 +23,10 @@ export const initController = async (
 ) => {
   try {
     const { transaction_id } = req.body.context;
-    const VERSION=await redis.keys(`${transaction_id}-version-*`)
+    const VERSION = await redis.keys(`${transaction_id}-version-*`)
     const parts = VERSION[0].split('-');
-	const versionn = parts[parts.length - 1];
-    
+    const versionn = parts[parts.length - 1];
+
 
     const transactionKeys = await redis.keys(`${transaction_id}-*`);
 
@@ -74,7 +74,7 @@ export const initController = async (
 
     req.body.item_arr = item_id_name.flat();
     initDomesticController(req, res, next);
-   
+
   } catch (error) {
     return next(error);
   }
@@ -86,26 +86,32 @@ const initDomesticController =(
   next: NextFunction
 ) => {
   try {
-    const {version} = req.query;
-    const { context, message,providersItems} = req.body;
+    let version
+    const { context, message, providersItems } = req.body;
     const { items, fulfillments, billing, ...remainingMessage } =
       message.order;
 
-    let file:any
-    if(version === "b2c"){
+    if (context?.location?.city?.code?.toLowerCase() === "un:sin" || context?.location?.city?.code?.toLowerCase() === "std:999") {
+      version = "b2c"
+    }
+
+    let file: any
+    if (version === "b2c") {
       file = fs.readFileSync(
         path.join(B2C_EXAMPLES_PATH, "on_init/on_init_exports.yaml")
       );
-    }else{
+    } else {
       file = fs.readFileSync(
         path.join(B2B_EXAMPLES_PATH, "on_init/on_init_domestic.yaml")
       );
     }
-  
+
 
     const response = YAML.parse(file.toString());
+
     let { type, collected_by, ...staticPaymentInfo } =
       response.value.message.order.payments[0];
+
     if (
       remainingMessage.payments[0].type === "PRE-FULFILLMENT" &&
       remainingMessage.payments[0].collected_by === "BAP"
@@ -130,14 +136,14 @@ const initDomesticController =(
 
     let responseMessage;
 
-    if(version==="b2b"){
+    if (version === "b2b") {
       let responseMessageb2b = {
         order: {
-          items:[
+          items: [
             {
-              id:items[0].id,
-              fulfillment_ids:items[0].fulfillment_ids,
-              quantity:items[0].quantity,
+              id: items[0].id,
+              fulfillment_ids: items[0].fulfillment_ids,
+              quantity: items[0].quantity,
               tags: response.value.message.order.items[0].tags
             }
           ],
@@ -146,90 +152,95 @@ const initDomesticController =(
 
             tracking: true,
           })),
-        
+
           billing,
-          provider: { id: remainingMessage.provider.id,
-           },
+          provider: {
+            id: remainingMessage.provider.id,
+          },
           provider_location: remainingMessage.provider.locations[0],
           payments: remainingMessage.payments.map((each: any) => ({
             ...each,
             ...staticPaymentInfo,
           })),
-          tags:message.order.tags,
-          quote: quoteCreatorB2c(message?.order?.items,providersItems?.items),
+          tags: message.order.tags,
+          quote: quoteCreatorB2c(message?.order?.items, providersItems?.items),
         },
       };
-      responseMessage=responseMessageb2b
-      }
-      else{
-        let responseMessageb2c = {
-          order: {
-            items:[
-              {
-                id:items[0].id,
-                fulfillment_ids:items[0].fulfillment_ids,
-                quantity:items[0].quantity
-              }
-            ],
-            fulfillments: fulfillments.map((each: Fulfillment) => ({
-              id:each.id,
-              stops:each.stops,
-              type:each.type,             
-              tracking: true,
-            })),
-            cancelation_terms:response.value.message.order.cancelation_terms,
-            tags: [
-              {
-                descriptor: {
-                  code: "bpp_terms",
-                },
-                list: [
-                  {
-                    descriptor: {
-                      code: "max_liability",
-                    },
-                    value: "2",
-                  },
-                  {
-                    descriptor: {
-                      code: "max_liability_cap",
-                    },
-                    value: "10000",
-                  },
-                  {
-                    descriptor: {
-                      code: "mandatory_arbitration",
-                    },
-                    value: "false",
-                  },
-                  {
-                    descriptor: {
-                      code: "court_jurisdiction",
-                    },
-                    value: "Bengaluru",
-                  },
-                  {
-                    descriptor: {
-                      code: "delay_interest",
-                    },
-                    value: "1000",
-                  },
-                ],
+      responseMessage = responseMessageb2b
+    }
+    else {
+      let responseMessageb2c = {
+        order: {
+          items: [
+            {
+              id: items[0].id,
+              fulfillment_ids: items[0].fulfillment_ids,
+              quantity: items[0].quantity
+            }
+          ],
+          fulfillments: fulfillments.map((each: Fulfillment) => ({
+            id: each.id,
+            stops: each.stops,
+            type: each.type,
+            tracking: true,
+          })),
+          cancelation_terms: response.value.message.order.cancelation_terms,
+          tags: [
+            {
+              descriptor: {
+                code: "bpp_terms",
               },
-            ],
-            billing,
-            provider: { id: remainingMessage.provider.id,
-              location:remainingMessage.provider.locations[0]
-             },
-            payments: remainingMessage.payments.map((each: any) => ({
-              ...each,
-              ...staticPaymentInfo,
-            })),
-            quote: quoteCreatorB2c(message?.order?.items,providersItems?.items),
+              list: [
+                {
+                  descriptor: {
+                    code: "max_liability",
+                  },
+                  value: "2",
+                },
+                {
+                  descriptor: {
+                    code: "max_liability_cap",
+                  },
+                  value: "10000",
+                },
+                {
+                  descriptor: {
+                    code: "mandatory_arbitration",
+                  },
+                  value: "false",
+                },
+                {
+                  descriptor: {
+                    code: "court_jurisdiction",
+                  },
+                  value: "Bengaluru",
+                },
+                {
+                  descriptor: {
+                    code: "delay_interest",
+                  },
+                  value: "1000",
+                },
+              ],
+            },
+          ],
+          billing,
+          provider: {
+            id: remainingMessage.provider.id,
+            location: remainingMessage.provider.locations[0]
           },
-        };
-        responseMessage=responseMessageb2c
-      }
+          //  payments:response.value.message.order.payments,
+          payments: remainingMessage.payments.map((each: any) => ({
+            ...each,
+            ...staticPaymentInfo,
+          })),
+          quote: quoteCreatorB2c(message?.order?.items, providersItems?.items),
+        },
+      };
+      responseMessage = responseMessageb2c
+
+    }
+
 
     
     try {
@@ -259,8 +270,7 @@ const initDomesticController =(
       next,
       context,
       responseMessage,
-      `${req.body.context.bap_uri}${
-        req.body.context.bap_uri.endsWith("/") ? "on_init" : "/on_init"
+      `${req.body.context.bap_uri}${req.body.context.bap_uri.endsWith("/") ? "on_init" : "/on_init"
       }`,
       `on_init`,
       "retail"

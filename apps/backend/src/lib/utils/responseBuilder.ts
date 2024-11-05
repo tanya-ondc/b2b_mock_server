@@ -249,7 +249,8 @@ export const responseBuilder = async (
 					},
 				},
 			},
-			async,
+			error
+			// async,
 		});
 	}
 };
@@ -1421,7 +1422,6 @@ export const updateFulfillments = (
 	try {
 		// Update fulfillments according to actions
 
-		console.log("fulfillmentssssssssssssssssssssssss", fulfillments);
 		const rangeStart = new Date().setHours(new Date().getHours() + 2);
 		const rangeEnd = new Date().setHours(new Date().getHours() + 3);
 
@@ -1459,6 +1459,7 @@ export const updateFulfillments = (
 					code: FULFILLMENT_STATES.SERVICEABLE,
 				},
 			};
+			delete fulfillmentObj.tags
 		} else {
 			fulfillmentObj.stops = fulfillments[0]?.stops.map((ele: any) => {
 				action;

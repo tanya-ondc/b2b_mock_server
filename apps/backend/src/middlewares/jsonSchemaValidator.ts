@@ -73,7 +73,7 @@ export const jsonSchemaValidator = <T extends Domain>({
           } else if (VERSION === "b2c") {
             return b2cSchemaValidator(action as AllActions)(req, res, next);
           } else {
-            return retailSchemaValidator(action as AllActions)(req, res, next);
+            return b2cSchemaValidator(action as AllActions)(req, res, next);
           }
         case "subscription":
           return subscriptionSchemaValidator(action as AllActions)(req, res, next);
