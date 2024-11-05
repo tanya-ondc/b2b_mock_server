@@ -23,8 +23,8 @@ async function redisFetchFromServer(action: string, transaction_id: string) {
   const transactionKeys = await redis.keys(`${transaction_id}-*`);
 
   const ifTransactionExist = transactionKeys.filter((e) =>
-    e.includes(`${action}-from-server`)
-  );
+    e.includes(`-${action}-from-server`)
+);
 
   if (ifTransactionExist.length === 0) {
     return null
