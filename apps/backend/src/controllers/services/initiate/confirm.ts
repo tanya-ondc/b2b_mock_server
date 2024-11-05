@@ -7,10 +7,7 @@ import {
 	redisFetchToServer,
 	SERVICES_BAP_MOCKSERVER_URL,
 } from "../../../lib/utils";
-import {
-	ACTTION_KEY,
-	ON_ACTION_KEY,
-} from "../../../lib/utils/actionOnActionKeys";
+import { ACTTION_KEY, ON_ACTION_KEY } from "../../../lib/utils/actionOnActionKeys";
 import { ERROR_MESSAGES } from "../../../lib/utils/responseMessages";
 import { ORDER_STATUS, PAYMENT_STATUS } from "../../../lib/utils/apiConstants";
 
@@ -19,24 +16,19 @@ export const initiateConfirmController = async (
 	res: Response,
 	next: NextFunction
 ) => {
-	try {
+	try{
 		const { scenario, transactionId } = req.body;
-		const on_search = await redisFetchToServer(
-			ON_ACTION_KEY.ON_SEARCH,
-			transactionId
-		);
+		const on_search = await redisFetchToServer(ON_ACTION_KEY.ON_SEARCH, transactionId);
 		const providersItems = on_search?.message?.catalog?.providers[0]?.items;
-		const on_init = await redisFetchToServer(
-			ON_ACTION_KEY.ON_INIT,
-			transactionId
-		);
+		const on_init = await redisFetchToServer(ON_ACTION_KEY.ON_INIT, transactionId)
 		if (!on_init) {
-			return send_nack(res, ERROR_MESSAGES.ON_INIT_DOES_NOT_EXISTED);
+			return send_nack(res, ERROR_MESSAGES.ON_INIT_DOES_NOT_EXISTED)
 		}
 		return intializeRequest(res, next, on_init, scenario, providersItems);
-	} catch (error) {
-		return next(error);
+	}catch(error){
+		return next(error)
 	}
+	
 };
 
 const intializeRequest = async (
@@ -46,16 +38,23 @@ const intializeRequest = async (
 	scenario: string,
 	providersItems: any
 ) => {
-	try {
+	try{
 		const {
 			context,
 			message: {
-				order: { provider, locations, payments, fulfillments, xinput, items },
+				order: {
+					provider,
+					locations,
+					payments,
+					fulfillments,
+					xinput,
+					items,
+				},
 			},
 		} = transaction;
 		const { transaction_id } = context;
 		const { stops, ...remainingfulfillments } = fulfillments[0];
-
+	
 		const timestamp = new Date().toISOString();
 
 		const confirm = {
@@ -65,13 +64,13 @@ const intializeRequest = async (
 				action: ACTTION_KEY.CONFIRM,
 				bap_id: MOCKSERVER_ID,
 				bap_uri: SERVICES_BAP_MOCKSERVER_URL,
-				message_id: uuidv4(),
+				message_id: uuidv4()
 			},
 			message: {
 				order: {
 					...transaction.message.order,
 					id: uuidv4(),
-					status: ORDER_STATUS.CREATED.toUpperCase(),
+					status: ORDER_STATUS.CREATED,
 					provider: {
 						...provider,
 						locations,
@@ -84,16 +83,14 @@ const intializeRequest = async (
 									...stop,
 									contact: {
 										...stop.contact,
-										email:
-											stop.contact && stop.contact.email
-												? stop.contact.email
-												: "nobody@nomail.com",
+										email: stop.contact && stop.contact.email ? stop.contact.email : "nobody@nomail.com"
 									},
-									person: {
-										name: "Ramu",
+									customer: {
+										person: {
+											name: "Ramu",
+										},
 									},
-
-									tags: undefined,
+									tags: undefined
 								};
 							}),
 						},
@@ -124,20 +121,13 @@ const intializeRequest = async (
 							...xinput?.form,
 							submission_id: uuidv4(),
 							status: "SUCCESS",
-						},
+						}
 					},
 				},
 			},
 		};
-		await send_response(
-			res,
-			next,
-			confirm,
-			transaction_id,
-			"confirm",
-			(scenario = scenario)
-		);
-	} catch (error) {
-		next(error);
+		await send_response(res, next, confirm, transaction_id, "confirm", scenario = scenario);
+	}catch(error){
+		next(error)
 	}
 };

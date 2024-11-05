@@ -80,13 +80,17 @@ export const cancelController = async (
 				return send_nack(res, "On Confirm doesn't exist");
 			}
 			// getting on_search data for payment_ids
-			const search = await redisFetchFromServer("on_search",transaction_id);
-
+			const search = await redis.mget(
+				`${transaction_id}-on_search-from-server`
+			);
+			const parsedSearch = search.map((ele: any) => {
+				return JSON.parse(ele as string);
+			});
 
 			const provider_id = on_confirm.message.order.provider.id;
 
 			const item_payment_ids =
-			search.message.catalog.providers.map((itm: any) => {
+				parsedSearch[0].request.message.catalog.providers.map((itm: any) => {
 					if (itm.id === provider_id) {
 						const result = itm.items.reduce(
 							(accumulator: Item_payment_id, currentItem: any) => {

@@ -120,7 +120,7 @@ const statusRequest = async (
 		const responseMessage: any = {
 			order: {
 				id: message.order.id,
-				status: ORDER_STATUS.IN_PROGRESS.toUpperCase(),
+				status: ORDER_STATUS.IN_PROGRESS,
 				provider: {
 					...message.order.provider,
 					rateable: undefined,
@@ -150,14 +150,14 @@ const statusRequest = async (
 									: undefined,
 								person: stop.person ? stop.person : stop.customer?.person,
 							};
-							if (stop.type === "start") {
+							if (stop.type === "start"){
 								return {
 									...demoObj,
 									location: {
 										...stop.location,
 										descriptor: {
 											...stop.location?.descriptor,
-											images: [{ url: "https://gf-integration/images/5.png" }],
+											images: ["https://gf-integration/images/5.png"],
 										},
 									},
 								};

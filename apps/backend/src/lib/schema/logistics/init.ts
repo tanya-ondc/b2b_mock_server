@@ -342,10 +342,7 @@ export const initSchema = {
 													properties: {
 														code: {
 															type: "string",
-<<<<<<< Updated upstream
 															enum: "PAYMENT_TERMS",
-=======
->>>>>>> Stashed changes
 														},
 													},
 													required: ["code"],
@@ -360,6 +357,7 @@ export const initSchema = {
 																properties: {
 																	code: {
 																		type: "string",
+																		enum: "PAYMENT_BPP_TERMS",
 																	},
 																},
 																required: ["code"],

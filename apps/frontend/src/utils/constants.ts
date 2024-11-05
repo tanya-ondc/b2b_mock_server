@@ -146,17 +146,6 @@ export const INITIATE_FIELDS = {
 				logistics: LOGISTICS_DOMAINS,
 			},
 		},
-		//DEPENDS ON DOMAIN B2B LOGISTICS
-		{
-			name: "deliveryType",
-			placeholder: "Select Delivery Type...",
-			type: "select",
-			domainDepended: true,
-			options: {
-				logistics: [],
-			},
-		},
-
 
 		{
 			name: "city",
