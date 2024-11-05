@@ -249,7 +249,8 @@ export const responseBuilder = async (
 					},
 				},
 			},
-			async,
+			error
+			// async,
 		});
 	}
 };

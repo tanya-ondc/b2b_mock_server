@@ -16,8 +16,9 @@ export const initiateInitController = async (
 	try {
 		const { transactionId } = req.body;
 		const transactionKeys = await redis.keys(`${transactionId}-*`);
-		const ifTransactionExist = transactionKeys.filter((e) =>
-			e.includes("on_search-from-server") || e.includes("on_search-to-server")
+		const ifTransactionExist = transactionKeys.filter(
+			(e) =>
+				e.includes("on_search-from-server") || e.includes("on_search-to-server")
 		);
 		if (ifTransactionExist.length === 0) {
 			return send_nack(res, "On Search doesn't exist");
@@ -130,74 +131,76 @@ export const initiateInitController = async (
 							timestamp: newTime,
 						},
 					},
-					payments: {
-						collected_by: "BPP",
-						type: "ON-FULFILLMENT",
-						tags: [
-							{
-								descriptor: {
-									code: "Settlement_Details",
+					payments: [
+						{
+							collected_by: "BPP",
+							type: "ON-FULFILLMENT",
+							tags: [
+								{
+									descriptor: {
+										code: "Settlement_Details",
+									},
+									list: [
+										{
+											descriptor: {
+												code: "Counterparty",
+											},
+											value: "BAP",
+										},
+										{
+											descriptor: {
+												code: "Mode",
+											},
+											value: "UPI",
+										},
+										{
+											descriptor: {
+												code: "Beneficiary_Name",
+											},
+											value: "xxxxx",
+										},
+										{
+											descriptor: {
+												code: "Bank_Account_No",
+											},
+											value: "xxxxx",
+										},
+										{
+											descriptor: {
+												code: "Ifsc_Code",
+											},
+											value: "xxxxxxx",
+										},
+										{
+											descriptor: {
+												code: "UPI_Address",
+											},
+											value: "xxxxxxx",
+										},
+									],
 								},
-								list: [
-									{
-										descriptor: {
-											code: "Counterparty",
-										},
-										value: "BAP",
+								{
+									descriptor: {
+										code: "Collection_Details",
 									},
-									{
-										descriptor: {
-											code: "Mode",
+									list: [
+										{
+											descriptor: {
+												code: "Amount",
+											},
+											value: "20000",
 										},
-										value: "UPI",
-									},
-									{
-										descriptor: {
-											code: "Beneficiary_Name",
+										{
+											descriptor: {
+												code: "Type",
+											},
+											value: "ON-FULFILLMENT",
 										},
-										value: "xxxxx",
-									},
-									{
-										descriptor: {
-											code: "Bank_Account_No",
-										},
-										value: "xxxxx",
-									},
-									{
-										descriptor: {
-											code: "Ifsc_Code",
-										},
-										value: "xxxxxxx",
-									},
-									{
-										descriptor: {
-											code: "UPI_Address",
-										},
-										value: "xxxxxxx",
-									},
-								],
-							},
-							{
-								descriptor: {
-									code: "Collection_Details",
+									],
 								},
-								list: [
-									{
-										descriptor: {
-											code: "Amount",
-										},
-										value: "20000",
-									},
-									{
-										descriptor: {
-											code: "Type",
-										},
-										value: "ON-FULFILLMENT",
-									},
-								],
-							},
-						],
-					},
+							],
+						},
+					],
 					xinput: {
 						form: {
 							url: "https://lsp.com/xxx/kyc",
