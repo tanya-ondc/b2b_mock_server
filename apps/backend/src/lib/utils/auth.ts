@@ -39,8 +39,6 @@ export async function verifyHeader(
 
 		const subscriber_id = parts["keyId"].split("|")[0];
 		const unique_key_id = parts["keyId"].split("|")[1];
-
-		console.log("HERE !!!")
 		
 		const subscribers_details = await getSubscriberDetails(
 			subscriber_id,
