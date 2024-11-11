@@ -481,8 +481,49 @@ export const onCancelSchema = {
 											required: ["descriptor", "list"],
 										},
 									},
+									agent: {
+										type: "object",
+										properties: {
+											person: {
+												type: "object",
+												properties: {
+													name: {
+														type: "string",
+													},
+												},
+												required: ["name"],
+											},
+										},
+										required: ["person"],
+									},
+									customer: {
+										type: "object",
+										properties: {
+											person: {
+												type: "object",
+												properties: {
+													name: {
+														type: "string",
+													}
+												},
+												required: ["name"],
+											},
+											contact: {
+												type: "object",
+												properties: {
+													phone: {
+														type: "string",
+													},
+													email: {
+														type: "string",
+													},
+												},
+												required: ["phone", "email"],
+											},
+										}
+									},
 								},
-								required: ["id", "type", "state", "tracking", "stops", "tags"],
+								required: ["id", "type", "state", "tracking", "stops", "tags", "agent", "customer"],
 							},
 						},
 						billing: {

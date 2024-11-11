@@ -21,7 +21,7 @@ export const onConfirmSchema = {
 			properties: {
 				domain: {
 					type: "string",
-					enum : CONTEXT_DOMAIN
+					enum: CONTEXT_DOMAIN,
 				},
 				location: {
 					type: "object",
@@ -52,7 +52,7 @@ export const onConfirmSchema = {
 				},
 				version: {
 					type: "string",
-					const : VERSION
+					const: VERSION,
 				},
 				bap_id: {
 					type: "string",
@@ -196,7 +196,7 @@ export const onConfirmSchema = {
 											},
 											title: {
 												type: "string",
-												enum : QUOTE_TITLE
+												enum: QUOTE_TITLE,
 											},
 											price: {
 												type: "object",
@@ -227,7 +227,7 @@ export const onConfirmSchema = {
 									},
 									type: {
 										type: "string",
-										enum : FULFILLMENT_TYPES
+										enum: FULFILLMENT_TYPES,
 									},
 									state: {
 										type: "object",
@@ -260,7 +260,7 @@ export const onConfirmSchema = {
 												},
 												type: {
 													type: "string",
-													enum : ["start","end"]
+													enum: ["start", "end"],
 												},
 												location: {
 													type: "object",
@@ -348,10 +348,7 @@ export const onConfirmSchema = {
 															required: ["content_type", "url"],
 														},
 													},
-													required: [
-														"short_desc",
-														"long_desc"
-													],
+													required: ["short_desc", "long_desc"],
 												},
 												time: {
 													type: "object",
@@ -424,8 +421,49 @@ export const onConfirmSchema = {
 											required: ["descriptor", "list"],
 										},
 									},
+									agent: {
+										type: "object",
+										properties: {
+											person: {
+												type: "object",
+												properties: {
+													name: {
+														type: "string",
+													},
+												},
+												required: ["name"],
+											},
+										},
+										required: ["person"],
+									},
+									customer: {
+										type: "object",
+										properties: {
+											person: {
+												type: "object",
+												properties: {
+													name: {
+														type: "string",
+													}
+												},
+												required: ["name"],
+											},
+											contact: {
+												type: "object",
+												properties: {
+													phone: {
+														type: "string",
+													},
+													email: {
+														type: "string",
+													},
+												},
+												required: ["phone", "email"],
+											},
+										}
+									},
 								},
-								required: ["id", "type", "state", "tracking", "stops", "tags"],
+								required: ["id", "type", "state", "tracking", "stops", "tags", "agent", "customer"],
 							},
 						},
 						cancellation_terms: {
@@ -441,7 +479,7 @@ export const onConfirmSchema = {
 												properties: {
 													code: {
 														type: "string",
-														enum: FULFILLMENT_STATES
+														enum: FULFILLMENT_STATES,
 													},
 													short_desc: {
 														type: "string",
@@ -562,7 +600,7 @@ export const onConfirmSchema = {
 									},
 									type: {
 										type: "string",
-										enum : PAYMENT_TYPES
+										enum: PAYMENT_TYPES,
 									},
 									tags: {
 										type: "array",
