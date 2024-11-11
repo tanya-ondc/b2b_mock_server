@@ -5,8 +5,11 @@ import {
 	send_nack,
 	redisFetchToServer,
 	redisFetchFromServer,
+	LOGISTICS_EXAMPLES_PATH,
 } from "../../../lib/utils";
-
+import fs from "fs";
+import path from "path";
+import YAML from "yaml";
 import { v4 as uuidv4 } from "uuid";
 
 export const initiateConfirmController = async (
@@ -48,6 +51,38 @@ export const initiateConfirmController = async (
 		if (Object.keys(Init).includes("error")) {
 			return send_nack(res, "Init had errors");
 		}
+
+		const domain = Init.context.domain;
+		var confirmExample;
+		switch (domain) {
+			case "ONDC:LOG10":
+				// Picking either between air and surface since there is no difference in the confirm example
+				var file = fs.readFileSync(
+					path.join(
+						LOGISTICS_EXAMPLES_PATH,
+						"/B2B_Dom_Logistics_yaml/search/search_by_air_delivery.yaml"
+					)
+				);
+				confirmExample = YAML.parse(file.toString())
+				break;
+			case "ONDC:LOG11":
+				file = fs.readFileSync(
+					path.join(
+						LOGISTICS_EXAMPLES_PATH,
+						"/B2B_Int_Logistics_yaml/search/search_by_air_delivery.yaml"
+					)
+				);
+				break;
+			default:
+				var file = fs.readFileSync(
+					path.join(
+						LOGISTICS_EXAMPLES_PATH,
+						"/B2B_Dom_Logistics_yaml/search/search_by_air_delivery.yaml"
+					)
+				);
+				confirmExample = YAML.parse(file.toString())
+				break;
+		}
 		var newTime = new Date().toISOString();
 		let confirm = {
 			context: {
@@ -64,6 +99,7 @@ export const initiateConfirmController = async (
 					items: Init.message.order.items,
 					fulfillments: [
 						{
+							...confirmExample.message.order.fulfillments[0],
 							...Init.message.order.fulfillments[0],
 							agent: {
 								person: {
