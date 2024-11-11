@@ -2,7 +2,12 @@ import { NextFunction, Request, Response, Router } from "express";
 import { logger } from "../lib/utils";
 import { AxiosError } from "axios";
 
-export const globalErrorHandler = (err: Error, _req: Request, res: Response, _next: NextFunction) => {
+export const globalErrorHandler = (
+	err: Error,
+	_req: Request,
+	res: Response,
+	_next: NextFunction
+) => {
 	logger.error(`Error occured: ${err.stack}`);
 	return res.status(500).send({
 		async: {
@@ -12,7 +17,7 @@ export const globalErrorHandler = (err: Error, _req: Request, res: Response, _ne
 				},
 			},
 			error: {
-				message: JSON.stringify(err.message)
+				message: JSON.stringify(err.message),
 			},
 		},
 		sync: {
@@ -23,12 +28,13 @@ export const globalErrorHandler = (err: Error, _req: Request, res: Response, _ne
 			},
 		},
 	});
-}
+};
 
-export const errorHandlingWrapper = (router: Router) => (req: Request, res: Response, next: NextFunction) => {
-  try {
-    router(req, res, next)
-  } catch (error) {
-    return next(error)
-  }
-}
+export const errorHandlingWrapper =
+	(router: Router) => (req: Request, res: Response, next: NextFunction) => {
+		try {
+			router(req, res, next);
+		} catch (error) {
+			return next(error);
+		}
+	};

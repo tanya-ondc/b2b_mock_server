@@ -22,7 +22,7 @@ export const authValidatorMiddleware = async (
 		} else {
 			const auth_header = req.headers["authorization"] || "";
 			let verified = await verifyHeader(auth_header, (req as any).rawBody.toString());
-
+			console.log("VERIFIED :::", verified)
 			if (!verified) {
 				return res.status(401).json({
 					message: {
@@ -39,6 +39,7 @@ export const authValidatorMiddleware = async (
 		}
 	} catch (err) {
 		logger.error(err)
+		console.log("Error in authValidatorMiddleware", err);
 		return res.status(401).json({
 			message: {
 				ack: {
@@ -46,7 +47,7 @@ export const authValidatorMiddleware = async (
 				},
 			},
 			error: {
-				message: "Authentication failed",
+				message: "Authentication failed with Error",
 			},
 		});
 	}

@@ -4,7 +4,7 @@
   "description": "NGINX configurations for environment based configuration usage and routing.",
   "main": "index.js",
   "scripts": {
-    "start:nginx": "docker compose down && docker compose up -d --build --force-recreate"
+    "start:nginx": "docker-compose down && docker-compose up -d"
   },
   "author": "Abhik Banerjee",
   "license": "ISC"

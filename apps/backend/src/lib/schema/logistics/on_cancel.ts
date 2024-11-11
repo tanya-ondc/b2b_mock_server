@@ -336,7 +336,7 @@ export const onCancelSchema = {
 																	type: "string",
 																},
 															},
-															required: ["code"],
+															required: ["name", "code"],
 														},
 														area_code: {
 															type: "string",
@@ -350,6 +350,24 @@ export const onCancelSchema = {
 														"country",
 														"area_code",
 													],
+												},
+												authorization: {
+													type: "object",
+													properties: {
+														type: {
+															type: "string",
+														},
+														token: {
+															type: "string",
+														},
+														valid_from: {
+															type: "string",
+														},
+														valid_to: {
+															type: "string",
+														},
+													},
+													required: ["type", "token","valid_from","valid_to"],
 												},
 												contact: {
 													type: "object",
@@ -402,8 +420,12 @@ export const onCancelSchema = {
 															},
 															required: ["start", "end"],
 														},
+														timestamp:{
+															type: "string",
+															formate: "date-time",
+														}
 													},
-													required: ["range"],
+													required: ["range", "timestamp"],
 												},
 											},
 											required: [
@@ -413,6 +435,7 @@ export const onCancelSchema = {
 												"location",
 												"contact",
 												"instructions",
+												"authorization",
 												"time",
 											],
 										},
