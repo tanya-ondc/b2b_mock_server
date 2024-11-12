@@ -60,16 +60,17 @@ export const initiateConfirmController = async (
 				var file = fs.readFileSync(
 					path.join(
 						LOGISTICS_EXAMPLES_PATH,
-						"/B2B_Dom_Logistics_yaml/search/search_by_air_delivery.yaml"
+						"/B2B_Dom_Logistics_yaml/confirm/confirm_air.yaml"
 					)
 				);
 				confirmExample = YAML.parse(file.toString())
+				console.log("CONFIRM EXAMPLE ::", confirmExample)
 				break;
 			case "ONDC:LOG11":
 				file = fs.readFileSync(
 					path.join(
 						LOGISTICS_EXAMPLES_PATH,
-						"/B2B_Int_Logistics_yaml/search/search_by_air_delivery.yaml"
+						"/B2B_Int_Logistics_yaml/confirm/confirm_air.yaml"
 					)
 				);
 				break;
@@ -77,7 +78,7 @@ export const initiateConfirmController = async (
 				var file = fs.readFileSync(
 					path.join(
 						LOGISTICS_EXAMPLES_PATH,
-						"/B2B_Dom_Logistics_yaml/search/search_by_air_delivery.yaml"
+						"/B2B_Dom_Logistics_yaml/confirm/confirm_air.yaml"
 					)
 				);
 				confirmExample = YAML.parse(file.toString())
@@ -99,7 +100,7 @@ export const initiateConfirmController = async (
 					items: Init.message.order.items,
 					fulfillments: [
 						{
-							...confirmExample.message.order.fulfillments[0],
+							...confirmExample.value.message.order.fulfillments[0],
 							...Init.message.order.fulfillments[0],
 							agent: {
 								person: {

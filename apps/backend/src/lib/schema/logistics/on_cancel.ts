@@ -336,7 +336,7 @@ export const onCancelSchema = {
 																	type: "string",
 																},
 															},
-															required: ["name", "code"],
+															required: ["code"],
 														},
 														area_code: {
 															type: "string",
@@ -425,7 +425,7 @@ export const onCancelSchema = {
 															formate: "date-time",
 														}
 													},
-													required: ["range", "timestamp"],
+													required: ["range"],
 												},
 											},
 											required: [
@@ -435,7 +435,6 @@ export const onCancelSchema = {
 												"location",
 												"contact",
 												"instructions",
-												"authorization",
 												"time",
 											],
 										},

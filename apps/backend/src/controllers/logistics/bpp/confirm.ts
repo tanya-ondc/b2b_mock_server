@@ -112,8 +112,7 @@ export const confirmController = async (
 					quote: req.body.message.order.quote,
 					fulfillments: [
 						{
-							id: req.body.message.order.fulfillments[0].id,
-							type: req.body.message.order.fulfillments[0].type,
+							...req.body.message.order.fulfillments[0],
 							state: {
 								descriptor: {
 									code: "Pending",
