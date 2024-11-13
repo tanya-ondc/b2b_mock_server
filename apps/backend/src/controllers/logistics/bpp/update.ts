@@ -151,6 +151,59 @@ export const updateController = async (
 					},
 				})
 			);
+			const tags = [
+				...onConfirm.message.order.tags,
+				{
+					descriptor: {
+						code: "Package_Dimensions_Diff",
+					},
+					list: [
+						{
+							descriptor: {
+								code: "Unit",
+							},
+							value: "centimeter",
+						},
+						{
+							descriptor: {
+								code: "Length",
+							},
+							value: "1.5",
+						},
+						{
+							descriptor: {
+								code: "Breadth",
+							},
+							value: "1.5",
+						},
+						{
+							descriptor: {
+								code: "Height",
+							},
+							value: "1.5",
+						},
+					],
+				},
+				{
+					descriptor: {
+						code: "Diff_Proof",
+					},
+					list: [
+						{
+							descriptor: {
+								code: "type",
+							},
+							value: "image",
+						},
+						{
+							descriptor: {
+								code: "url",
+							},
+							value: "https://xxxxx/xx.png",
+						},
+					],
+				},
+			];
 			let response = {
 				order: {
 					id: onConfirm.message.order.id,
@@ -162,7 +215,7 @@ export const updateController = async (
 					updated_at: newTime,
 					billing: onConfirm.message.order.billing,
 					payments: onConfirm.message.order.payments,
-					tags: onConfirm.message.order.tags,
+					tags: tags,
 				},
 			};
 			return responseBuilder(
