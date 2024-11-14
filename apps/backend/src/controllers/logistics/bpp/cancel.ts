@@ -139,6 +139,7 @@ const cancelRequest = async (
 				...transaction.message,
 				order: {
 					...transaction.message.order,
+					provider: transaction.message.order.provider.map((each: any) => ({id: each.id})),
 					status: "Cancelled",
 					cancellation: {
 						cancelled_by: req.body.context.bap_id,
@@ -223,6 +224,7 @@ const cancelRequest = async (
 				...on_update.message,
 				order: {
 					...on_update.message.order,
+					provider: on_update.message.order.provider.map((each: any) => ({id: each.id})),
 					status: "Cancelled",
 					cancellation: {
 						cancelled_by: req.body.context.bap_id,
@@ -261,14 +263,7 @@ const cancelRequest = async (
 										location: {
 											...stop.location,
 										},
-										agent: {
-											person: {
-												name: "Ramu",
-											},
-											contact: {
-												phone: "9886098860",
-											},
-										},
+										
 									};
 								} else if (stop.type === "start") {
 									// For stops of type "start", add the instructions and location modifications

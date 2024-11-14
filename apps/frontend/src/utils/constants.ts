@@ -290,7 +290,7 @@ export const INITIATE_FIELDS = {
 				b2c:["001"],
 				retail:["001"],
 				subscription:["001"],
-				logistics: ["TAT Breach, 007"], // Follow this format if new options are added.
+				logistics: ["001", "003", "006", "007", "009", "010", "023", "999", "996"], // Follow this format if new options are added.
 			},
 		},
 		{

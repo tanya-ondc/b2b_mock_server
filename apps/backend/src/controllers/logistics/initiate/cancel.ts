@@ -28,7 +28,7 @@ export const initiateCancelController = async (
       },
       message: {
         order_id: on_confirm.message.order.id,
-        cancellation_reason_id: cancellationReasonId.split(',')[1]?.trim(),
+        cancellation_reason_id: cancellationReasonId,
       },
     };
     await send_response(res, next, cancel, transactionId, "cancel");
