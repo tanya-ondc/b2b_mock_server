@@ -351,6 +351,24 @@ export const onCancelSchema = {
 														"area_code",
 													],
 												},
+												authorization: {
+													type: "object",
+													properties: {
+														type: {
+															type: "string",
+														},
+														token: {
+															type: "string",
+														},
+														valid_from: {
+															type: "string",
+														},
+														valid_to: {
+															type: "string",
+														},
+													},
+													required: ["type", "token","valid_from","valid_to"],
+												},
 												contact: {
 													type: "object",
 													properties: {
@@ -402,6 +420,10 @@ export const onCancelSchema = {
 															},
 															required: ["start", "end"],
 														},
+														timestamp:{
+															type: "string",
+															formate: "date-time",
+														}
 													},
 													required: ["range"],
 												},
@@ -458,8 +480,49 @@ export const onCancelSchema = {
 											required: ["descriptor", "list"],
 										},
 									},
+									agent: {
+										type: "object",
+										properties: {
+											person: {
+												type: "object",
+												properties: {
+													name: {
+														type: "string",
+													},
+												},
+												required: ["name"],
+											},
+										},
+										required: ["person"],
+									},
+									customer: {
+										type: "object",
+										properties: {
+											person: {
+												type: "object",
+												properties: {
+													name: {
+														type: "string",
+													}
+												},
+												required: ["name"],
+											},
+											contact: {
+												type: "object",
+												properties: {
+													phone: {
+														type: "string",
+													},
+													email: {
+														type: "string",
+													},
+												},
+												required: ["phone", "email"],
+											},
+										}
+									},
 								},
-								required: ["id", "type", "state", "tracking", "stops", "tags"],
+								required: ["id", "type", "state", "tracking", "stops", "tags", "agent", "customer"],
 							},
 						},
 						billing: {

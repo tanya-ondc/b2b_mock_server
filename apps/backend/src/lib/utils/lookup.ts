@@ -22,25 +22,12 @@ export async function getSubscriberDetails(
 		},
 	});
 
-	// console.log(
-	// 	"Registry Lookup Paramters",
-	// 	JSON.stringify({
-	// 		subscriber_id,
-	// 		unique_key_id,
-	// 	})
-	// );
 	if (subscribers.length === 0) {
 		const response = await axios.post(REGISTRY_URL, {
 			subscriber_id,
 			ukId: unique_key_id,
 		});
-		// console.log(
-		// 	"RESPONSE RECEIVED FROM",
-		// 	REGISTRY_URL,
-		// 	response,
-		// 	subscriber_id,
-		// 	unique_key_id
-		// );
+
 		response.data
 			.map((data: object) => {
 				const { subscriber_url, ...subscriberData } = data as SubscriberDetail;

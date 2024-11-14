@@ -80,7 +80,7 @@ export const initController = async (
   }
 };
 
-const initDomesticController = (
+const initDomesticController =(
   req: Request,
   res: Response,
   next: NextFunction
@@ -242,6 +242,7 @@ const initDomesticController = (
     }
 
 
+    
     try {
       responseMessage.order.quote.breakup.forEach((element: Breakup) => {
         if (element["@ondc/org/title_type"] === "item") {

@@ -259,45 +259,49 @@ export const confirmSchema = {
 										},
 									},
 									tags: {
-										type: "object",
-										properties: {
-											descriptor: {
-												type: "object",
-												properties: {
-													code: {
-														type: "string",
-														enum: ["Delivery_Terms"],
-													},
-												},
-												required: ["code"],
-											},
-											list: {
-												type: "array",
-												items: [
-													{
-														type: "object",
-														properties: {
-															descriptor: {
-																type: "object",
-																properties: {
-																	code: {
-																		type: "string",
-																		enum: [
-																			"INCOTERMS",
-																			"NAMED_PLACE_OF_DELIVERY",
-																		],
-																	},
-																},
-																required: ["code"],
-															},
-															value: {
-																type: "string",
-																enum: ["CIF", "EXW", "FOB", "DAP", "DDP"],
-															},
+										type: "array",
+										items: {
+											type: "object",
+											properties: {
+												descriptor: {
+													type: "object",
+													properties: {
+														code: {
+															type: "string",
+															enum: ["Delivery_Terms"],
 														},
-														required: ["descriptor", "value"],
 													},
-												],
+													required: ["code"],
+												},
+												list: {
+													type: "array",
+													items: [
+														{
+															type: "object",
+															properties: {
+																descriptor: {
+																	type: "object",
+																	properties: {
+																		code: {
+																			type: "string",
+																			enum: [
+																				"INCOTERMS",
+																				"NAMED_PLACE_OF_DELIVERY",
+																				"RTO_Action"
+																			],
+																		},
+																	},
+																	required: ["code"],
+																},
+																value: {
+																	type: "string",
+																	enum: ["CIF", "EXW", "FOB", "DAP", "DDP", "yes", "no"],
+																},
+															},
+															required: ["descriptor", "value"],
+														},
+													],
+												},
 											},
 										},
 									},
@@ -336,7 +340,7 @@ export const confirmSchema = {
 											},
 											title: {
 												type: "string",
-												enum: QUOTE_TITLE
+												enum: QUOTE_TITLE,
 											},
 											price: {
 												type: "object",
@@ -438,7 +442,7 @@ export const confirmSchema = {
 									},
 									type: {
 										type: "string",
-										enum: PAYMENT_TYPES
+										enum: PAYMENT_TYPES,
 									},
 									tags: {
 										type: "array",

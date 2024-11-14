@@ -1422,7 +1422,6 @@ export const updateFulfillments = (
 	try {
 		// Update fulfillments according to actions
 
-
 		const rangeStart = new Date().setHours(new Date().getHours() + 2);
 		const rangeEnd = new Date().setHours(new Date().getHours() + 3);
 

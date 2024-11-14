@@ -33,12 +33,7 @@ export const redisRetriever = async (
 	let ts = new Date().toISOString();
 	
 	if (action !== "status" && action !== "on_status") {
-		
-		
-		
-
-
-		console.log("storing in redis", `${transaction_id}-${action}-to-server`);
+		// console.log("storing in redis", `${transaction_id}-${action}-to-server`);
 		await redis.set(
 			`${transaction_id}-${action}-to-server`,
 			JSON.stringify({
