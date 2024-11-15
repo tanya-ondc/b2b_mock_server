@@ -1,30 +1,51 @@
-name: mock_server
+name: Build on Merge
 
+# Run this workflow when a pull request is merged into the main branch
 on:
   push:
-    branches: [ "draft-mock_server" ]
+    branches:
+      - release/v1.0-sandbox # Replace this with the branch you want to monitor for merges
   pull_request:
-    branches: [ "draft-mock_server" ]
+    branches:
+      - release/v1.0-sandbox # Monitor the 'build-check' branch for pull request events
+    
 
 jobs:
-  ssh-ec2:
+  build:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout the repository
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: executing remote ssh commands using ssh key
-        uses: appleboy/ssh-action@v1.0.3
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
-          port: 22
-          script: |
-            ls
-            whoami
-            pwd
-            curl ifconfig.me
+          node-version: "20" # Use the appropriate Node.js version
 
-            
+      
+      - name: Install submodules
+        run: git submodule init
+
+      - name: Update Submodules  
+        run: git submodule update --remote --recursive
+
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm install -ff
+
+      - name: Generate Prisma Client
+        run: npx prisma generate --schema=./apps/backend/prisma/schema.prisma
+
+
+      # Run the build
+      - name: Run build
+        run: npm run build
+
+      # Conditional Deployment
+      - name: Deploy (only if build succeeds)
+        if: success() # Continue only if the previous steps succeed
+        run: echo "Deploying..." # Replace this with your actual deploy command

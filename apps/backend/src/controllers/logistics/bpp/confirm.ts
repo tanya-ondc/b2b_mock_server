@@ -5,6 +5,8 @@ import {
 	redis,
 	send_nack,
 	Stop,
+	redisFetchToServer,
+	redisFetchFromServer,
 } from "../../../lib/utils";
 import fs from "fs";
 import path from "path";
@@ -72,16 +74,17 @@ export const confirmController = async (
 		var transactionKeys = await redis.keys(`${transactionId}-*`);
 		var ifTransactionExist = transactionKeys.filter((e) =>
 			e.includes("on_init-from-server")
-		);
+	);
+	console.log("🚀 ~ ifTransactionExist:", ifTransactionExist)
 		if (ifTransactionExist.length === 0) {
 			return send_nack(res, "On Init doesn't exist");
 		}
-		var transaction = await redis.mget(ifTransactionExist);
-		var parsedTransaction = transaction.map((ele) => {
-			return JSON.parse(ele as string);
-		});
+		var transaction = await redisFetchFromServer("on_init",transactionId)
+		// var parsedTransaction = transaction.map((ele) => {
+		// 	return JSON.parse(ele as string);
+		// });
 
-		const onInit = parsedTransaction[0].request;
+		const onInit = transaction;
 		if (Object.keys(onInit).includes("error")) {
 			return send_nack(res, "On Init had errors");
 		}

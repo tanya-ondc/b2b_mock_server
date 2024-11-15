@@ -3,10 +3,11 @@ import {
 	send_response,
 	redis,
 	send_nack,
+	redisFetchToServer,
+	redisFetchFromServer,
 } from "../../../lib/utils";
 
 import { v4 as uuidv4 } from "uuid";
-
 
 export const initiateConfirmController = async (
 	req: Request,
@@ -16,36 +17,34 @@ export const initiateConfirmController = async (
 	try {
 		const { transactionId } = req.body;
 		var transactionKeys = await redis.keys(`${transactionId}-*`);
-		var ifTransactionExist = transactionKeys.filter((e) =>
-			e.includes("on_init-from-server")
+		var ifTransactionExist = transactionKeys.filter(
+			(e) =>
+				e.includes("on_init-from-server") || e.includes("on_init-to-server")
 		);
 		if (ifTransactionExist.length === 0) {
 			return send_nack(res, "On Init doesn't exist");
 		}
-		var transaction = await redis.mget(ifTransactionExist);
-		var parsedTransaction = transaction.map((ele) => {
-			return JSON.parse(ele as string);
-		});
-		const onInit = parsedTransaction[0].request;
+		var transaction = await redisFetchToServer("on_init", transactionId);
+		const onInit = transaction;
 		if (Object.keys(onInit).includes("error")) {
 			return send_nack(res, "On Init had errors");
 		}
 		transactionKeys = await redis.keys(`${transactionId}-*`);
-		ifTransactionExist = transactionKeys.filter((e) =>
-			e.includes("init-to-server")
-		);
-		if (ifTransactionExist.length === 0) {
-			return send_nack(res, "Init doesn't exist");
-		}
-		transaction = await redis.mget(ifTransactionExist);
-		parsedTransaction = transaction.map((ele) => {
-			return JSON.parse(ele as string);
-		});
-	
-		const initTransaction = parsedTransaction.find(
-			(tx) => tx?.request?.context && tx?.request?.context?.action === 'init'
-		);
-   const Init = initTransaction.request
+		// ifTransactionExist = transactionKeys.filter((e) =>
+		// 	e.includes("init-to-server")
+		// );
+		// if (ifTransactionExist.length === 0) {
+		// 	return send_nack(res, "Init doesn't exist");
+		// }
+		transaction = await redisFetchFromServer("init", transactionId);
+		// parsedTransaction = transaction.map((ele) => {
+		// 	return JSON.parse(ele as string);
+		// });
+
+		// const initTransaction = parsedTransaction.find(
+		// 	(tx) => tx?.request?.context && tx?.request?.context?.action === 'init'
+		// );
+		const Init = transaction;
 		if (Object.keys(Init).includes("error")) {
 			return send_nack(res, "Init had errors");
 		}
@@ -125,6 +124,49 @@ export const initiateConfirmController = async (
 									},
 									value: "100",
 								},
+								{
+									descriptor: {
+										code: "Count",
+									},
+									value: "10",
+								},
+							],
+						},
+						{
+							descriptor: {
+								code: "Package_Dimensions",
+							},
+							list: [
+								{
+									descriptor: {
+										code: "Unit",
+									},
+									value: "centimeter",
+								},
+								{
+									descriptor: {
+										code: "Length",
+									},
+									value: "100",
+								},
+								{
+									descriptor: {
+										code: "Breadth",
+									},
+									value: "100",
+								},
+								{
+									descriptor: {
+										code: "Height",
+									},
+									value: "100",
+								},
+								{
+									descriptor: {
+										code: "Count",
+									},
+									value: "5",
+								},
 							],
 						},
 						{
@@ -155,12 +197,6 @@ export const initiateConfirmController = async (
 										code: "Shipment_Value",
 									},
 									value: "50000",
-								},
-								{
-									descriptor: {
-										code: "Package_Count",
-									},
-									value: "10",
 								},
 							],
 						},
@@ -196,14 +232,13 @@ export const initiateConfirmController = async (
 							],
 						},
 					],
-          created_at: newTime,
-          updated_at: newTime,
+					created_at: newTime,
+					updated_at: newTime,
 				},
 			},
 		};
 
-    await send_response(res, next, confirm, transactionId, "confirm");
-
+		await send_response(res, next, confirm, transactionId, "confirm");
 	} catch (error) {
 		return next(error);
 	}

@@ -49,8 +49,6 @@ export const b2bSchemaValidator =
 		});
 		addFormats(ajv);
 
-		console.log("b2bbbb")
-
 		require("ajv-errors")(ajv);
 		var validate: ValidateFunction<{
 				[x: string]: {};

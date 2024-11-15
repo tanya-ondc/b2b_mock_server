@@ -21,6 +21,7 @@ const onSearchSelectionController = (
 	try {
 		const { context, message } = req.body;
 		const resposneMessage = message;
+		
 		return responseBuilder(
 			res,
 			next,

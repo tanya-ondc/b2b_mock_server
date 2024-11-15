@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect } from "react";
 import Fade from "@mui/material/Fade";
 import Paper from "@mui/material/Paper";
@@ -15,7 +16,7 @@ import HelpOutlineTwoToneIcon from "@mui/icons-material/HelpOutlineTwoTone";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 
-import { Item } from "common/index";
+// import { Item } from "common/index";
 // type InitiateRequestSectionProp = {
 // 	domain:
 // 		| "b2b"
@@ -48,13 +49,13 @@ type SELECT_OPTIONS =
 // };
 
 type OptionsType = {
-  retail: string[];
-  subscription: string[];
-  b2b: string[];
-	b2c:string[];
+	retail: string[];
+	subscription: string[];
+	b2b: string[];
+	b2c: string[];
 };
 
-type Version = keyof OptionsType; 
+type Version = keyof OptionsType;
 
 export const InitiateRequestSection = () => {
 	const { handleMessageToggle, setMessageType, setCopy } = useMessage();
@@ -71,7 +72,7 @@ export const InitiateRequestSection = () => {
 	const [allowSubmission, setAllowSubmission] = useState<boolean>(false);
 	const [transactionId, setTransactionId] = useState<string>("");
 	const [showCatalogSelect, setShowCatalogSelect] = useState<boolean>(false);
-	const [matchingItems, setMatchingItems] = useState<Item[]>([]);
+	const [matchingItems, setMatchingItems] = useState<any[]>([]);
 	const [selectedItemId, setSelectedItemId] = useState<string>("");
 
 	useEffect(() => {
@@ -85,13 +86,12 @@ export const InitiateRequestSection = () => {
 	) => {
 		setSelectedItemId(newValue as string | "");
 		setFormState((prev) => ({ ...prev, ["itemID"]: newValue }));
-		console.log(`Selected item ID: ${newValue}`);
 	};
 
 	const handleTransactionIdSubmit = async () => {
 		try {
 			const response = await axios.post<{
-				message: { matchingItems: Item[] };
+				message: { matchingItems: any[] };
 			}>(
 				`${
 					import.meta.env.VITE_SERVER_URL
@@ -146,16 +146,14 @@ export const InitiateRequestSection = () => {
 			setDomainOptions(newDomainOptions as string[]);
 
 			const newCityOptions =
-				INITIATE_FIELDS.search.find((field) => field.name === "city")?.options?.[
-					version as Version
-				] || [];
+				INITIATE_FIELDS.search.find((field) => field.name === "city")
+					?.options?.[version as Version] || [];
 
 			setCityOptions(newCityOptions as string[]);
 
 			const newScenarioOption =
-			INITIATE_FIELDS.search.find((field) => field.name === "scenario")?.options?.[
-				version as Version
-			] || [];
+				INITIATE_FIELDS.search.find((field) => field.name === "scenario")
+					?.options?.[version as Version] || [];
 
 			setScenarioOptions(newScenarioOption as string[]);
 		}
@@ -197,7 +195,7 @@ export const InitiateRequestSection = () => {
 				logisticsCancelKeys
 			) {
 				setAllowSubmission(true);
-			} else if (checker(keys, formKeys, domain,version)) {
+			} else if (checker(keys, formKeys, domain, version)) {
 				setAllowSubmission(true);
 			} else if (
 				checker(
@@ -215,29 +213,27 @@ export const InitiateRequestSection = () => {
 		}
 
 		const newDomainOptions =
-				INITIATE_FIELDS.search.find((field) => field.name === "domain")
-					?.options?.[version as Version] || [];
+			INITIATE_FIELDS.search.find((field) => field.name === "domain")
+				?.options?.[version as Version] || [];
 
-			setDomainOptions(newDomainOptions as string[]);
+		setDomainOptions(newDomainOptions as string[]);
 
-			const newCityOptions =
-				INITIATE_FIELDS.search.find((field) => field.name === "city")?.options?.[
-					version as Version
-				] || [];
-
-			setCityOptions(newCityOptions as string[]);
-
-			const newScenarioOption =
-			INITIATE_FIELDS.search.find((field) => field.name === "scenario")?.options?.[
+		const newCityOptions =
+			INITIATE_FIELDS.search.find((field) => field.name === "city")?.options?.[
 				version as Version
 			] || [];
 
-			setScenarioOptions(newScenarioOption as string[]);
+		setCityOptions(newCityOptions as string[]);
+
+		const newScenarioOption =
+			INITIATE_FIELDS.search.find((field) => field.name === "scenario")
+				?.options?.[version as Version] || [];
+
+		setScenarioOptions(newScenarioOption as string[]);
 	}, [action, domain, formState, version]);
 
 	const handleSubmit = async () => {
 		try {
-			console.log("formStateeeeeeee",formState)
 			const response = await axios.post(
 				`${
 					import.meta.env.VITE_SERVER_URL
@@ -347,7 +343,6 @@ export const InitiateRequestSection = () => {
 			}
 		}
 	};
-console.log("versionnn",version)
 	return (
 		<Fade in={true} timeout={2500}>
 			<Paper
@@ -394,7 +389,6 @@ console.log("versionnn",version)
 								</Option>
 							))}
 					</Select>
-	
 
 					<Grow in={renderActionFields} timeout={500}>
 						<Stack spacing={2} sx={{ my: 2 }}>
@@ -461,12 +455,9 @@ console.log("versionnn",version)
 											);
 										}
 
-
 										return (
 											<React.Fragment key={`field-${action}-${index}`}>
-
-												{
-												field.type === "text" &&
+												{field.type === "text" &&
 												field.name !== "cancellationReasonId" ? (
 													<Input
 														fullWidth
@@ -476,31 +467,29 @@ console.log("versionnn",version)
 															handleFieldChange(field.name, e.target.value)
 														}
 													/>
-												) : 
-												
-												
-												field.type === "select" ||
+												) : field.type === "select" ||
 												  (field.type === "text" &&
 														field.name === "cancellationReasonId") ? (
 													field.domainDepended ? (
 														(() => {
 															const options = field.options as any;
-															console.log("optionss",options,"fielld",field)
 															// Special case for scenario field
-															if (field.name === "scenario" ) {
+															if (field.name === "scenario") {
 																if (
 																	options &&
 																	domain in options &&
 																	Array.isArray(options[domain]) &&
-																	options[domain].length > 0 
-																) {			
-																	if(version==="b2c" && domain==="retail"){
-																		return (<></>)
-																	}													
+																	options[domain].length > 0
+																) {
+																	if (
+																		version === "b2c" &&
+																		domain === "retail"
+																	) {
+																		return <></>;
+																	}
 																	return (
-																	
-																	//   version ==="b2c" && domain==="retail"? (<></>) :
-																	<Select
+																		//   version ==="b2c" && domain==="retail"? (<></>) :
+																		<Select
 																			placeholder={field.placeholder}
 																			onChange={(
 																				_event: React.SyntheticEvent | null,
@@ -526,9 +515,6 @@ console.log("versionnn",version)
 																				)
 																			)}
 																		</Select>
-																		
-																	
-																		
 																	);
 																}
 																return null; // Render null if domain doesn't exist in options or has no options
@@ -541,7 +527,6 @@ console.log("versionnn",version)
 																Array.isArray(options[domain]) &&
 																options[domain].length > 0
 															) {
-																
 																return (
 																	<Select
 																		placeholder={field.placeholder}
@@ -555,33 +540,49 @@ console.log("versionnn",version)
 																			)
 																		}
 																	>
-														{field.name === "domain" && domain === "retail" ? (
-														<>
-															{domainOptions.map((option, index: number) => (
-																<Option value={option} key={option + index}>
-																	{option}
-																</Option>
-															))}
-														</>
-													) : field.name === "city" && domain === "retail" ? (
-														<>
-															{cityOptions.map((option, index: number) => (
-																<Option value={option} key={option + index}>
-																	{option}
-																</Option>
-															))}
-														</>
-													) 
-													: options[domain].map(
-														(option: string, optionIndex: number) => (
-															<Option
-																value={option}
-																key={`${option}-${optionIndex}`}
-															>
-																{option}
-															</Option>
-														)
-													)} 
+																		{field.name === "domain" &&
+																		domain === "retail" ? (
+																			<>
+																				{domainOptions.map(
+																					(option, index: number) => (
+																						<Option
+																							value={option}
+																							key={option + index}
+																						>
+																							{option}
+																						</Option>
+																					)
+																				)}
+																			</>
+																		) : field.name === "city" &&
+																		  domain === "retail" ? (
+																			<>
+																				{cityOptions.map(
+																					(option, index: number) => (
+																						<Option
+																							value={option}
+																							key={option + index}
+																						>
+																							{option}
+																						</Option>
+																					)
+																				)}
+																			</>
+																		) : (
+																			options[domain].map(
+																				(
+																					option: string,
+																					optionIndex: number
+																				) => (
+																					<Option
+																						value={option}
+																						key={`${option}-${optionIndex}`}
+																					>
+																						{option}
+																					</Option>
+																				)
+																			)
+																		)}
 																		{/* {options[domain].map(
 																			(option: string, optionIndex: number) => (
 																				<Option
@@ -598,7 +599,6 @@ console.log("versionnn",version)
 																domain == "logistics" &&
 																action == "search"
 															) {
-																console.log("searchhhhhhhhhhhhhhhhhhhh",field.name)
 																return (
 																	<>
 																		{field.name !== "version" && (
@@ -607,30 +607,62 @@ console.log("versionnn",version)
 																				onChange={(
 																					_event: React.SyntheticEvent | null,
 																					newValue: string | null
-																				) => handleFieldChange(field.name, newValue as string)}
+																				) =>
+																					handleFieldChange(
+																						field.name,
+																						newValue as string
+																					)
+																				}
 																			>
 																				{field.name === "city" ? (
 																					formState.domain === "ONDC:LOG10" ? (
-																						CITY_CODE.map((option, optionIndex) => (
-																							<Option value={option} key={`${option}-${optionIndex}`}>
-																								{option}
-																							</Option>
-																						))
+																						CITY_CODE.map(
+																							(option, optionIndex) => (
+																								<Option
+																									value={option}
+																									key={`${option}-${optionIndex}`}
+																								>
+																									{option}
+																								</Option>
+																							)
+																						)
 																					) : (
-																						<Option value="UN:SIN">UN:SIN</Option>
-																					)
-																				) : Array.isArray(field.options) ? (
-																					field.options.map((option, optionIndex: number) => (
-																						<Option value={option} key={`${option}-${optionIndex}`}>
-																							{option}
+																						<Option value="UN:SIN">
+																							UN:SIN
 																						</Option>
-																					))
+																					)
+																				) : field.name === "deliveryType" &&
+																				  formState.domain === "ONDC:LOG10" ? (
+																					<>
+																						<Option value="air">Air</Option>
+																						<Option value="surface">
+																							Surface
+																						</Option>
+																					</>
+																				) : field.name === "deliveryType" &&
+																				  formState.domain !== "ONDC:LOG10" ? (
+																					<>
+																						<Option value="air">Air</Option>
+																						<Option value="ocean">Ocean</Option>
+																					</>
+																				) : Array.isArray(field.options) ? (
+																					field.options.map(
+																						(option, optionIndex: number) => {
+																							return (
+																								<Option
+																									value={option}
+																									key={`${option}-${optionIndex}`}
+																								>
+																									{option}
+																								</Option>
+																							);
+																						}
+																					)
 																				) : null}
 																			</Select>
 																		)}
 																	</>
 																);
-																
 															}
 														})()
 													) : (
@@ -650,8 +682,6 @@ console.log("versionnn",version)
 								)}
 						</Stack>
 					</Grow>
-
-					
 				</Stack>
 				<Box sx={{ display: "flex", justifyContent: "center" }}>
 					<Button

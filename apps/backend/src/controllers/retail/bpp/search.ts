@@ -5,6 +5,8 @@ import YAML from "yaml";
 import {
 	B2B_EXAMPLES_PATH,
 	B2C_EXAMPLES_PATH,
+	logger,
+	redis,
 	responseBuilder,
 } from "../../../lib/utils";
 
@@ -14,8 +16,37 @@ export const searchController = async (
 	next: NextFunction
 ) => {
 	try {
-		const domain = req.body.context.domain;
-		const { version } = req.body;
+		
+		const {domain,transaction_id,action }= req.body.context;
+		const message = req.body.message;
+		let { version } = req.body;
+
+		const buyerIdTag = message.intent.tags.find(
+			(tag: any) => tag.descriptor.code === "buyer_id"
+		);
+
+		if (buyerIdTag) {
+			const buyerIdNo = buyerIdTag.list.find(
+				(item: any) => item.descriptor.code === "buyer_id_no"
+			);
+
+			if (buyerIdNo && buyerIdNo.value) {
+				logger.info("buyer id number is present , it is b2b");
+				version = "b2b";
+			} else version = "b2c";
+		} else {
+			version = "b2c";
+		}
+
+		console.log("🚀 ~ version:", version);
+
+		try{
+			console.log("abs",`${transaction_id}-version-${version}`)
+			await redis.set(
+				`${transaction_id}-version-${version}`,"");
+		}catch(err:any){
+		}
+
 		var onSearch;
 
 		if (version === "b2c") {

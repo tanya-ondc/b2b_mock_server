@@ -30,7 +30,6 @@ const ONDCDocumentation = () => {
 	// State to hold the text value
 
 	const handleCopyText = (text: unknown) => {
-		console.log("🚀 ~ handleCopyText ~ text:", text);
 
 		navigator.clipboard.writeText(JSON.stringify(text)); // Copy text to clipboard
 	};

@@ -1,4 +1,4 @@
-# ONDC Mock & Sandbox
+# ONDC Mock & Sandbox.
 This is the monorepo for the ONDC Mock & Sandbox. It features an ExpressJS Web Server, a Vite ReactJS App. This README specifies the instructions on how to use it.
 
 >NOTE: Currently, the mock server and sandbox support B2B and services domains.

@@ -176,47 +176,47 @@ export const selectSchema = {
 											required: ["id"],
 										},
 									},
-									tags: {
-										type: "array",
-										items: {
-											type: "object",
-											properties: {
-												descriptor: {
-													type: "object",
-													properties: {
-														code: {
-															type: "string",
-															enum: ["BUYER_TERMS"],
-														},
-													},
-													required: ["code"],
-												},
-												list: {
-													type: "array",
-													items: {
-														type: "object",
-														properties: {
-															descriptor: {
-																type: "object",
-																properties: {
-																	code: {
-																		type: "string",
-																		enum: ["ITEM_REQ", "PACKAGING_REQ"],
-																	},
-																},
-																required: ["code"],
-															},
-															value: {
-																type: "string",
-															},
-														},
-														required: ["descriptor", "value"],
-													},
-												},
-											},
-											required: ["descriptor", "list"],
-										},
-									},
+									// tags: {
+									// 	type: "array",
+									// 	items: {
+									// 		type: "object",
+									// 		properties: {
+									// 			descriptor: {
+									// 				type: "object",
+									// 				properties: {
+									// 					code: {
+									// 						type: "string",
+									// 						enum: ["BUYER_TERMS"],
+									// 					},
+									// 				},
+									// 				required: ["code"],
+									// 			},
+									// 			list: {
+									// 				type: "array",
+									// 				items: {
+									// 					type: "object",
+									// 					properties: {
+									// 						descriptor: {
+									// 							type: "object",
+									// 							properties: {
+									// 								code: {
+									// 									type: "string",
+									// 									enum: ["ITEM_REQ", "PACKAGING_REQ"],
+									// 								},
+									// 							},
+									// 							required: ["code"],
+									// 						},
+									// 						value: {
+									// 							type: "string",
+									// 						},
+									// 					},
+									// 					required: ["descriptor", "value"],
+									// 				},
+									// 			},
+									// 		},
+									// 		required: ["descriptor", "list"],
+									// 	},
+									// },
 								},
 								required: ["id", "location_ids", "quantity", "fulfillment_ids"],
 							},
@@ -304,77 +304,86 @@ export const selectSchema = {
 										},
 										required: ["person"],
 									},
-									tags: {
-										type: "array",
-										items: {
-											type: "object",
-											properties: {
-												descriptor: {
-													type: "object",
-													properties: {
-														code: {
-															type: "string",
-															enum: ["DELIVERY_TERMS"],
-														},
-													},
-													required: ["code"],
-												},
-												list: {
-													type: "array",
-													items: {
-														type: "object",
-														properties: {
-															descriptor: {
-																type: "object",
-																properties: {
-																	code: {
-																		type: "string",
-																		enum: [
-																			"INCOTERMS",
-																			"NAMED_PLACE_OF_DELIVERY",
-																		],
-																	},
-																},
-																required: ["code"],
-															},
-															value: {
-																type: "string",
-															},
-														},
-														if: {
-															properties: {
-																descriptor: {
-																	properties: { code: { const: "INCOTERMS" } },
-																},
-															},
-														},
-														then: {
-															properties: {
-																value: {
-																	enum: [
-																		"DPU",
-																		"CIF",
-																		"EXW",
-																		"FOB",
-																		"DAP",
-																		"DDP",
-																	],
-																},
-															},
-														},
-														required: ["descriptor", "value"],
-													},
-												},
-											},
-											required: ["descriptor", "list"],
-										},
-									},
+									// tags: {
+									// 	type: "array",
+									// 	items: {
+									// 		type: "object",
+									// 		properties: {
+									// 			descriptor: {
+									// 				type: "object",
+									// 				properties: {
+									// 					code: {
+									// 						type: "string",
+									// 						enum: ["DELIVERY_TERMS"],
+									// 					},
+									// 				},
+									// 				required: ["code"],
+									// 			},
+									// 			list: {
+									// 				type: "array",
+									// 				items: {
+									// 					type: "object",
+									// 					properties: {
+									// 						descriptor: {
+									// 							type: "object",
+									// 							properties: {
+									// 								code: {
+									// 									type: "string",
+									// 									enum: [
+									// 										"INCOTERMS",
+									// 										"NAMED_PLACE_OF_DELIVERY",
+									// 									],
+									// 								},
+									// 							},
+									// 							required: ["code"],
+									// 						},
+									// 						value: {
+									// 							type: "string",
+									// 						},
+									// 					},
+									// 					if: {
+									// 						properties: {
+									// 							descriptor: {
+									// 								properties: { code: { const: "INCOTERMS" } },
+									// 							},
+									// 						},
+									// 					},
+									// 					then: {
+									// 						properties: {
+									// 							value: {
+									// 								enum: [
+									// 									"DPU",
+									// 									"CIF",
+									// 									"EXW",
+									// 									"FOB",
+									// 									"DAP",
+									// 									"DDP",
+									// 								],
+									// 							},
+									// 						},
+									// 					},
+									// 					required: ["descriptor", "value"],
+									// 				},
+									// 			},
+									// 		},
+									// 		required: ["descriptor", "list"],
+									// 	},
+									// },
 								},
 								additionalProperties: false,
 								if: { properties: { type: { const: "Delivery" } } },
 								then: { required: ["id", "type", "stops"] },
 								else: { required: ["id", "type"] },
 							},
+						},
+						offers:{
+							type:"object",
+							properties:{
+								id:{
+									type:"string"
+								}
+							},
+							required:["id"]
 						},
 						payments: {
 							type: "array",
@@ -393,50 +402,50 @@ export const selectSchema = {
 								required: ["type"],
 							},
 						},
-						tags: {
-							type: "array",
-							items: {
-								type: "object",
-								properties: {
-									descriptor: {
-										properties: {
-											code: {
-												type: "string",
-												enum: ["buyer_id", "COMM_CHANNEL"],
-											},
-										},
-									},
-									list: {
-										type: "array",
-										items: {
-											type: "object",
-											properties: {
-												descriptor: {
-													properties: {
-														code: {
-															type: "string",
-															enum: [
-																"buyer_id_code",
-																"buyer_id_no",
-																"chat_url",
-															],
-														},
-													},
-												},
-												value: {
-													type: "string",
-												},
-											},
-											required: ["descriptor", "value"],
-										},
-									},
-								},
-								required: ["descriptor", "list"],
-							},
-						},
+						// tags: {
+						// 	type: "array",
+						// 	items: {
+						// 		type: "object",
+						// 		properties: {
+						// 			descriptor: {
+						// 				properties: {
+						// 					code: {
+						// 						type: "string",
+						// 						enum: ["buyer_id", "COMM_CHANNEL"],
+						// 					},
+						// 				},
+						// 			},
+						// 			list: {
+						// 				type: "array",
+						// 				items: {
+						// 					type: "object",
+						// 					properties: {
+						// 						descriptor: {
+						// 							properties: {
+						// 								code: {
+						// 									type: "string",
+						// 									enum: [
+						// 										"buyer_id_code",
+						// 										"buyer_id_no",
+						// 										"chat_url",
+						// 									],
+						// 								},
+						// 							},
+						// 						},
+						// 						value: {
+						// 							type: "string",
+						// 						},
+						// 					},
+						// 					required: ["descriptor", "value"],
+						// 				},
+						// 			},
+						// 		},
+						// 		required: ["descriptor", "list"],
+						// 	},
+						// },
 					},
 					additionalProperties: false,
-					required: ["provider", "items", "fulfillments", "payments"],
+					required: ["provider", "items", "fulfillments", "payments","offers"],
 				},
 			},
 			required: ["order"],
