@@ -299,6 +299,7 @@ export const checker = (
 	if (
 		domain === "services" ||
 		domain === "logistics" ||
+		domain === "agri" ||
 		domain === "subscription"
 	) {
 		target = target.filter((item) => item !== "version");

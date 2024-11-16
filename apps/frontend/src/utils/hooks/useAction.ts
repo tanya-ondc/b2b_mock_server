@@ -48,7 +48,9 @@ export const useAction = () => {
 					? LOGISTICS_SCENARIOS
 					: version === "b2b"
 					? B2B_SCENARIOS
-					: B2C_SCENARIOS;
+					: version === "b2c"?
+					B2C_SCENARIOS
+					: [];
 			if (!parsedLog.context!.action) setLogError(true);
 			const parsedAction = parsedLog.context.action;
 			setAction(parsedAction);

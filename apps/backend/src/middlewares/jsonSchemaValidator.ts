@@ -3,9 +3,9 @@ import { srvSchemaValidator } from "../lib/schema/services";
 import { subscriptionSchemaValidator } from "../lib/schema/subscription";
 import { logisticsSchemaValidator } from "../lib/schema/logistics";
 import { b2cSchemaValidator } from "../lib/schema/b2c";
-import { retailSchemaValidator } from "../lib/schema/retail";
 import { l2Validator, redis } from "../lib/utils";
 import { NextFunction, Request, Response } from "express";
+import { agriSchemaValidator } from "../lib/schema/agri";
 
 type AllActions =
 	| "search"
@@ -38,7 +38,8 @@ type Domain =
 	| "services"
 	| "logistics"
 	| "retail"
-	| "subscription";
+	| "subscription"
+  | "agri";
 
 type ActionType<T extends Domain> = T extends "logistics"
 	? LogisticsActions
@@ -79,6 +80,8 @@ export const jsonSchemaValidator = <T extends Domain>({
           return subscriptionSchemaValidator(action as AllActions)(req, res, next);
         case "logistics":
           return logisticsSchemaValidator(action as LogisticsActions)(req, res, next);
+        case "agri":
+          return agriSchemaValidator(action as AllActions)(req, res, next);
         default:
           throw new Error(`Unsupported domain: ${domain}`);
       }

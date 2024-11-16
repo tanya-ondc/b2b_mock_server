@@ -66,6 +66,7 @@ export const LOGISTICS_DOMAINS_OBJECT = {
 
 export const LOGISTICS_DOMAINS = ["ONDC:LOG10", "ONDC:LOG11"];
 
+export const AGRI_DOMAINS = ["ONDC:AGR10", "ONDC:AGR11"];
 export const B2C_DOMAINS = ["ONDC:RET10", "ONDC:RET12"];
 
 export const SERVICE_DOMAINS = [
@@ -104,6 +105,7 @@ export const ALL_DOMAINS = {
 	Services: SERVICE_DOMAINS,
 	Subscription: SUBSCRIPTION_DOMAINS,
 	Logistics: LOGISTICS_DOMAINS,
+	Agri:AGRI_DOMAINS
 };
 
 export const CITY_CODE = ["std:080", "std:011"];
@@ -144,6 +146,7 @@ export const INITIATE_FIELDS = {
 				// services:SERVICE_DOMAINS_OBJECT,
 				b2c: B2C_DOMAINS,
 				logistics: LOGISTICS_DOMAINS,
+				agri:AGRI_DOMAINS
 			},
 		},
 		//DEPENDS ON DOMAIN B2B LOGISTICS
@@ -169,6 +172,7 @@ export const INITIATE_FIELDS = {
 				services: CITY_CODE,
 				subscription:CITY_CODE,
 				b2c: B2C_CITY_CODE,
+				agri: CITY_CODE,
 				logistics: [],
 			},
 		},
