@@ -8,6 +8,8 @@ import {
 	send_response,
 	AGRI_EXAMPLES_PATH,
 	AGRI_BAP_MOCKSERVER_URL,
+	logger,
+	redis,
 } from "../../../lib/utils";
 import { ACTTION_KEY } from "../../../lib/utils/actionOnActionKeys";
 import { SERVICES_DOMAINS } from "../../../lib/utils/apiConstants";
@@ -18,7 +20,8 @@ export const initiateSearchController = async (
 	next: NextFunction
 ) => {
 	try {
-		const { bpp_uri, city, domain } = req.body;
+		const { bpp_uri, city, domain,flow } = req.body;
+		console.log("flowww",flow)
 		let onSearch, file;
 
 		switch (domain) {
@@ -40,6 +43,13 @@ export const initiateSearchController = async (
 		search = search.value;
 		const transaction_id = uuidv4();
 		const timestamp = new Date().toISOString();
+
+		try{
+			logger.info(`${transaction_id}-flow-${flow}`)
+			await redis.set(`${transaction_id}-flow-${flow}`,flow)
+		}catch(err){
+			logger.error(err)
+		}
 
 		search = {
 			...search,

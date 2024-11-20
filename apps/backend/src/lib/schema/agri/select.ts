@@ -145,7 +145,7 @@ export const selectSchema = {
 								required: ["end"],
 							},
 						},
-						payments: {
+						payment: {
 							type: "object",
 							properties: {
 								type: {
@@ -156,7 +156,7 @@ export const selectSchema = {
 							required: ["type"],
 						},
 					},
-					required: ["provider", "items", "fulfillments", "payments"],
+					required: ["provider", "items", "fulfillments", "payment"],
 				},
 			},
 			required: ["order"],

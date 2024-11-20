@@ -6,11 +6,14 @@ import {
 	redisFetchToServer,
 	redis,
 	SERVICES_BAP_MOCKSERVER_URL,
+	AGRI_BAP_MOCKSERVER_URL,
 } from "../../../lib/utils";
 
 import { v4 as uuidv4 } from "uuid";
 import {
 	AGRI_HEALTH_STATUS,
+	AGRI_STATUS,
+	AGRI_STATUS_OBJECT,
 	BID_AUCTION_STATUS,
 	EQUIPMENT_HIRING_STATUS,
 	SERVICES_DOMAINS,
@@ -61,13 +64,14 @@ const intializeRequest = async (
 				timestamp: new Date().toISOString(),
 				action: "status",
 				bap_id: MOCKSERVER_ID,
-				bap_uri: SERVICES_BAP_MOCKSERVER_URL,
+				bap_uri: AGRI_BAP_MOCKSERVER_URL,
 			},
 			message: {
 				order_id: transaction.message.order.id,
 			},
 		};
 		const domain = context?.domain;
+		console.log("domainnnatStatus",domain)
 		switch (domain) {
 			case SERVICES_DOMAINS.SERVICES:
 				senarios = EQUIPMENT_HIRING_STATUS;
@@ -78,12 +82,15 @@ const intializeRequest = async (
 			case SERVICES_DOMAINS.BID_ACTION_SERVICES:
 				senarios = BID_AUCTION_STATUS;
 				break;
+			case SERVICES_DOMAINS.AGRI_INPUT:
+				senarios=AGRI_STATUS;
+				break;
 			default: //service started is the default case
 				senarios = AGRI_HEALTH_STATUS;
 				break;
 		}
 
-		// satus index is always witin boundary of senarios array
+		// status index is always witin boundary of senarios array
 		statusIndex = Math.min(Math.max(statusIndex, 0), senarios.length - 1);
 
 		await send_response(

@@ -74,6 +74,7 @@ export const InitiateRequestSection = () => {
 	const [showCatalogSelect, setShowCatalogSelect] = useState<boolean>(false);
 	const [matchingItems, setMatchingItems] = useState<any[]>([]);
 	const [selectedItemId, setSelectedItemId] = useState<string>("");
+	const [flow,setflow]=useState<string>("1")
 
 	useEffect(() => {
 		// setRenderActionFields(true);
@@ -161,17 +162,19 @@ export const InitiateRequestSection = () => {
 			setSelectedScenario(value as string);
 			/****Write the logic for changes the domain options based on version selection */
 		}
+		if(fieldName ==="flow"){
+			setflow(value)
+		}
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		setFormState((prev: any) => ({ ...prev, [fieldName]: value }));
 	};
-
 	useEffect(() => {
 		if (action) {
 			const keys = Object.keys(formState || {});
 			const formKeys = INITIATE_FIELDS[
 				action as keyof typeof INITIATE_FIELDS
 			].map((e) => e.name);
-
+			
 			const scenarios = INITIATE_FIELDS[
 				action as keyof typeof INITIATE_FIELDS
 			].filter((e) => e.name === "scenario")[0];
@@ -389,7 +392,6 @@ export const InitiateRequestSection = () => {
 								</Option>
 							))}
 					</Select>
-
 					<Grow in={renderActionFields} timeout={500}>
 						<Stack spacing={2} sx={{ my: 2 }}>
 							<Divider />
@@ -397,6 +399,7 @@ export const InitiateRequestSection = () => {
 								INITIATE_FIELDS[action as keyof typeof INITIATE_FIELDS].map(
 									(field, index) => {
 										// Skip rendering `orderId` if action is "cancel" and domain is "logistics"
+										{console.log("action",action,domain)}
 										if (
 											domain === "logistics" &&
 											action === "cancel" &&
@@ -454,7 +457,7 @@ export const InitiateRequestSection = () => {
 												</React.Fragment>
 											);
 										}
-
+										
 										return (
 											<React.Fragment key={`field-${action}-${index}`}>
 												{field.type === "text" &&
@@ -473,6 +476,7 @@ export const InitiateRequestSection = () => {
 													field.domainDepended ? (
 														(() => {
 															const options = field.options as any;
+															console.log("options",options)
 															// Special case for scenario field
 															if (field.name === "scenario") {
 																if (
@@ -665,7 +669,7 @@ export const InitiateRequestSection = () => {
 																);
 															}
 														})()
-													) : (
+													) : ( (domain==="agri" && field.name==="flow")? 
 														<Input
 															fullWidth
 															placeholder={field.placeholder}
@@ -673,7 +677,7 @@ export const InitiateRequestSection = () => {
 															onChange={(e) =>
 																handleFieldChange(field.name, e.target.value)
 															}
-														/>
+														/>:null
 													)
 												) : null}
 											</React.Fragment>

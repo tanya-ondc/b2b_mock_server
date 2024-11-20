@@ -6,6 +6,8 @@ import {
 	send_nack,
 	redisFetchToServer,
 	AGRI_BAP_MOCKSERVER_URL,
+	redis,
+	logger,
 } from "../../../lib/utils";
 import {
 	ACTTION_KEY,
@@ -48,16 +50,43 @@ const intializeRequest = async (
 	providersItems: any
 ) => {
 	try {
-		const {
+		let {
 			context,
 			message: {
 				order: { provider,quote, locations, payment, fulfillments, xinput, items },
 			},
 		} = transaction;
 		const { transaction_id } = context;
+
 		// const { stops, ...remainingfulfillments } = fulfillments[0];
 
 		const timestamp = new Date().toISOString();
+		const flowKey = await redis.keys(`${context.transaction_id}-flow*`)
+		const flow = flowKey[0].slice(-1)
+		logger.info(`flow is ${flow}`)
+
+
+		if(flow==="3"){
+			items=items.map((itm:any)=>(
+				{
+					id:itm.id,
+					fulfillment_id:itm.fulfillment_id,
+					quantity: {
+						count: 2,
+					},
+				}
+			))
+		}else{
+			items=[
+				{
+					id:items[0].id,
+					fulfillment_id:items[0].fulfillment_id,
+					quantity:{
+						count:2,
+					}
+				}
+			]		
+		}
 
 		const confirm = {
 			context: {
@@ -75,6 +104,7 @@ const intializeRequest = async (
 					state: ORDER_STATUS.CREATED.toUpperCase(),
 					provider,
 					fulfillments,
+					items,
 					payment: {
 						...payment,
 						"@ondc/org/settlement_details": [

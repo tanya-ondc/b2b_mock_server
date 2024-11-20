@@ -47,7 +47,7 @@ export const updateController = async (
 			return send_nack(res, ERROR_MESSAGES.ON_SEARCH_DOES_NOT_EXISTED);
 		}
 
-		const providersItems = on_search?.message?.catalog?.providers[0];
+		const providersItems = on_search?.message?.catalog?.['bpp/providers'][0];
 		req.body.providersItems = providersItems;
 
 		//UPDATE FULFILLMENTS HERE BECAUSE It IS SAME FOR ALL SACENRIOS

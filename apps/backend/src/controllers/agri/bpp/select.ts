@@ -12,6 +12,7 @@ import {
 	redis,
 	quoteCreatorService,
 	quoteCreatorAgri,
+	logger,
 } from "../../../lib/utils";
 import { v4 as uuidv4 } from "uuid";
 import { ERROR_MESSAGES } from "../../../lib/utils/responseMessages";
@@ -39,6 +40,15 @@ export const selectController = async (
 		if (!checkItemExistInSearch) {
 			return send_nack(res, ERROR_MESSAGES.SELECTED_ITEMS_DOES_NOT_EXISTED);
 		}
+
+
+
+		const flowKey = await redis.keys(`${req.body.context.transaction_id}-flow*`)
+		const flow = flowKey[0].slice(-1)
+		logger.info(`flow is ${flow}`)
+
+		
+
 		const { scenario } = req.query;
 		switch (scenario) {
 			//SERVICES AND AGRI SCENARIOS
@@ -58,6 +68,8 @@ export const selectController = async (
 			default:
 				return selectConsultationConfirmController(req, res, next);
 		}
+
+
 	} catch (error) {
 		return next(error);
 	}
@@ -73,25 +85,26 @@ const selectConsultationConfirmController = (
 		const { locations, ...provider } = message.order.provider;
 		const domain = context?.domain;
 
+
 		const updatedFulfillments =
 			domain === SERVICES_DOMAINS.BID_ACTION_SERVICES
 				? updateFulfillments(
-						message?.order?.fulfillments,
-						ON_ACTION_KEY?.ON_SELECT,
-						"",
-						"bid_auction_service"
-				  )
+					message?.order?.fulfillments,
+					ON_ACTION_KEY?.ON_SELECT,
+					"",
+					"bid_auction_service"
+				)
 				: domain === SERVICES_DOMAINS.AGRI_INPUT
-				? updateFulfillments(
+					? updateFulfillments(
 						message?.order?.fulfillments,
 						ON_ACTION_KEY?.ON_SELECT,
 						"",
 						"agri_input"
-				  )
-				: updateFulfillments(
+					)
+					: updateFulfillments(
 						message?.order?.fulfillments,
 						ON_ACTION_KEY?.ON_SELECT
-				  );
+					);
 		const responseMessage = {
 			order: {
 				provider: {
@@ -120,10 +133,9 @@ const selectConsultationConfirmController = (
 			next,
 			context,
 			responseMessage,
-			`${req.body.context.bap_uri}${
-				req.body.context.bap_uri.endsWith("/")
-					? ON_ACTION_KEY.ON_SELECT
-					: `/${ON_ACTION_KEY.ON_SELECT}`
+			`${req.body.context.bap_uri}${req.body.context.bap_uri.endsWith("/")
+				? ON_ACTION_KEY.ON_SELECT
+				: `/${ON_ACTION_KEY.ON_SELECT}`
 			}`,
 			`${ON_ACTION_KEY.ON_SELECT}`,
 			"agri"
@@ -315,11 +327,11 @@ const selectConsultationRejectController = (
 					domain === SERVICES_DOMAINS.SERVICES
 						? quoteCreatorService(message?.order?.items, providersItems?.items)
 						: quoteCreatorHealthCareService(
-								message?.order?.items,
-								providersItems?.items,
-								"",
-								message?.order?.fulfillments[0]?.type
-						  ),
+							message?.order?.items,
+							providersItems?.items,
+							"",
+							message?.order?.fulfillments[0]?.type
+						),
 				error: {
 					code: 90001,
 					message: "Schedule not available",

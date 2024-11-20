@@ -7,6 +7,8 @@ import {
 	send_nack,
 	redisFetchToServer,
 	Item,
+	logger,
+	redis,
 } from "../../../lib/utils";
 import { v4 as uuidv4 } from "uuid";
 import { set, eq } from "lodash";
@@ -41,8 +43,13 @@ const intializeRequest = async (
 		const { transaction_id } = context;
 		const providers = message?.catalog["bpp/providers"];
 		const { id, locations } = providers?.[0];
-		let items = [];
-		items = providers[0].items = [
+		let items ;
+
+		const flowKey = await redis.keys(`${transaction_id}-flow*`)
+		const flow = flowKey[0].slice(-1)
+		logger.info(`flow is ${flow}`)
+
+		items = providers[0].items = 
 			providers?.[0]?.items.map(
 				({
 					id,
@@ -50,9 +57,8 @@ const intializeRequest = async (
 				}: {
 					id: string;
 					location_id: string[];
-				}) => ({ id, location_id })
-			)?.[0],
-		];
+				}) => ( {id, location_id })
+			)
 
 		const select = {
 			context: {
@@ -73,14 +79,10 @@ const intializeRequest = async (
 							},
 						],
 					},
-					items: items.map((itm: Item) => ({
-						...itm,
-						quantity: {
-							selected: {
-								count: 1,
-							},
-						},
-					})),
+					 items : items.map((itm:any) => ({
+						...itm,           
+						quantity: { count: 1 }  
+					  })),
 					fulfillments: [
 						{
 							end: {
@@ -93,10 +95,11 @@ const intializeRequest = async (
 							},
 						},
 					],
-					payments: { type: "ON-FULFILLMENT" },
+					payment: { type: "ON-FULFILLMENT" },
 				},
 			},
 		};
+		console.log("items",JSON.stringify(select.message.order.items))
 		await send_response(res, next, select, transaction_id, "select");
 	} catch (error) {
 		return next(error);

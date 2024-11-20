@@ -11,30 +11,30 @@ export const onUpdateSchema = {
           type: "string",
           enum: DOMAIN,
         },
-        location: {
-          type: "object",
-          properties: {
-            city: {
-              type: "object",
-              properties: {
-                code: {
-                  type: "string",
-                },
-              },
-              required: ["code"],
-            },
-            country: {
-              type: "object",
-              properties: {
-                code: {
-                  type: "string",
-                },
-              },
-              required: ["code"],
-            },
-          },
-          required: ["city", "country"],
-        },
+        // location: {
+        //   type: "object",
+        //   properties: {
+        //     city: {
+        //       type: "object",
+        //       properties: {
+        //         code: {
+        //           type: "string",
+        //         },
+        //       },
+        //       required: ["code"],
+        //     },
+        //     country: {
+        //       type: "object",
+        //       properties: {
+        //         code: {
+        //           type: "string",
+        //         },
+        //       },
+        //       required: ["code"],
+        //     },
+        //   },
+        //   required: ["city", "country"],
+        // },
         action: {
           type: "string",
           const: "on_update",
@@ -80,7 +80,7 @@ export const onUpdateSchema = {
       },
       required: [
         "domain",
-        "location",
+        // "location",
         "action",
         "core_version",
         "bap_id",
@@ -102,7 +102,7 @@ export const onUpdateSchema = {
             id: {
               type: "string",
             },
-            status: {
+            state: {
               type: "string",
             },
             provider: {
@@ -132,390 +132,294 @@ export const onUpdateSchema = {
               items: {
                 type: "object",
                 properties: {
-                  id: {
-                    type: "string",
-                  },
-                  parent_item_id: {
-                    type: "string",
-                  },
-                  fulfillment_ids: {
-                    type: "array",
-                    items: {
-                      type: "string",
-                    },
-                  },
-                  location_ids: {
-                    type: "array",
-                    items: {
-                      type: "string",
-                    },
-                  },
-                },
-                required: ["id", "fulfillment_ids"],
-              },
-            },
-            payments: {
-              type: "array",
-              items: {
-                type: "object",
-                properties: {
-                  id: {
-                    type: "string",
-                  },
-                  collected_by: {
-                    type: "string",
-                  },
-                  params: {
+                  id: { type: "string" },
+                  quantity: {
                     type: "object",
                     properties: {
-                      amount: {
-                        type: "string",
-                      },
-                      currency: {
-                        type: "string",
-                      },
-                      transaction_id: {
-                        type: "string",
-                      },
-                      bank_account_number: {
-                        type: "string",
-                      },
-                      virtual_payment_address: {
-                        type: "string",
-                      },
+                      count: { type: "integer" }
                     },
-                    required: [
-                      "amount",
-                      "currency",
-                    ],
+                    required: ["count"]
                   },
-                  status: {
-                    type: "string",
-                  },
-                  type: {
-                    type: "string",
-                  },
-                  tags: {
-                    type: "array",
-                    items: {
-                      type: "object",
-                      properties: {
-                        descriptor: {
-                          type: "object",
-                          properties: {
-                            code: {
-                              type: "string",
-                            },
-                          },
-                          required: ["code"],
-                        },
-                        list: {
-                          type: "array",
-                          items: {
-                            type: "object",
-                            properties: {
-                              descriptor: {
-                                type: "object",
-                                properties: {
-                                  code: {
-                                    type: "string",
-                                  },
-                                },
-                                required: ["code"],
-                              },
-                              value: {
-                                type: "string",
-                              },
-                            },
-                            required: ["descriptor", "value"],
-                          },
-                        },
-                      },
-                      required: ["descriptor", "list"],
-                    },
-                  },
+                  fulfillment_id: { type: "string" }
                 },
-                required: [
-                  "id",
-                  "collected_by",
-                  "params",
-                  "status",
-                  "type",
-                  "tags",
-                ],
-              },
+                required: ["id", "quantity", "fulfillment_id"]
+              }
             },
-            fulfillments: {
-              type: "array",
-              items: {
-                type: "object",
-                properties: {
-                  id: {
-                    type: "string",
+            payment: {
+              type: "object",
+              properties: {
+                time: {
+                  type: "object",
+                  properties: {
+                    timestamp: { type: "string" }
                   },
-                  state: {
-                    type: "object",
-                    properties: {
-                      descriptor: {
-                        type: "object",
-                        properties: {
-                          code: {
-                            type: "string",
-                          },
-                        },
-                        required: ["code"],
-                      },
-                    },
-                    required: ["descriptor"],
-                  },
-                  type: {
-                    type: "string",
-                  },
-                  tracking: {
-                    type: "boolean",
-                  },
-                  stops: {
-                    type: "array",
-                    items: {
-                      type: "object",
-                      properties: {
-                        type: {
-                          type: "string",
-                        },
-                        location: {
-                          type: "object",
-                          properties: {
-                            id: {
-                              type: "string",
-                            },
-                            descriptor: {
-                              type: "object",
-                              properties: {
-                                name: {
-                                  type: "string",
-                                },
-                              },
-                              required: ["name"],
-                            },
-                            gps: {
-                              type: "string",
-                            },
-                            address: {
-                              type: "string",
-                            },
-                            city: {
-                              type: "object",
-                              properties: {
-                                name: {
-                                  type: "string",
-                                },
-                              },
-                              required: ["name"],
-                            },
-                            country: {
-                              type: "object",
-                              properties: {
-                                code: {
-                                  type: "string",
-                                },
-                              },
-                              required: ["code"],
-                            },
-                            area_code: {
-                              type: "string",
-                            },
-                            state: {
-                              type: "object",
-                              properties: {
-                                name: {
-                                  type: "string",
-                                },
-                              },
-                              required: ["name"],
-                            },
-                          },
-                          required: ["gps"],
-                        },
-                        time: {
-                          type: "object",
-                          properties: {
-                            range: {
-                              type: "object",
-                              properties: {
-                                start: {
-                                  type: "string",
-                                },
-                                end: {
-                                  type: "string",
-                                },
-                              },
-                              required: ["start", "end"],
-                            },
-                          },
-                          required: ["range"],
-                        },
-                        contact: {
-                          type: "object",
-                          properties: {
-                            phone: {
-                              type: "string",
-                            },
-                            email: {
-                              type: "string",
-                            },
-                          },
-                          required: ["phone", "email"],
-                        },
-                        instructions: {
-                          type: "object",
-                          properties: {
-                            name: {
-                              type: "string",
-                            },
-                            short_desc: {
-                              type: "string",
-                            },
-                          },
-                          required: ["name", "short_desc"],
-                        },
-                        person: {
-                          type: "object",
-                          properties: {
-                            name: {
-                              type: "string",
-                            },
-                          },
-                          required: ["name"],
-                        },
-                      },
-                      required: [
-                        "type",
-                        "location",
-                        "time",
-                        "contact",
-                        "person",
-                      ],
-                    },
-                  },
-                  rateable: {
-                    type: "boolean",
-                  },
+                  required: ["timestamp"]
                 },
-                required: ["id", "state", "type", "stops"],
+                type: { type: "string" },
+                params: {
+                  type: "object",
+                  properties: {
+                    amount: { type: "string" },
+                    currency: { type: "string" },
+                    transaction_id: { type: "string" }
+                  },
+                  required: ["amount", "currency", "transaction_id"]
+                },
+                status: { type: "string" },
+                collected_by: { type: "string" },
               },
+              required: [
+                "time",
+                "type",
+                "params",
+                "status",
+                "collected_by",
+              ]
             },
+            // fulfillments: {
+            //   type: "array",
+            //   items: {
+            //     type: "object",
+            //     properties: {
+            //       id: { type: "string" },
+            //       end: {
+            //         type: "object",
+            //         properties: {
+            //           time: {
+            //             type: "object",
+            //             properties: {
+            //               range: {
+            //                 type: "object",
+            //                 properties: {
+            //                   start: { type: "string" },
+            //                   end: { type: "string" }
+            //                 },
+            //                 required: ["start", "end"]
+            //               },
+            //               timestamp: { type: "string" }
+            //             },
+            //             required: ["range", "timestamp"]
+            //           },
+            //           person: {
+            //             type: "object",
+            //             properties: {
+            //               name: { type: "string" }
+            //             },
+            //             required: ["name"]
+            //           },
+            //           contact: {
+            //             type: "object",
+            //             properties: {
+            //               phone: { type: "string" }
+            //             },
+            //             required: ["phone"]
+            //           },
+            //           location: {
+            //             type: "object",
+            //             properties: {
+            //               gps: { type: "string" },
+            //               address: {
+            //                 type: "object",
+            //                 properties: {
+            //                   city: { type: "string" },
+            //                   name: { type: "string" },
+            //                   state: { type: "string" },
+            //                   country: { type: "string" },
+            //                   building: { type: "string" },
+            //                   locality: { type: "string" },
+            //                   area_code: { type: "string" }
+            //                 },
+            //                 required: ["city", "name", "state", "country", "building", "locality", "area_code"]
+            //               }
+            //             },
+            //             required: ["gps", "address"]
+            //           }
+            //         },
+            //         required: ["time", "person", "contact", "location"]
+            //       },
+            //       type: { type: "string" },
+            //       start: {
+            //         type: "object",
+            //         properties: {
+            //           time: {
+            //             type: "object",
+            //             properties: {
+            //               range: {
+            //                 type: "object",
+            //                 properties: {
+            //                   start: { type: "string" },
+            //                   end: { type: "string" }
+            //                 },
+            //                 required: ["start", "end"]
+            //               },
+            //               timestamp: { type: "string" }
+            //             },
+            //             required: ["range", "timestamp"]
+            //           },
+            //           contact: {
+            //             type: "object",
+            //             properties: {
+            //               email: { type: "string" },
+            //               phone: { type: "string" }
+            //             },
+            //             required: ["email", "phone"]
+            //           },
+            //           location: {
+            //             type: "object",
+            //             properties: {
+            //               gps: { type: "string" },
+            //               address: {
+            //                 type: "object",
+            //                 properties: {
+            //                   city: { type: "string" },
+            //                   name: { type: "string" },
+            //                   state: { type: "string" },
+            //                   country: { type: "string" },
+            //                   building: { type: "string" },
+            //                   locality: { type: "string" },
+            //                   area_code: { type: "string" }
+            //                 },
+            //                 required: ["city", "name", "state", "country", "building", "locality", "area_code"]
+            //               },
+            //               descriptor: {
+            //                 type: "object",
+            //                 properties: {
+            //                   name: { type: "string" }
+            //                 },
+            //                 required: ["name"]
+            //               }
+            //             },
+            //             required: ["gps", "address", "descriptor"]
+            //           }
+            //         },
+            //         required: ["time", "contact", "location"]
+            //       },
+            //       state: {
+            //         type: "object",
+            //         properties: {
+            //           descriptor: {
+            //             type: "object",
+            //             properties: {
+            //               code: { type: "string" }
+            //             },
+            //             required: ["code"]
+            //           }
+            //         },
+            //         required: ["descriptor"]
+            //       },
+            //       "@ondc/org/TAT": { type: "string" },
+            //       "@ondc/org/category": { type: "string" },
+            //       "@ondc/org/provider_name": { type: "string" },
+            //       tags: {
+            //         type: "array",
+            //         items: {
+            //           type: "object",
+            //           properties: {
+            //             code: { type: "string" },
+            //             list: {
+            //               type: "array",
+            //               items: {
+            //                 type: "object",
+            //                 properties: {
+            //                   code: { type: "string" },
+            //                   value: { type: "string" }
+            //                 },
+            //                 required: ["code", "value"]
+            //               }
+            //             }
+            //           },
+            //           required: ["code", "list"]
+            //         }
+            //       }
+            //     },
+            //     required: ["id", "end", "type", "start", "state"]
+            //   }
+            // },
             quote: {
               type: "object",
               properties: {
+                ttl: { type: "string" },
                 price: {
                   type: "object",
                   properties: {
-                    currency: {
-                      type: "string",
-                    },
-                    value: {
-                      type: "string",
-                    },
+                    value: { type: "string" },
+                    currency: { type: "string" }
                   },
-                  required: ["currency", "value"],
+                  required: ["value", "currency"]
                 },
                 breakup: {
                   type: "array",
                   items: {
                     type: "object",
                     properties: {
-                      title: {
-                        type: "string",
+                      item: {
+                        type: "object",
+                        properties: {
+                          price: {
+                            type: "object",
+                            properties: {
+                              value: { type: "string" },
+                              currency: { type: "string" }
+                            },
+                            required: ["value", "currency"]
+                          }
+                        }
                       },
                       price: {
                         type: "object",
                         properties: {
-                          currency: {
-                            type: "string",
-                          },
-                          value: {
-                            type: "string",
-                          },
+                          value: { type: "string" },
+                          currency: { type: "string" }
                         },
-                        required: ["currency", "value"],
+                        required: ["value", "currency"]
                       },
-                      item: {
+                      title: { type: "string" },
+                      "@ondc/org/item_id": { type: "string" },
+                      "@ondc/org/title_type": { type: "string" },
+                      "@ondc/org/item_quantity": {
                         type: "object",
                         properties: {
-                          id: {
-                            type: "string",
-                          },
-                          price: {
-                            type: "object",
-                            properties: {
-                              currency: {
-                                type: "string",
-                              },
-                              value: {
-                                type: "string",
-                              },
-                            },
-                            required: ["currency", "value"],
-                          },
+                          count: { type: "integer" }
                         },
-                        required: ["id", "price"],
-                      },
-                      tags: {
-                        type: "array",
-                        items: {
-                          type: "object",
-                          properties: {
-                            descriptor: {
-                              type: "object",
-                              properties: {
-                                code: {
-                                  type: "string",
-                                },
-                              },
-                              required: ["code"],
-                            },
-                            list: {
-                              type: "array",
-                              items: {
-                                type: "object",
-                                properties: {
-                                  descriptor: {
-                                    type: "object",
-                                    properties: {
-                                      code: {
-                                        type: "string",
-                                      },
-                                    },
-                                    required: ["code"],
-                                  },
-                                  value: {
-                                    type: "string",
-                                  },
-                                },
-                                required: ["descriptor"],
-                              },
-                            },
-                          },
-                          required: ["descriptor", "list"],
-                        },
-                      },
+                        required: ["count"]
+                      }
                     },
-                    required: ["title", "price", "item", "tags"],
-                  },
-                },
-                ttl: {
-                  type: "string",
-                },
+                    required: ["title", "@ondc/org/item_id", "@ondc/org/title_type", "price"]
+                  }
+                }
               },
-              required: ["price", "breakup", "ttl"],
+              required: ["ttl", "price", "breakup"]
             },
+            billing: {
+              type: "object",
+              properties: {
+                name: { type: "string" },
+                phone: { type: "string" },
+                address: {
+                  type: "object",
+                  properties: {
+                    city: { type: "string" },
+                    name: { type: "string" },
+                    state: { type: "string" },
+                    country: { type: "string" },
+                    building: { type: "string" },
+                    locality: { type: "string" },
+                    area_code: { type: "string" }
+                  },
+                  required: ["city", "name", "state", "country", "building", "locality", "area_code"]
+                },
+                created_at: { type: "string" },
+                updated_at: { type: "string" }
+              },
+              required: ["name", "phone", "address", "created_at", "updated_at"]
+            }
           },
           required: [
             "id",
-            "status",
+            "state",
             "provider",
             "items",
-            "payments",
+            "payment",
             "fulfillments",
             "quote",
           ],

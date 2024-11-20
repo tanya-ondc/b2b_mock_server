@@ -55,7 +55,6 @@ export const initiateUpdateController = async (
 			if (!on_update) {
 				return send_nack(res, ERROR_MESSAGES.ON_UPDATE_DOES_NOT_EXISTED);
 			}
-			console.log("----->", on_update);
 			message = on_update.message;
 		}
 		// message.order.status = req.body.message.order.status;
