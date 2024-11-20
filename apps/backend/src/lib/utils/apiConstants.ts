@@ -87,6 +87,23 @@ export const AGRI_HEALTHCARE_STATUS_OBJECT = {
 	CANCEL: "cancel",
 };
 
+export const AGRI_STATUS_OBJECT={
+	CREATED:"Created",
+	PACKED:"Packed",
+	AGENT_ASSIGNED:"Agent_Assigned",
+	ORDER_PICKED_UP:"Order_Picked_Up",
+	OUT_FOR_DELIVERY:"Out_For_Delivery",
+	DELIVERED:"Delivered"
+}
+export const AGRI_STATUS=[
+	"Created",
+	"Packed",
+	"Agent_Assigned",
+	"Order_Picked_Up",
+	"Out_For_Delivery",
+	"Delivered"
+]
+
 export const EQUIPMENT_HIRING_STATUS = [
 	"IN_TRANSIT",
 	"AT_LOCATION",

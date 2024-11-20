@@ -310,6 +310,6 @@ export const checker = (
 	}
 	if (domain !== "logistics")
 		target = target.filter((item) => item !== "deliveryType");
-
+	console.log("array",arr,target,domain)
 	return target.every((v) => arr.includes(v));
 };

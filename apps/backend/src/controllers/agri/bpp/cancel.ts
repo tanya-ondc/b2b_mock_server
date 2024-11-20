@@ -27,7 +27,6 @@ export const cancelController = async (
 		if (!on_confirm_data) {
 			return send_nack(res, ERROR_MESSAGES.ON_CONFIRM_DOES_NOT_EXISTED);
 		}
-
 		if (on_confirm_data.message.order.id != req.body.message.order_id) {
 			return send_nack(res, ERROR_MESSAGES.ORDER_ID_DOES_NOT_EXISTED);
 		}
@@ -38,7 +37,7 @@ export const cancelController = async (
 		);
 
 		const item_measure_ids =
-			on_search_data.message.catalog.providers[0].items.reduce(
+			on_search_data.message.catalog['bpp/providers'][0].items.reduce(
 				(accumulator: any, currentItem: any) => {
 					accumulator[currentItem.id] = currentItem.quantity
 						? currentItem.quantity.unitized.measure
@@ -65,9 +64,9 @@ const cancelRequest = async (
 		const { context } = req.body;
 		const updatedFulfillments = updateFulfillments(
 			transaction.message.order.fulfillments,
-			ON_ACTION_KEY?.ON_CANCEL
+			ON_ACTION_KEY?.ON_CANCEL,'',"agri_input"
 		);
-
+		console.log("transaction",JSON.stringify(updatedFulfillments))
 		const responseMessage = {
 			order: {
 				id: req.body.message.order_id,
@@ -84,7 +83,6 @@ const cancelRequest = async (
 					...transaction.message.order.provider,
 					rateable: undefined,
 				},
-
 				items: transaction.message.order.items.map((itm: any) => ({
 					...itm,
 					quantity: {
@@ -93,17 +91,17 @@ const cancelRequest = async (
 							? req.body.item_measure_ids[itm.id]
 							: { unit: "", value: "" },
 					},
-				})),
-
+				})),			
 				quote: transaction.message.order.quote,
 				fulfillments: updatedFulfillments,
 				billing: transaction.message.order.billing,
-				payments: transaction.message.order.payments.map((itm: any) => ({
-					...itm,
-					tags: itm.tags.filter(
-						(tag: any) => tag.descriptor.code !== "Settlement_Counterparty"
-					),
-				})),
+				// payments: transaction.message.order.payment.map((itm: any) => ({
+				// 	...itm,
+				// 	tags: itm.tags.filter(
+				// 		(tag: any) => tag.descriptor.code !== "Settlement_Counterparty"
+				// 	),
+				// })),
+				payments:transaction.message.order.payment,
 				updated_at: new Date().toISOString(),
 			},
 		};
@@ -119,7 +117,7 @@ const cancelRequest = async (
 					: `/${ON_ACTION_KEY.ON_CANCEL}`
 			}`,
 			`${ON_ACTION_KEY.ON_CANCEL}`,
-			"services"
+			"agri"
 		);
 	} catch (error) {
 		next(error);

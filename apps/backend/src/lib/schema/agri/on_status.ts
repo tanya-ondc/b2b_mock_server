@@ -1,4 +1,4 @@
-import { DOMAIN, SRV_FULFILLMENT_STATE, SRV_ORDER_STATE, VERSION } from "./constants";
+import { AGRI_FULFILLMENT_STATE, AGRI_INPUT_STATE, DOMAIN, SRV_FULFILLMENT_STATE, SRV_ORDER_STATE, VERSION } from "./constants";
 
 export const onStatusSchema = {
   $id: "onStatusSchema",
@@ -11,29 +11,32 @@ export const onStatusSchema = {
           type: "string",
           enum: DOMAIN
         },
-        location: {
-          type: "object",
-          properties: {
-            city: {
-              type: "object",
-              properties: {
-                code: {
-                  type: "string",
-                },
-              },
-              required: ["code"],
-            },
-            country: {
-              type: "object",
-              properties: {
-                code: {
-                  type: "string",
-                },
-              },
-              required: ["code"],
-            },
-          },
-          required: ["city", "country"],
+        // location: {
+        //   type: "object",
+        //   properties: {
+        //     city: {
+        //       type: "object",
+        //       properties: {
+        //         code: {
+        //           type: "string",
+        //         },
+        //       },
+        //       required: ["code"],
+        //     },
+        //     country: {
+        //       type: "object",
+        //       properties: {
+        //         code: {
+        //           type: "string",
+        //         },
+        //       },
+        //       required: ["code"],
+        //     },
+        //   },
+        //   required: ["city", "country"],
+        // },
+        city: {
+          type: "string",
         },
         action: {
           type: "string",
@@ -80,7 +83,7 @@ export const onStatusSchema = {
       },
       required: [
         "domain",
-        "location",
+        // "location",
         "action",
         "core_version",
         "bap_id",
@@ -104,7 +107,7 @@ export const onStatusSchema = {
             },
             status: {
               type: "string",
-              enum: SRV_ORDER_STATE,
+              enum: AGRI_INPUT_STATE,
             },
             provider: {
               type: "object",
@@ -147,17 +150,12 @@ export const onStatusSchema = {
                   quantity: {
                     type: "object",
                     properties: {
-                      selected: {
-                        type: "object",
-                        properties: {
-                          count: {
-                            type: "integer",
-                          },
-                        },
-                        required: ["count"],
+                      count: {
+                        type: "integer",
+
                       },
                     },
-                    required: ["selected"],
+                    required: ["count"],
                   },
                 },
                 required: [
@@ -172,419 +170,326 @@ export const onStatusSchema = {
               type: "object",
               properties: {
                 name: {
-                  type: "string",
-                },
-                address: {
-                  type: "string",
-                },
-                state: {
-                  type: "object",
-                  properties: {
-                    name: {
-                      type: "string",
-                    },
-                  },
-                  required: ["name"],
-                },
-                city: {
-                  type: "object",
-                  properties: {
-                    name: {
-                      type: "string",
-                    },
-                  },
-                  required: ["name"],
-                },
-                tax_id: {
-                  type: "string",
-                },
-                email: {
-                  type: "string",
+                  type: "string"
                 },
                 phone: {
-                  type: "string",
+                  type: "string"
                 },
+                address: {
+                  type: "object",
+                  properties: {
+                    city: {
+                      type: "string"
+                    },
+                    name: {
+                      type: "string"
+                    },
+                    state: {
+                      type: "string"
+                    },
+                    country: {
+                      type: "string"
+                    },
+                    building: {
+                      type: "string"
+                    },
+                    locality: {
+                      type: "string"
+                    },
+                    area_code: {
+                      type: "string"
+                    }
+                  },
+                  required: [
+                    "city",
+                    "name",
+                    "state",
+                    "country",
+                    "building",
+                    "locality",
+                    "area_code"
+                  ]
+                }
               },
-
-              required: ["name", "address", "state", "city","phone"],
-            },
+              required: [
+                "name",
+                "phone",
+                "address"
+              ]
+            }
+            ,
             fulfillments: {
               type: "array",
               items: {
                 type: "object",
                 properties: {
                   id: {
-                    type: "string",
+                    type: "string"
                   },
-                  type: {
-                    type: "string",
-                  },
-                  tracking: {
-                    type: "boolean",
-                  },
-                  state: {
+                  end: {
                     type: "object",
                     properties: {
-                      descriptor: {
+                      time: {
                         type: "object",
                         properties: {
-                          code: {
-                            type: "string",
-                            enum: SRV_FULFILLMENT_STATE,
-                          },
-                        },
-                        required: ["code"],
+                          range: {
+                            type: "object",
+                            properties: {
+                              start: {
+                                type: "string",
+                                format: "date-time"
+                              },
+                              end: {
+                                type: "string",
+                                format: "date-time"
+                              }
+                            }
+                          }
+                        }
                       },
-                    },
-                    required: ["descriptor"],
-                  },
-                  stops: {
-                    type: "array",
-                    items: {
-                      type: "object",
-                      properties: {
-                        type: {
-                          type: "string",
-                        },
-                        location: {
-                          type: "object",
-                          properties: {
-                            id: {
-                              type: "string",
-                            },
-                            descriptor: {
-                              type: "object",
-                              properties: {
-                                name: {
-                                  type: "string",
-                                },
-                              },
-                              required: ["name"],
-                            },
-                            gps: {
-                              type: "string",
-                            },
-                            address: {
-                              type: "string",
-                            },
-                            city: {
-                              type: "object",
-                              properties: {
-                                name: {
-                                  type: "string",
-                                },
-                              },
-                              required: ["name"],
-                            },
-                            country: {
-                              type: "object",
-                              properties: {
-                                code: {
-                                  type: "string",
-                                },
-                              },
-                              required: ["code"],
-                            },
-                            area_code: {
-                              type: "string",
-                            },
-                            state: {
-                              type: "object",
-                              properties: {
-                                name: {
-                                  type: "string",
-                                },
-                              },
-                              required: ["name"],
-                            },
-                          },
-                          required: ["gps"],
-                        },
-                        time: {
-                          type: "object",
-                          properties: {
-                            range: {
-                              type: "object",
-                              properties: {
-                                start: {
-                                  type: "string",
-                                },
-                                end: {
-                                  type: "string",
-                                },
-                              },
-                              required: ["start", "end"],
-                            },
-                            timestamp: {
-                              type: "string",
-                            },
-                          },
-                          required: ["range"],
-                        },
-                        contact: {
-                          type: "object",
-                          properties: {
-                            phone: {
-                              type: "string",
-                            },
-                            email: {
-                              type: "string",
-                            },
-                          },
-                          required: ["phone", "email"],
-                        },
-                        person: {
-                          type: "object",
-                          properties: {
-                            name: {
-                              type: "string",
-                            },
-                          },
-                          required: ["name"],
-                        },
+                      person: {
+                        type: "object",
+                        properties: {
+                          name: {
+                            type: "string"
+                          }
+                        }
                       },
-                      required: [
-                        "type",
-                        "location",
-                        "time",
-                        "contact",
-                        "person",
-                      ],
-                    },
+                      contact: {
+                        type: "object",
+                        properties: {
+                          phone: {
+                            type: "string"
+                          }
+                        }
+                      },
+                      location: {
+                        type: "object",
+                        properties: {
+                          gps: {
+                            type: "string"
+                          },
+                          address: {
+                            type: "object",
+                            properties: {
+                              city: {
+                                type: "string"
+                              },
+                              name: {
+                                type: "string"
+                              },
+                              state: {
+                                type: "string"
+                              },
+                              country: {
+                                type: "string"
+                              },
+                              building: {
+                                type: "string"
+                              },
+                              locality: {
+                                type: "string"
+                              },
+                              area_code: {
+                                type: "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
                   },
-                },
-                required: ["id", "type", "state", "stops"],
-              },
+                  start: {
+                    type: "object"
+                  },
+                  state: {
+                    type: "object"
+                  }
+                }
+              }
             },
             quote: {
               type: "object",
               properties: {
+                ttl: {
+                  type: "string"
+                },
                 price: {
                   type: "object",
                   properties: {
-                    currency: {
-                      type: "string",
-                    },
                     value: {
-                      type: "string",
+                      type: "string"
                     },
+                    currency: {
+                      type: "string"
+                    }
                   },
-                  required: ["currency", "value"],
+                  required: [
+                    "value",
+                    "currency"
+                  ]
                 },
                 breakup: {
                   type: "array",
                   items: {
                     type: "object",
                     properties: {
-                      title: {
-                        type: "string",
+                      item: {
+                        type: "object",
+                        properties: {
+                          price: {
+                            type: "object",
+                            properties: {
+                              value: {
+                                type: "string"
+                              },
+                              currency: {
+                                type: "string"
+                              }
+                            },
+                            required: [
+                              "value",
+                              "currency"
+                            ]
+                          }
+                        }
                       },
                       price: {
                         type: "object",
                         properties: {
-                          currency: {
-                            type: "string",
-                          },
                           value: {
-                            type: "string",
+                            type: "string"
                           },
+                          currency: {
+                            type: "string"
+                          }
                         },
-                        required: ["currency", "value"],
+                        required: [
+                          "value",
+                          "currency"
+                        ]
                       },
-                      item: {
+                      title: {
+                        type: "string"
+                      },
+                      "@ondc/org/item_id": {
+                        type: "string"
+                      },
+                      "@ondc/org/title_type": {
+                        type: "string"
+                      },
+                      "@ondc/org/item_quantity": {
                         type: "object",
                         properties: {
-                          id: {
-                            type: "string",
-                          },
-                          quantity: {
-                            type: "object",
-                            properties: {
-                              selected: {
-                                type: "object",
-                                properties: {
-                                  count: {
-                                    type: "integer",
-                                  },
-                                },
-                                required: ["count"],
-                              },
-                            },
-                          },
-                          price: {
-                            type: "object",
-                            properties: {
-                              currency: {
-                                type: "string",
-                              },
-                              value: {
-                                type: "string",
-                              },
-                            },
-                            required: ["currency", "value"],
-                          },
-                        },
-                        required: ["id", "quantity", "price"],
-                      },
-                      tags: {
-                        type: "array",
-                        items: {
-                          type: "object",
-                          properties: {
-                            descriptor: {
-                              type: "object",
-                              properties: {
-                                code: {
-                                  type: "string",
-                                },
-                              },
-                              required: ["code"],
-                            },
-                            list: {
-                              type: "array",
-                              items: {
-                                type: "object",
-                                properties: {
-                                  descriptor: {
-                                    type: "object",
-                                    properties: {
-                                      code: {
-                                        type: "string",
-                                      },
-                                    },
-                                    required: ["code"],
-                                  },
-                                  value: {
-                                    type: "string",
-                                  },
-                                },
-                                required: ["descriptor"],
-                              },
-                            },
-                          },
-                          required: ["descriptor", "list"],
-                        },
-                      },
-                    },
-                    required: ["title", "price", "item", "tags"],
-                  },
-                },
-                ttl: {
-                  type: "string",
-                },
-              },
-              required: ["price", "breakup", "ttl"],
+                          count: {
+                            type: "integer"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
             },
-            payments: {
-              type: "array",
-              items: {
-                type: "object",
-                properties: {
-                  id: {
-                    type: "string",
-                  },
-                  collected_by: {
-                    type: "string",
-                  },
-                  params: {
+            payment: {
+              type: "object",
+              properties: {
+                type: {
+                  type: "string"
+                },
+                status: {
+                  type: "string"
+                },
+                "@ondc/org/settlement_basis": {
+                  type: "string"
+                },
+                "@ondc/org/settlement_window": {
+                  type: "string"
+                },
+                "@ondc/org/withholding_amount": {
+                  type: "string"
+                },
+                "@ondc/org/buyer_app_finder_fee_type": {
+                  type: "string"
+                },
+                "@ondc/org/buyer_app_finder_fee_amount": {
+                  type: "string"
+                },
+                "@ondc/org/settlement_details": {
+                  type: "array",
+                  items: {
                     type: "object",
                     properties: {
-                      amount: {
-                        type: "string",
+                      bank_name: {
+                        type: "string"
                       },
-                      currency: {
-                        type: "string",
+                      beneficiary_name: {
+                        type: "string"
                       },
-                      transaction_id: {
-                        type: "string",
+                      branch_name: {
+                        type: "string"
                       },
-                      bank_account_number: {
-                        type: "string",
+                      settlement_bank_account_no: {
+                        type: "string"
                       },
-                      virtual_payment_address: {
-                        type: "string",
+                      settlement_counterparty: {
+                        type: "string"
                       },
+                      settlement_ifsc_code: {
+                        type: "string"
+                      },
+                      settlement_phase: {
+                        type: "string"
+                      },
+                      settlement_type: {
+                        type: "string"
+                      }
                     },
                     required: [
-                      "amount",
-                      "currency",
-                      "transaction_id",
-                      "bank_account_number",
-                      "virtual_payment_address",
-                    ],
-                  },
-                  status: {
-                    type: "string",
-                  },
-                  type: {
-                    type: "string",
-                  },
-                  tags: {
-                    type: "array",
-                    items: {
-                      type: "object",
-                      properties: {
-                        descriptor: {
-                          type: "object",
-                          properties: {
-                            code: {
-                              type: "string",
-                            },
-                          },
-                          required: ["code"],
-                        },
-                        list: {
-                          type: "array",
-                          items: {
-                            type: "object",
-                            properties: {
-                              descriptor: {
-                                type: "object",
-                                properties: {
-                                  code: {
-                                    type: "string",
-                                  },
-                                },
-                                required: ["code"],
-                              },
-                              value: {
-                                type: "string",
-                              },
-                            },
-                            required: ["descriptor"],
-                          },
-                        },
-                      },
-                      required: ["descriptor", "list"],
+                      "bank_name",
+                      "beneficiary_name",
+                      "branch_name",
+                      "settlement_bank_account_no",
+                      "settlement_counterparty",
+                      "settlement_ifsc_code",
+                      "settlement_phase",
+                      "settlement_type"
+                    ]
+                  }
+                },
+                collected_by: {
+                  type: "string"
+                },
+                params: {
+                  type: "object",
+                  properties: {
+                    amount: {
+                      type: "string"
                     },
+                    currency: {
+                      type: "string"
+                    }
                   },
-                },
-                required: [
-                  "id",
-                  "collected_by",
-                  "params",
-                  "status",
-                  "type",
-                  "tags",
-                ],
+                  required: [
+                    "amount",
+                    "currency"
+                  ]
+                }
               },
-            },
-            documents: {
-              type: "array",
-              items: {
-                type: "object",
-                properties: {
-                  url: {
-                    type: "string",
-                  },
-                  label: {
-                    type: "string",
-                  },
-                },
-                required: ["url", "label"],
-              },
-            },
-
+              required: [
+                "type",
+                "status",
+                "@ondc/org/settlement_basis",
+                "@ondc/org/settlement_window",
+                "@ondc/org/withholding_amount",
+                "@ondc/org/buyer_app_finder_fee_type",
+                "@ondc/org/buyer_app_finder_fee_amount",
+                "@ondc/org/settlement_details",
+                "collected_by",
+                "params"
+              ]
+            }
+            ,
             created_at: {
               type: "string",
               format: "date-time",
@@ -604,7 +509,6 @@ export const onStatusSchema = {
             "fulfillments",
             "quote",
             "payments",
-            "documents",
             "created_at",
             "updated_at",
           ],

@@ -38,7 +38,6 @@ export const searchController = (
 				break;
 		}
 		const response = YAML.parse(file.toString());
-		console.log("req.body.contexttttttttttt",req.body.context)
 		return responseBuilder(
 			res,
 			next,

@@ -36,6 +36,7 @@ const intializeRequest = async (
 ) => {
 	try{
 		const { context } = transaction;
+
 		let scenario = "ack"
 		const cancel = {
 			context: {
@@ -48,6 +49,7 @@ const intializeRequest = async (
 				cancellation_reason_id,
 			},
 		};
+		console.log("Json",JSON.stringify(cancel.context))
 		await send_response(res, next, cancel, context.transaction_id, ACTTION_KEY.CANCEL, scenario = scenario);
 	}catch(error){
 		next(error)

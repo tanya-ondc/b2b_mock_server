@@ -651,7 +651,10 @@ export const quoteCreatorAgri = (items: Item[], providersItems?: any) => {
 			if (matchingItem) {
 				item.title = matchingItem?.descriptor?.name;
 				// item.price = matchingItem?.price;
-				item.available_quantity = matchingItem?.quantity;
+				item.available_quantity = {
+					available:matchingItem?.quantity?.available,
+					maximum:matchingItem?.quantity?.maximum
+				};
 				item.price = {
 					currency: matchingItem.price.currency,
 					value: matchingItem.price.value,
@@ -659,10 +662,9 @@ export const quoteCreatorAgri = (items: Item[], providersItems?: any) => {
 			}
 		}
 	});
-
 	items.forEach((item) => {
-		breakup = [
-			...chargesOnFulfillment,
+		console.log("itemsbreakup",item)
+		breakup = [...breakup,
 			{
 				title: item.title,
 				"@ondc/org/item_id": item.id,
@@ -702,6 +704,7 @@ export const quoteCreatorAgri = (items: Item[], providersItems?: any) => {
 				title: "Discount",
 			},
 		];
+		
 	});
 
 	//MAKE DYNAMIC BREACKUP USING THE DYANMIC ITEMS
@@ -712,9 +715,12 @@ export const quoteCreatorAgri = (items: Item[], providersItems?: any) => {
 			totalPrice += priceValue;
 		}
 	});
-
+	
 	const result = {
-		breakup,
+		breakup:[
+			...breakup,
+			...chargesOnFulfillment
+		],
 		price: {
 			currency: "INR",
 			value: totalPrice.toFixed(2),
@@ -1555,8 +1561,8 @@ export const updateFulfillments = (
 	try {
 		// Update fulfillments according to actions
 		console.log("domainnnnn", domain, fulfillments);
-		const rangeStart = new Date().setHours(new Date().getHours() + 2);
-		const rangeEnd = new Date().setHours(new Date().getHours() + 3);
+		const rangeStart = new Date().setHours(new Date().getHours() + 2).toString();
+		const rangeEnd = new Date().setHours(new Date().getHours() + 3).toString();
 
 		let updatedFulfillments: any = [];
 
@@ -1572,6 +1578,7 @@ export const updateFulfillments = (
 				"@ondc/org/category": "Standard Delivery",
 				"@ondc/org/provider_name": "Agro Fertilizer Store",
 				"@ondc/org/TAT": "P2D",
+				
 			};
 		} else {
 			fulfillmentObj = {
@@ -1612,6 +1619,7 @@ export const updateFulfillments = (
 				},
 			};
 			fulfillmentObj.type = "Delivery";
+		
 			delete fulfillmentObj.tags;
 		} else {
 			fulfillmentObj.stops = fulfillments[0]?.stops.map((ele: any) => {
@@ -1684,16 +1692,145 @@ export const updateFulfillments = (
 				break;
 			case ON_ACTION_KEY.ON_CANCEL:
 				updatedFulfillments = fulfillments;
-				updatedFulfillments = updatedFulfillments.map((fulfillment: any) => ({
-					...fulfillment,
-					state: {
-						...fulfillment.state,
-						descriptor: {
+				updatedFulfillments = updatedFulfillments.map((fulfillment: any) => {
+					if (fulfillment.type === "Delivery") {
+					  return {
+						...fulfillment,
+						state: {
+						  ...fulfillment.state,
+						  descriptor: {
 							code: FULFILLMENT_STATES.CANCELLED,
+						  },
 						},
-					},
-					rateable: undefined,
-				}));
+						end: {
+						  ...fulfillment.end,
+						  time: {
+							range: {
+							  end: rangeEnd,
+							  start: rangeStart,
+							},
+						  },
+						},
+						start: {
+						  ...fulfillment.start,
+						  time: {
+							range: {
+							  end: rangeEnd,
+							  start: rangeStart,
+							},
+						  },
+						},
+						tags: [
+						  {
+							code: "cancel_request",
+							list: [
+							  {
+								code: "reason_id",
+								value: "010",
+							  },
+							  {
+								code: "initiated_by",
+								value: "buyer-app.com",
+							  },
+							],
+						  },
+						  {
+							code: "precancel_state",
+							list: [
+							  {
+								code: "fulfillment_state",
+								value: "Pending",
+							  },
+							  {
+								code: "updated_at",
+								value: "2024-03-15T13:00:16.744Z",
+							  },
+							],
+						  },
+						],
+						rateable: undefined,
+					  };
+					} else if (fulfillment.type === "Cancel") {
+					  return {
+						...fulfillment,
+						state: {
+						  ...fulfillment.state,
+						  descriptor: {
+							code: FULFILLMENT_STATES.CANCELLED,
+						  },
+						},
+						tags: [
+						  {
+							code: "quote_trail",
+							list: [
+							  {
+								code: "type",
+								value: "item",
+							  },
+							  {
+								code: "id",
+								value: "13959",
+							  },
+							  {
+								code: "currency",
+								value: "INR",
+							  },
+							  {
+								code: "value",
+								value: "-1798.00",
+							  },
+							],
+						  },
+						  {
+							code: "quote_trail",
+							list: [
+							  {
+								code: "type",
+								value: "item",
+							  },
+							  {
+								code: "id",
+								value: "14574",
+							  },
+							  {
+								code: "currency",
+								value: "INR",
+							  },
+							  {
+								code: "value",
+								value: "-1640.00",
+							  },
+							],
+						  },
+						  {
+							code: "quote_trail",
+							list: [
+							  {
+								code: "type",
+								value: "delivery",
+							  },
+							  {
+								code: "id",
+								value: "5009-Delivery",
+							  },
+							  {
+								code: "currency",
+								value: "INR",
+							  },
+							  {
+								code: "value",
+								value: "-10.00",
+							  },
+							],
+						  },
+						],
+						rateable: undefined,
+					  };
+					}
+				  
+					// Default return if no conditions are met
+					return fulfillment;
+				  });
 				break;
 			case ON_ACTION_KEY.ON_UPDATE:
 				updatedFulfillments = fulfillments;

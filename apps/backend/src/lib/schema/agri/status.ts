@@ -11,29 +11,32 @@ export const statusSchema = {
           type: "string",
           enum: DOMAIN
         },
-        location: {
-          type: "object",
-          properties: {
-            city: {
-              type: "object",
-              properties: {
-                code: {
-                  type: "string",
-                },
-              },
-              required: ["code"],
-            },
-            country: {
-              type: "object",
-              properties: {
-                code: {
-                  type: "string",
-                },
-              },
-              required: ["code"],
-            },
-          },
-          required: ["city", "country"],
+        // location: {
+        //   type: "object",
+        //   properties: {
+        //     city: {
+        //       type: "object",
+        //       properties: {
+        //         code: {
+        //           type: "string",
+        //         },
+        //       },
+        //       required: ["code"],
+        //     },
+        //     country: {
+        //       type: "object",
+        //       properties: {
+        //         code: {
+        //           type: "string",
+        //         },
+        //       },
+        //       required: ["code"],
+        //     },
+        //   },
+        //   required: ["city", "country"],
+        // },
+        city:{
+          type:"string",
         },
         action: {
           type: "string",
@@ -81,7 +84,7 @@ export const statusSchema = {
       },
       required: [
         "domain",
-        "location",
+        // "location",
         "action",
         "core_version",
         "bap_id",

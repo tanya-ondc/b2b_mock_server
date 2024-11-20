@@ -34,7 +34,21 @@ export const SRV_ORDER_STATE = [
 	"COMPLETED",
 	"Pending",
 ];
+ 
+export const AGRI_INPUT_STATE=[
+	"ACCEPTED",
+	"IN-PROGRESS",
+	"COMPLETED"
+]
 
+export const AGRI_FULFILLMENT_STATE=[
+	"CREATED",
+	"PACKED",
+	"AGENT_ASSIGNED",
+	"ORDER_PICKED_UP",
+	"OUT_FOR_DELIVERY",
+	"DELIVERED"
+]
 export const GPS_PATTERN =
 	"^(-?[0-9]{1,3}(?:.[0-9]{6,15})?),( )*?(-?[0-9]{1,3}(?:.[0-9]{6,15})?)$";
 

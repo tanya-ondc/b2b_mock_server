@@ -176,6 +176,21 @@ export const INITIATE_FIELDS = {
 				logistics: [],
 			},
 		},
+		{
+			name: "flow",
+			placeholder: "Enter a flow",
+			type: "select",
+			// domainDepended: false,
+			// options: {
+			// 	retail:CITY_CODE,
+			// 	b2b: CITY_CODE,
+			// 	services: CITY_CODE,
+			// 	subscription:CITY_CODE,
+			// 	b2c: B2C_CITY_CODE,
+			// 	agri: CITY_CODE,
+			// 	logistics: [],
+			// },
+		},
 	],
 
 	select: [
@@ -268,6 +283,7 @@ export const INITIATE_FIELDS = {
 				b2b: ["payments", "fulfillments", "items"],
 				b2c: ["payments", "fulfillments", "items"],
 				logistics: ["fulfillments"],
+				agri:["items"]
 			},
 		},
 	],
@@ -294,7 +310,8 @@ export const INITIATE_FIELDS = {
 				b2c:["001"],
 				retail:["001"],
 				subscription:["001"],
-				logistics: ["TAT Breach, 007"], // Follow this format if new options are added.
+				logistics: ["TAT Breach, 007"],
+				agri:["010"] // Follow this format if new options are added.
 			},
 		},
 		{

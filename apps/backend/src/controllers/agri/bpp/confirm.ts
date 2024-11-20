@@ -20,6 +20,7 @@ export const confirmController = (
 		if (checkIfCustomized(req.body.message.order?.items)) {
 			return confirmServiceCustomizationController(req, res, next);
 		}
+		
 		confirmConsultationController(req, res, next);
 	} catch (error) {
 		return next(error);
