@@ -126,14 +126,14 @@ export const updateRejectController = (
 		const file = fs.readFileSync(
 			path.join(
 				AGRI_EXAMPLES_PATH,
-				"on_update/on_update_return_initiated_seller_reject.json.yaml"
+				"on_update/on_update_return_initiated_seller_reject.yaml"
 			)
 		);
 		const response = YAML.parse(file.toString());
-		
+		console.log("on_confirmmm",on_confirm)
 		const responseMessages = {
 			order: {
-				...response.value.message.order			
+				...response.value.message.order,	
 			},
 		};
 		console.log("responseatUpdateBpp",JSON.stringify(responseMessages))

@@ -81,7 +81,7 @@ function updateReject(message: any, update_target: string) {
 	const file = fs.readFileSync(
 		path.join(
 			AGRI_EXAMPLES_PATH,
-			"update/update_return_initiated_seller_reject.yaml.yaml"
+			"update/update_return_initiated_seller_reject.yaml"
 		)
 	);
 	const response = YAML.parse(file.toString());

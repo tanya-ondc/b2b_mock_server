@@ -185,10 +185,10 @@ export const AGRI_SCENARIOS = {
 		},
 	],
 	update: [
-		{
-			name:"update-items",
-			scenario:"items"
-		},
+		// {
+		// 	name:"update-items",
+		// 	scenario:"items"
+		// },
 		{
 			name: "liquidate",
 			scenario: "liquidate",
