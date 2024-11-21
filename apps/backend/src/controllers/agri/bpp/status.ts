@@ -266,7 +266,7 @@ const statusRequest = async (
 		}
 
 
-	return	responseBuilder(
+		responseBuilder(
 			res,
 			next,
 			req.body.context,

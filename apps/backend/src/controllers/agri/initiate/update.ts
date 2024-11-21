@@ -50,11 +50,11 @@ export const initiateUpdateController = async (
 		console.log("scenario", scenario);
 
 		switch (scenario) {
-			case "reject":
-				responseMessage = updatePaymentController(message, update_target);
+			case "liquidate":
+				responseMessage = updateliquidateController(message, update_target);
 				break;
 			default:
-				responseMessage = requoteRequest(message, update_target);
+				responseMessage = updateReject(message, update_target);
 				break;
 		}
 
@@ -77,57 +77,25 @@ export const initiateUpdateController = async (
 	}
 };
 
-function requoteRequest(message: any, update_target: string) {
-	let {
-		order: { items, payments, fulfillments, quote },
-	} = message;
-
-	items = items.map(
-		({
-			id,
-			parent_item_id,
-			...every
-		}: {
-			id: string;
-			parent_item_id: object;
-		}) => ({
-			...every,
-			id,
-			parent_item_id,
-		})
+function updateReject(message: any, update_target: string) {
+	const file = fs.readFileSync(
+		path.join(
+			AGRI_EXAMPLES_PATH,
+			"update/update_return_initiated_seller_reject.yaml.yaml"
+		)
 	);
-
-	fulfillments.map((itm: any) => {
-		itm.state.descriptor.code = "Completed";
-	});
+	const response = YAML.parse(file.toString());
 
 	const responseMessage = {
-		update_target:
-			update_target === "items"
-				? "fulfillments,items"
-				: update_target === "fulfillments"
-				? "fulfillments"
-				: "payments",
+		update_target:"items",
 		order: {
-			id: message.order.id,
-			provider: {
-				id: message.order.provider.id,
-			},
-			items,
-			payments,
-			fulfillments: fulfillments.map((itm: any) => ({
-				...itm,
-				stops: itm.stops.map((stop: any) => ({
-					...stop,
-				})),
-			})),
-			quote,
+			...response.value.message.order
 		},
 	};
 	return responseMessage;
 }
 
-function updatePaymentController(message: any, update_target: string) {
+function updateliquidateController(message: any, update_target: string) {
 	const file = fs.readFileSync(
 		path.join(
 			AGRI_EXAMPLES_PATH,
@@ -142,38 +110,7 @@ function updatePaymentController(message: any, update_target: string) {
 			...response.value.message.order
 		},
 	};
-	console.log()
 	return responseMessage;
 }
 
-function modifyItemsRequest(message: any, update_target: string) {
-	let {
-		order: { items, payments, quote },
-	} = message;
 
-	//LOGIC CHANGED ACCORDING TO SANDBOX QUERIES
-	const file = fs.readFileSync(
-		path.join(
-			AGRI_EXAMPLES_PATH,
-			"update/update_extend_renting_period.yaml"
-		)
-	);
-	const response = YAML.parse(file.toString());
-	const updatedPackageQuantity = items.map((ele: any) => {
-		ele.quantity.selected.count = 3; //Update quantity of tests
-		return ele;
-	});
-
-	const responseMessage = {
-		update_target: "items",
-		order: {
-			...response.value.message.order,
-			id: uuidv4(),
-			items: [updatedPackageQuantity[0]],
-			payments,
-			quote,
-		},
-	};
-
-	return responseMessage;
-}

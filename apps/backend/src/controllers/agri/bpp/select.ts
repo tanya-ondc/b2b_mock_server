@@ -107,13 +107,12 @@ const onSelectMultiSuccessfullorder = (
 						{
 							id:message.order.items[0].id,
 							fulfillment_id: "5009-Delivery",
+						},
+						{
+							id:message.order.items[1].id,
+							fulfillment_id: "5009-Delivery",
 						}
 					],
-					// items: message.order.items(({ id }: { id: any }) => ({
-					// 	id,
-					// 	fulfillment_id: "5009-Delivery",
-					// })),
-
 					fulfillments: updatedFulfillments,
 
 					quote: quoteCreatorAgri(

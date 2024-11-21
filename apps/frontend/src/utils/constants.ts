@@ -117,7 +117,7 @@ export const AGRI_SCENARIOS = {
 		},
 		{
 			name: "Incremental Pull.",
-			scenario: "incremental-pull.", // Select Domestic
+			scenario: "incremental-pull", // Select Domestic
 		},
 	],
 	on_search: [
@@ -186,16 +186,12 @@ export const AGRI_SCENARIOS = {
 	],
 	update: [
 		{
-			name: "Default",
-			scenario: "default",
+			name: "liquidate",
+			scenario: "liquidate",
 		},
 		{
 			name: "Reject",
 			scenario: "reject",
-		},
-		{
-			name:"items",
-			scenario:"items"
 		}
 	],
 	on_update: [

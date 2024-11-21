@@ -607,7 +607,7 @@ export const quoteCreatorB2c = (items: Item[], providersItems?: any) => {
 
 //AGRI DOMAIN QUOTE CREATORS
 export const quoteCreatorAgri = (items: Item[], providersItems?: any) => {
-	console.log("itemssssssssssss", items, providersItems);
+	// console.log("itemssssssssssss", items, providersItems);
 	//get price from on_search
 	let breakup: any[] = [];
 	const chargesOnFulfillment = [
@@ -640,7 +640,7 @@ export const quoteCreatorAgri = (items: Item[], providersItems?: any) => {
 		},
 	];
 
-	console.log("itemssssssssssssEachhhhhhhhhhhh", items);
+	// console.log("itemssssssssssssEachhhhhhhhhhhh", items);
 	items.forEach((item) => {
 		// Find the corresponding item in the second array
 		if (providersItems) {
@@ -663,7 +663,7 @@ export const quoteCreatorAgri = (items: Item[], providersItems?: any) => {
 		}
 	});
 	items.forEach((item) => {
-		console.log("itemsbreakup",item)
+		// console.log("itemsbreakup",item)
 		breakup = [...breakup,
 			{
 				title: item.title,
@@ -715,6 +715,13 @@ export const quoteCreatorAgri = (items: Item[], providersItems?: any) => {
 			totalPrice += priceValue;
 		}
 	});
+	chargesOnFulfillment.forEach((entry) => {
+		const priceValue = parseFloat(entry.price.value);
+		if (!isNaN(priceValue)) {
+			totalPrice += priceValue;
+		}
+	});
+
 	
 	const result = {
 		breakup:[
@@ -728,7 +735,7 @@ export const quoteCreatorAgri = (items: Item[], providersItems?: any) => {
 		ttl: "P1D",
 	};
 
-	console.log("resultttttttttt", JSON.stringify(result));
+	// console.log("resultttttttttt", JSON.stringify(result));
 	return result;
 };
 
@@ -1850,10 +1857,10 @@ export const updateFulfillments = (
 				break;
 		}
 
-		console.log(
-			"updatedFulfillmentssssssssssss",
-			JSON.stringify(updatedFulfillments)
-		);
+		// console.log(
+		// 	"updatedFulfillmentssssssssssss",
+		// 	JSON.stringify(updatedFulfillments)
+		// );
 		return updatedFulfillments;
 	} catch (err) {
 		console.log("Error occured in fulfillments method", err);
