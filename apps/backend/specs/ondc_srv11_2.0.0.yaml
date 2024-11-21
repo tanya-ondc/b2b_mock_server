@@ -2129,17 +2129,29 @@ paths:
                                               required:
                                                 - label
                                                 - schedule
-                                          required:
-                                            - id
-                                            - descriptor
-                                            - price
-                                            - fulfillment_ids
-                                            - category_ids
-                                            - payment_ids
-                                            - cancellation_terms
-                                            - tags
-                                    required:
-                                      - items                        
+                                          allOf:
+                                            - if:
+                                                properties:
+                                                  parent_item_id:
+                                                    const: ""
+                                              then:
+                                                required:
+                                                  - id
+                                                  - descriptor
+                                                  - price
+                                                  - fulfillment_ids
+                                                  - category_ids
+                                                  - payment_ids
+                                                  - cancellation_terms
+                                                  - tags
+                                              else:
+                                                required:
+                                                  - id
+                                                  - descriptor
+                                                  - price
+                                                  - category_ids
+                                                  - tags
+
                     - properties:
                         message:
                           properties:
