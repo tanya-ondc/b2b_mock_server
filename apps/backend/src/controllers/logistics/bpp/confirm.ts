@@ -17,6 +17,7 @@ export const confirmController = async (
 	res: Response,
 	next: NextFunction
 ) => {
+
 	// const sandboxMode = res.getHeader("mode") === "sandbox";
 	// if (!sandboxMode) {
 	// 	try {
