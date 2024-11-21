@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { responseBuilder } from "../../../lib/utils";
+import { logger, responseBuilder } from "../../../lib/utils";
 
 export const onSearchController = (
 	req: Request,
@@ -21,7 +21,7 @@ const onSearchSelectionController = (
 	try {
 		const { context, message } = req.body;
 		const resposneMessage = message;
-		
+		logger.info(`${context.bpp_uri}`)
 		return responseBuilder(
 			res,
 			next,

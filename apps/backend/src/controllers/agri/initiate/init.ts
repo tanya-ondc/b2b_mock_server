@@ -60,30 +60,6 @@ const intializeRequest = async (
 		);
 		const timestamp = new Date().toISOString();
 
-		// if(flow==="3")
-		const flowKey = await redis.keys(`${context.transaction_id}-flow*`)
-		const flow = flowKey[0].slice(-1)
-		logger.info(`flow is ${flow}`)
-		
-		if(flow==="3"){
-			items=items.map((itm:any)=>(
-				{...itm,
-					quantity: {
-						count: 2,
-					},
-				}
-			))
-		}else{
-			items=[
-				{
-					...items[0],
-					quantity:{
-						count:2,
-					}
-				}
-			]		
-		}
-
 		const init = {
 			context: {
 				...context,
@@ -96,7 +72,13 @@ const intializeRequest = async (
 			message: {
 				order: {
 					provider,
-					items,
+					items:items.map((itm:any)=>(
+						{...itm,
+							quantity: {
+								count: 2,
+							},
+						}
+					)),
 					billing: {
 						name:BILLING_DETAILS.name,
 						phone:BILLING_DETAILS.phone,

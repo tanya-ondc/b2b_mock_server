@@ -607,7 +607,7 @@ export const quoteCreatorB2c = (items: Item[], providersItems?: any) => {
 
 //AGRI DOMAIN QUOTE CREATORS
 export const quoteCreatorAgri = (items: Item[], providersItems?: any) => {
-	console.log("itemssssssssssss", items, providersItems);
+	// console.log("itemssssssssssss", items, providersItems);
 	//get price from on_search
 	let breakup: any[] = [];
 	const chargesOnFulfillment = [
@@ -640,7 +640,7 @@ export const quoteCreatorAgri = (items: Item[], providersItems?: any) => {
 		},
 	];
 
-	console.log("itemssssssssssssEachhhhhhhhhhhh", items);
+	// console.log("itemssssssssssssEachhhhhhhhhhhh", items);
 	items.forEach((item) => {
 		// Find the corresponding item in the second array
 		if (providersItems) {
@@ -663,7 +663,8 @@ export const quoteCreatorAgri = (items: Item[], providersItems?: any) => {
 		}
 	});
 	items.forEach((item) => {
-		console.log("itemsbreakup",item)
+		// console.log("itemsbreakup",item)
+		console.log("itemmsmsss",item)
 		breakup = [...breakup,
 			{
 				title: item.title,
@@ -675,7 +676,7 @@ export const quoteCreatorAgri = (items: Item[], providersItems?: any) => {
 				price: {
 					currency: "INR",
 					value: (
-						Number(item?.price?.value) * item?.quantity?.count?item?.quantity?.count:item?.quantity?.selected?.count
+						Number(item?.price?.value) * (item?.quantity?.count?Number(item?.quantity?.count):Number(item?.quantity?.selected?.count))
 					).toString(),
 				},
 				tags: item.tags,
@@ -706,6 +707,7 @@ export const quoteCreatorAgri = (items: Item[], providersItems?: any) => {
 		];
 		
 	});
+	console.log("breakuppp",breakup)
 
 	//MAKE DYNAMIC BREACKUP USING THE DYANMIC ITEMS
 	let totalPrice = 0;
@@ -715,6 +717,13 @@ export const quoteCreatorAgri = (items: Item[], providersItems?: any) => {
 			totalPrice += priceValue;
 		}
 	});
+	chargesOnFulfillment.forEach((entry) => {
+		const priceValue = parseFloat(entry.price.value);
+		if (!isNaN(priceValue)) {
+			totalPrice += priceValue;
+		}
+	});
+
 	
 	const result = {
 		breakup:[
@@ -728,7 +737,7 @@ export const quoteCreatorAgri = (items: Item[], providersItems?: any) => {
 		ttl: "P1D",
 	};
 
-	console.log("resultttttttttt", JSON.stringify(result));
+	// console.log("resultttttttttt", JSON.stringify(result));
 	return result;
 };
 
@@ -1560,7 +1569,6 @@ export const updateFulfillments = (
 ) => {
 	try {
 		// Update fulfillments according to actions
-		console.log("domainnnnn", domain, fulfillments);
 		const rangeStart = new Date().setHours(new Date().getHours() + 2).toString();
 		const rangeEnd = new Date().setHours(new Date().getHours() + 3).toString();
 
@@ -1583,10 +1591,10 @@ export const updateFulfillments = (
 		} else {
 			fulfillmentObj = {
 				id: fulfillments[0]?.id ? fulfillments[0].id : "F1",
-				stops: fulfillments[0]?.stops.map((ele: any) => {
-					ele.time.label = FULFILLMENT_LABELS.CONFIRMED;
-					return ele;
-				}),
+				// stops: fulfillments[0]?.stops.map((ele: any) => {
+				// 	ele.time.label = FULFILLMENT_LABELS.CONFIRMED;
+				// 	return ele;
+				// }),
 				tags: {
 					descriptor: {
 						code: "schedule",
@@ -1851,10 +1859,10 @@ export const updateFulfillments = (
 				break;
 		}
 
-		console.log(
-			"updatedFulfillmentssssssssssss",
-			JSON.stringify(updatedFulfillments)
-		);
+		// console.log(
+		// 	"updatedFulfillmentssssssssssss",
+		// 	JSON.stringify(updatedFulfillments)
+		// );
 		return updatedFulfillments;
 	} catch (err) {
 		console.log("Error occured in fulfillments method", err);

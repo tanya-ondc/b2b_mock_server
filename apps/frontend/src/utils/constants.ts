@@ -97,7 +97,7 @@ export const SERVICES_DOMAINS = {
 	AGRI_SERVICES: "ONDC:SRV14",
 	EQUIPMENT_HIRING_SERVICES: "ONDC:SRV17",
 	BID_AUCTION_SERVICE: "ONDC:SRV18",
-	PRINT_MEDIA:"ONDC:MEC10"
+	PRINT_MEDIA: "ONDC:MEC10"
 };
 
 export const ALL_DOMAINS = {
@@ -105,11 +105,110 @@ export const ALL_DOMAINS = {
 	Services: SERVICE_DOMAINS,
 	Subscription: SUBSCRIPTION_DOMAINS,
 	Logistics: LOGISTICS_DOMAINS,
-	Agri:AGRI_DOMAINS
+	Agri: AGRI_DOMAINS
 };
 
 export const CITY_CODE = ["std:080", "std:011"];
-
+export const AGRI_SCENARIOS = {
+	search: [
+		{
+			name: "Default",
+			scenario: "default",
+		},
+		{
+			name: "Incremental Pull.",
+			scenario: "incremental-pull", // Select Domestic
+		},
+	],
+	on_search: [
+		{
+			name: "Default",
+			scenario: "default",
+		},
+		{
+			name: "Incremental Pull.",
+			scenario: "incremental-pull", // Select Domestic
+		},
+	],
+	select: [
+		{
+			name: "Default",
+			scenario: "default",
+		},
+		{
+			name: "Multi Items Successfull Order",
+			scenario: "multi-items-successfull-order",
+		},
+	],
+	on_select: [
+		{
+			name: "Default",
+			scenario: "default",
+		},
+		{
+			name: "Multi Items Successfull Order",
+			scenario: "multi-items-successfull-order",
+		},
+		{
+			name: "Item_Out_Of_Stock",
+			scenario: "item-out-of-stock",
+		},
+	],
+	on_status: [
+		{
+			name: "Default",
+			scenario: "default",
+		},
+		{
+			name: "Accepted",
+			scenario: "accepted",
+		},
+		{
+			name: "Packed",
+			scenario: "packed",
+		},
+		{
+			name: "Agent Assigned",
+			scenario: "agent-assigned",
+		},
+		{
+			name: "Order Picked Up",
+			scenario: "order-picked-up",
+		},
+		{
+			name: "Out for Delivery",
+			scenario: "out-for-delivery",
+		},
+		{
+			name: "Delivery",
+			scenario: "delivery",
+		},
+	],
+	update: [
+		// {
+		// 	name:"update-items",
+		// 	scenario:"items"
+		// },
+		{
+			name: "liquidate",
+			scenario: "liquidate",
+		},
+		{
+			name: "Reject",
+			scenario: "reject",
+		},
+	],
+	on_update: [
+		{
+			name: "Default",
+			scenario: "default",
+		},
+		{
+			name: "Reject",
+			scenario: "reject", 
+		},
+	],
+};
 export const B2C_CITY_CODE = ["UN:SIN"];
 export const INITIATE_FIELDS = {
 	search: [
@@ -139,14 +238,14 @@ export const INITIATE_FIELDS = {
 			type: "select",
 			domainDepended: true,
 			options: {
-				retail:B2B_DOMAINS,
+				retail: B2B_DOMAINS,
 				b2b: B2B_DOMAINS,
 				services: SERVICE_DOMAINS,
-				subscription:SUBSCRIPTION_DOMAINS,
+				subscription: SUBSCRIPTION_DOMAINS,
 				// services:SERVICE_DOMAINS_OBJECT,
 				b2c: B2C_DOMAINS,
 				logistics: LOGISTICS_DOMAINS,
-				agri:AGRI_DOMAINS
+				agri: AGRI_DOMAINS
 			},
 		},
 		//DEPENDS ON DOMAIN B2B LOGISTICS
@@ -167,29 +266,24 @@ export const INITIATE_FIELDS = {
 			type: "select",
 			domainDepended: true,
 			options: {
-				retail:CITY_CODE,
+				retail: CITY_CODE,
 				b2b: CITY_CODE,
 				services: CITY_CODE,
-				subscription:CITY_CODE,
+				subscription: CITY_CODE,
 				b2c: B2C_CITY_CODE,
 				agri: CITY_CODE,
 				logistics: [],
 			},
 		},
 		{
-			name: "flow",
-			placeholder: "Enter a flow",
+			name: "scenario",
+			placeholder: "Select Scenario",
 			type: "select",
-			// domainDepended: false,
-			// options: {
-			// 	retail:CITY_CODE,
-			// 	b2b: CITY_CODE,
-			// 	services: CITY_CODE,
-			// 	subscription:CITY_CODE,
-			// 	b2c: B2C_CITY_CODE,
-			// 	agri: CITY_CODE,
-			// 	logistics: [],
-			// },
+			domainDepended: true,
+			options: {
+				agri: AGRI_SCENARIOS["search"].map((each) => each.scenario),
+
+			},
 		},
 	],
 
@@ -206,8 +300,10 @@ export const INITIATE_FIELDS = {
 			domainDepended: true,
 			options: {
 				retail: B2B_SCENARIOS["select"].map((each) => each.scenario),
-				subscription:PRINT_MEDIA_SCENARIOS["select"].map((each) => each.scenario),
+				subscription: PRINT_MEDIA_SCENARIOS["select"].map((each) => each.scenario),
 				b2b: B2B_SCENARIOS["select"].map((each) => each.scenario),
+				agri: AGRI_SCENARIOS["select"].map((each) => each.scenario),
+
 			},
 		},
 	],
@@ -283,7 +379,7 @@ export const INITIATE_FIELDS = {
 				b2b: ["payments", "fulfillments", "items"],
 				b2c: ["payments", "fulfillments", "items"],
 				logistics: ["fulfillments"],
-				agri:["items"]
+				agri: AGRI_SCENARIOS["update"].map((each) => each.scenario)
 			},
 		},
 	],
@@ -305,13 +401,13 @@ export const INITIATE_FIELDS = {
 			type: "text",
 			domainDepended: true,
 			options: {
-				services:["001"],
-				b2b:["001"],
-				b2c:["001"],
-				retail:["001"],
-				subscription:["001"],
+				services: ["001"],
+				b2b: ["001"],
+				b2c: ["001"],
+				retail: ["001"],
+				subscription: ["001"],
 				logistics: ["TAT Breach, 007"],
-				agri:["010"] // Follow this format if new options are added.
+				agri: ["010"] // Follow this format if new options are added.
 			},
 		},
 		{

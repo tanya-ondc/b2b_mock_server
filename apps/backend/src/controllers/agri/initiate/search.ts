@@ -20,10 +20,10 @@ export const initiateSearchController = async (
 	next: NextFunction
 ) => {
 	try {
-		const { bpp_uri, city, domain,flow } = req.body;
-		console.log("flowww",flow)
+		const { bpp_uri, city, domain } = req.body;
+		const {scenario}=req.query
 		let onSearch, file;
-
+		// const scenario="incremental"
 		switch (domain) {
 			case SERVICES_DOMAINS.AGRI_INPUT:
 				file = fs.readFileSync(
@@ -31,7 +31,6 @@ export const initiateSearchController = async (
 				);
 				onSearch = YAML.parse(file.toString());
 				break;
-
 			default:
 				file = fs.readFileSync(
 					path.join(AGRI_EXAMPLES_PATH, "search/search.yaml")
@@ -44,12 +43,8 @@ export const initiateSearchController = async (
 		const transaction_id = uuidv4();
 		const timestamp = new Date().toISOString();
 
-		try{
-			logger.info(`${transaction_id}-flow-${flow}`)
-			await redis.set(`${transaction_id}-flow-${flow}`,flow)
-		}catch(err){
-			logger.error(err)
-		}
+		
+
 
 		search = {
 			...search,
@@ -64,8 +59,39 @@ export const initiateSearchController = async (
 				message_id: uuidv4(),
 			},
 		};
+		// logger.info(`scenario is ${scenario}`)
+		switch(scenario){
+			case "incremental-pull":
+					search={
+						...search
+						,message:{
+							intent:{
+								payment:search.message.intent.payment,
+								tags: [
+									{
+										"code": "catalog_inc",
+										"list": [
+											{
+												"code": "start_time",
+												"value": "2024-03-15T08:38:36.933Z"
+											},
+											{
+												"code": "end_time",
+												"value": "2024-03-15T08:46:31.068Z"
+											}
+										]
+									}
+								],
+							}
+						}
+					}
+					break;
+			default:
+				search={...search}
+				break;	
+		}
 		search.bpp_uri = bpp_uri;
-		await send_response(res, next, search, transaction_id, ACTTION_KEY.SEARCH);
+		await send_response(res, next, search, transaction_id, ACTTION_KEY.SEARCH,scenario);
 	} catch (error) {
 		return next(error);
 	}

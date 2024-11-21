@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 import {
+    AGRI_EXAMPLES_PATH,
 	quoteCreatorHealthCareService,
 	quoteCreatorService,
 	redisFetchToServer,
@@ -8,6 +9,8 @@ import {
 	send_nack,
 	updateFulfillments,
 } from "../../../lib/utils";
+import fs from "fs";
+import YAML from "yaml";
 import { ON_ACTION_KEY } from "../../../lib/utils/actionOnActionKeys";
 import { ERROR_MESSAGES } from "../../../lib/utils/responseMessages";
 import {
@@ -15,6 +18,7 @@ import {
 	FULFILLMENT_STATES,
 	SERVICES_DOMAINS,
 } from "../../../lib/utils/apiConstants";
+import path from "path";
 
 export const updateController = async (
 	req: Request,
@@ -23,12 +27,7 @@ export const updateController = async (
 ) => {
 	try {
 		let { scenario } = req.query;
-		scenario =
-			scenario === "fulfillments"
-				? "reschedule"
-				: scenario === "items"
-				? "modifyItems"
-				: "payments";
+		scenario=scenario?scenario:"reject"
 
 		const on_confirm = await redisFetchToServer(
 			ON_ACTION_KEY.ON_CONFIRM,
@@ -57,16 +56,13 @@ export const updateController = async (
 		);
 		req.body.message.order.fulfillments = updatedFulfillments;
 		req.body.on_confirm = on_confirm;
-
+		console.log("scenario",scenario)
 		switch (scenario) {
-			case "reschedule":
-				updateRescheduleController(req, res, next);
+			case "liquidate":
+				updateliquidateController(req, res, next);
 				break;
-			case "payments":
-				updatePaymentController(req, res, next);
-				break;
-			case "modifyItems":
-				updateRescheduleAndItemsController(req, res, next);
+			case "reject":
+				updateRejectController(req, res, next);
 				break;
 			default:
 				updateRequoteController(req, res, next);
@@ -86,19 +82,20 @@ export const updateRequoteController = (
 	try {
 		const { context, message, on_confirm } = req.body;
 		//CREATED COMMON RESPONSE MESSAGE FOR ALL SCENRIO AND UPDATE ACCORDENGLY IN FUNCTIONS
-
+		const file = fs.readFileSync(
+			path.join(
+				AGRI_EXAMPLES_PATH,
+				"on_update/on_update_status.yaml"
+			)
+		);
+		const response = YAML.parse(file.toString());
+		
 		const responseMessages = {
 			order: {
-				...message.order,
-				id: uuidv4(),
-				status: FULFILLMENT_STATES.PENDING,
-				ref_order_ids: [on_confirm?.message?.order?.id],
-				provider: {
-					id: on_confirm?.message?.order?.provider.id,
-				},
+				...response.value.message.order			
 			},
 		};
-
+		console.log("responseatUpdateBpp",JSON.stringify(responseMessages))
 		return responseBuilder(
 			res,
 			next,
@@ -110,7 +107,7 @@ export const updateRequoteController = (
 					: `/${ON_ACTION_KEY.ON_UPDATE}`
 			}`,
 			`${ON_ACTION_KEY.ON_UPDATE}`,
-			"services"
+			"agri"
 		);
 	} catch (error) {
 		next(error);
@@ -118,194 +115,83 @@ export const updateRequoteController = (
 };
 
 //HANDLE UPDATE PAYMENTS AFTER ITEMS UPDATE
-export const updatePaymentController = (
-	req: Request,
-	res: Response,
-	next: NextFunction
-) => {
-	const { context, message, on_confirm } = req.body;
-	const responseMessages = {
-		order: {
-			...message.order,
-			id: uuidv4(),
-			status: FULFILLMENT_STATES.PENDING,
-			ref_order_ids: [on_confirm?.message?.order?.id],
-			provider: {
-				id: on_confirm?.message?.order?.provider.id,
-			},
-		},
-	};
-
-	return responseBuilder(
-		res,
-		next,
-		context,
-		responseMessages,
-		`${req.body.context.bap_uri}${
-			req.body.context.bap_uri.endsWith("/")
-				? ON_ACTION_KEY.ON_UPDATE
-				: `/${ON_ACTION_KEY.ON_UPDATE}`
-		}`,
-		`${ON_ACTION_KEY.ON_UPDATE}`,
-		"services"
-	);
-};
-
-//HANDLE FULFILLMENT TARGET (TIME SLOT RESCHEDULE,ITEMS AND PATIENTS)(MODIFY NUMBER OF PATIENTS AND NUMBER OF TEST)
-export const updateRescheduleAndItemsController = (
+export const updateRejectController = (
 	req: Request,
 	res: Response,
 	next: NextFunction
 ) => {
 	try {
-		const {
-			context,
-			message: { order },
-			on_confirm,
-			providersItems,
-		} = req.body;
-
-		const domain = context?.domain;
-		//Add total quantity of items using coming request and on_confirm order
-
-		//on_confirm items selected
-		const on_confirm_quantity =
-			on_confirm?.message?.order?.items[0]?.quantity?.selected?.count;
-
-		const update_item_quantity = Number(
-			order?.items[0]?.quantity?.unitized?.measure?.value
-				? order?.items[0]?.quantity?.unitized?.measure?.value
-				: "2"
+		const { context, message, on_confirm } = req.body;
+		//CREATED COMMON RESPONSE MESSAGE FOR ALL SCENRIO AND UPDATE ACCORDENGLY IN FUNCTIONS
+		const file = fs.readFileSync(
+			path.join(
+				AGRI_EXAMPLES_PATH,
+				"on_update/on_update_return_initiated_seller_reject.yaml"
+			)
 		);
-
-		if (order?.items[0]?.quantity?.unitized?.measure?.value) {
-			order.items[0].quantity.unitized.measure.value =
-				on_confirm_quantity + update_item_quantity;
-		}
-
-		//UPDATE PAYMENT OBJECT AND QUOTE ACCORDING TO ITEMS AND PERSONS
-		const quote =
-			domain === SERVICES_DOMAINS.SERVICES
-				? quoteCreatorService(order?.items, providersItems?.items)
-				: domain === SERVICES_DOMAINS.BID_ACTION_SERVICES
-				? quoteCreatorHealthCareService(
-						order?.items,
-						providersItems?.items,
-						"",
-						order?.fulfillments[0]?.type,
-						"bid_auction_service"
-				  )
-				: domain === SERVICES_DOMAINS.AGRI_EQUIPMENT
-				? quoteCreatorHealthCareService(
-						order?.items,
-						providersItems?.items,
-						providersItems?.offers,
-						order?.fulfillments[0]?.type,
-						"agri-equipment-hiring"
-				  )
-				: quoteCreatorHealthCareService(
-						order?.items,
-						providersItems?.items,
-						"",
-						order?.fulfillments[0]?.type
-				  );
-
-		//UPDATE PAYMENT OBJECT ACCORDING TO QUANTITY
-		const updatedPaymentObj = updatePaymentObject(
-			order?.payments,
-			(
-				update_item_quantity * parseFloat(order.items[0]?.price?.value)
-			).toString()
-		);
-
-		const responseMessage = {
+		const response = YAML.parse(file.toString());
+		console.log("on_confirmmm",on_confirm)
+		const responseMessages = {
 			order: {
-				...order,
-				id: uuidv4(),
-				ref_order_ids: [on_confirm?.message?.order?.id],
-				payments: updatedPaymentObj,
-				quote,
+				...response.value.message.order,	
 			},
 		};
-
+		console.log("responseatUpdateBpp",JSON.stringify(responseMessages))
 		return responseBuilder(
 			res,
 			next,
 			context,
-			responseMessage,
+			responseMessages,
 			`${req.body.context.bap_uri}${
 				req.body.context.bap_uri.endsWith("/")
 					? ON_ACTION_KEY.ON_UPDATE
 					: `/${ON_ACTION_KEY.ON_UPDATE}`
 			}`,
 			`${ON_ACTION_KEY.ON_UPDATE}`,
-			"services"
+			"agri"
 		);
 	} catch (error) {
 		next(error);
 	}
 };
 
-//UPDATE PAYMENT OBJECT FUNCTION HANDLE HERE
-function updatePaymentObject(payments: any, quotePrice: any) {
-	try {
-		//GET TOTAL AMOUNT OF PAYMENT
-
-		payments.push({
-			...payments[0],
-			id: "PY2",
-			params: {
-				...payments[0].params,
-				amount: quotePrice,
-				transaction_id: uuidv4(),
-			},
-			status: "NOT-PAID",
-		});
-		return payments;
-	} catch (error) {
-		console.log("error ocuured in payment object:", error);
-	}
-}
-
-export const updateRescheduleController = (
+export const updateliquidateController = (
 	req: Request,
 	res: Response,
 	next: NextFunction
 ) => {
-	const {
-		context,
-		message: { order },
-	} = req.body;
+	try {
+		const { context, message, on_confirm } = req.body;
+		//CREATED COMMON RESPONSE MESSAGE FOR ALL SCENRIO AND UPDATE ACCORDENGLY IN FUNCTIONS
+		const file = fs.readFileSync(
+			path.join(
+				AGRI_EXAMPLES_PATH,
+				"on_update/on_update_return_initiated_seller_liquidates.yaml"
+			)
+		);
+		const response = YAML.parse(file.toString());
+		
+		const responseMessages = {
+			order: {
+				...response.value.message.order			
+			},
+		};
+		console.log("responseatUpdateBpp",JSON.stringify(responseMessages))
+		return responseBuilder(
+			res,
+			next,
+			context,
+			responseMessages,
+			`${req.body.context.bap_uri}${
+				req.body.context.bap_uri.endsWith("/")
+					? ON_ACTION_KEY.ON_UPDATE
+					: `/${ON_ACTION_KEY.ON_UPDATE}`
+			}`,
+			`${ON_ACTION_KEY.ON_UPDATE}`,
+			"agri"
+		);
+	} catch (error) {
+		next(error);
+	}
 
-	const responseMessage = {
-		order: {
-			...order,
-			fulfillments: [
-				{
-					...order.fulfillments[0],
-					stops: order.fulfillments[0].stops.map((stop: any) => ({
-						...stop,
-						time:
-							stop.type === "end"
-								? { ...stop.time, label: FULFILLMENT_LABELS.CONFIRMED }
-								: stop.time,
-					})),
-				},
-			],
-		},
-	};
-
-	return responseBuilder(
-		res,
-		next,
-		context,
-		responseMessage,
-		`${req.body.context.bap_uri}${
-			req.body.context.bap_uri.endsWith("/")
-				? ON_ACTION_KEY.ON_UPDATE
-				: `/${ON_ACTION_KEY.ON_UPDATE}`
-		}`,
-		`${ON_ACTION_KEY.ON_UPDATE}`,
-		"services"
-	);
 };

@@ -13,6 +13,7 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import { set, eq } from "lodash";
 import _ from "lodash";
+import { count } from "console";
 
 export const initiateSelectController = async (
 	req: Request,
@@ -40,14 +41,11 @@ const intializeRequest = async (
 ) => {
 	try {
 		const { context, message } = transaction;
+		const {scenario}=req.query
 		const { transaction_id } = context;
 		const providers = message?.catalog["bpp/providers"];
 		const { id, locations } = providers?.[0];
 		let items ;
-
-		const flowKey = await redis.keys(`${transaction_id}-flow*`)
-		const flow = flowKey[0].slice(-1)
-		logger.info(`flow is ${flow}`)
 
 		items = providers[0].items = 
 			providers?.[0]?.items.map(
@@ -59,8 +57,8 @@ const intializeRequest = async (
 					location_id: string[];
 				}) => ( {id, location_id })
 			)
-
-		const select = {
+			console.log("items",items)
+		let select = {
 			context: {
 				...context,
 				timestamp: new Date().toISOString(),
@@ -99,6 +97,45 @@ const intializeRequest = async (
 				},
 			},
 		};
+
+		switch(scenario){
+			case "multi-items-successfull-order":
+				select={
+					...select,
+					message:{
+						order:{
+							...select.message.order,
+							items:items.map((itm:any)=>(
+								{
+									...itm,
+									quantity:{
+										count:2
+									}
+								}
+							))
+						}
+					}
+				}
+				break;
+			default:
+				select={
+					...select,
+					message:{
+						order:{
+							...select.message.order,
+							items:[{
+								...items[0],
+								quantity:{
+									count:2
+								}
+							}]
+						}
+					}
+				}
+				break;
+		}
+
+
 		console.log("items",JSON.stringify(select.message.order.items))
 		await send_response(res, next, select, transaction_id, "select");
 	} catch (error) {

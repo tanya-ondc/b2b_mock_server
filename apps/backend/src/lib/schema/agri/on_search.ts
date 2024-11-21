@@ -241,7 +241,7 @@ export const onSearchSchema = {
 										},
 									},
 								},
-								required: ["id", "ttl", "tags", "time", "items"],
+								required: ["id",  "time", "items"],
 							},
 						},
 						"bpp/descriptor": {
@@ -287,7 +287,8 @@ export const onSearchSchema = {
 							],
 						},
 					},
-					required: ["bpp/providers", "bpp/descriptor"],
+					// required: ["bpp/providers", "bpp/descriptor"],
+					required:["bpp/providers"]
 				},
 			},
 			required: ["catalog"],

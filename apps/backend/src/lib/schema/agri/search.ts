@@ -103,7 +103,7 @@ export const searchSchema = {
 							required: ["type"],
 						},
 					},
-					required: ["payment", "fulfillment"], // Adjust required fields.
+					required: ["payment"], // Adjust required fields.
 				},
 			},
 			required: ["intent"],
