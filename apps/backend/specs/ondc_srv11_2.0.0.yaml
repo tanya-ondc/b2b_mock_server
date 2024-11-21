@@ -2139,17 +2139,17 @@ paths:
                                                   - id
                                                   - descriptor
                                                   - price
-                                                  - fulfillment_ids
                                                   - category_ids
-                                                  - payment_ids
-                                                  - cancellation_terms
                                                   - tags
                                               else:
                                                 required:
                                                   - id
                                                   - descriptor
                                                   - price
+                                                  - fulfillment_ids
                                                   - category_ids
+                                                  - payment_ids
+                                                  - cancellation_terms
                                                   - tags
 
                     - properties:
