@@ -1560,7 +1560,6 @@ export const updateFulfillments = (
 ) => {
 	try {
 		// Update fulfillments according to actions
-		console.log("domainnnnn", domain, fulfillments);
 		const rangeStart = new Date().setHours(new Date().getHours() + 2).toString();
 		const rangeEnd = new Date().setHours(new Date().getHours() + 3).toString();
 
