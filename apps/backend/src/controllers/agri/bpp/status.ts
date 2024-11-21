@@ -11,7 +11,7 @@ import {
 	SERVICES_DOMAINS,
 } from "../../../lib/utils/apiConstants";
 import {
-    AGRI_BPP_MOCKSERVER_URL,
+	AGRI_BPP_MOCKSERVER_URL,
 	Fulfillment,
 	MOCKSERVER_ID,
 	Stop,
@@ -82,7 +82,7 @@ const statusRequest = async (
 
 			//FIND NEXT STATUS
 			let lastStatusIndex: any = 0;
-			console.log("domainatstatusbpp",domain)
+			console.log("domainatstatusbpp", domain)
 			switch (domain) {
 				case SERVICES_DOMAINS.SERVICES || SERVICES_DOMAINS.AGRI_EQUIPMENT:
 					lastStatusIndex = EQUIPMENT_HIRING_STATUS.indexOf(lastStatus);
@@ -139,7 +139,6 @@ const statusRequest = async (
 			}
 		}
 		scenario = scenario ? scenario : next_status;
-		console.log("message.order",JSON.stringify(message.order))
 		const responseMessage: any = {
 			order: {
 				id: message.order.id,
@@ -159,9 +158,9 @@ const statusRequest = async (
 								code: AGRI_HEALTHCARE_STATUS_OBJECT.IN_TRANSIT,
 							},
 						},
-						end:fulfillment.end,
-						type:"Delivery",
-						start:fulfillment.start,
+						end: fulfillment.end,
+						type: "Delivery",
+						start: fulfillment.start,
 						// stops: fulfillment.stops.map((stop: Stop) => {
 						// 	const demoObj = {
 						// 		...stop,
@@ -198,107 +197,11 @@ const statusRequest = async (
 			},
 		};
 
-		// switch (scenario) {
-		// 	case AGRI_HEALTHCARE_STATUS_OBJECT.IN_TRANSIT:
-		// 		responseMessage.order.fulfillments.forEach(
-		// 			(fulfillment: Fulfillment) => {
-		// 				fulfillment.state.descriptor.code =
-		// 					AGRI_HEALTHCARE_STATUS_OBJECT.IN_TRANSIT;
-		// 				// fulfillment.stops.forEach((stop: Stop) =>
-		// 				// 	stop?.authorization ? (stop.authorization = undefined) : undefined
-		// 				// );
-		// 			}
-		// 		);
-		// 		break;
-		// 	case AGRI_HEALTHCARE_STATUS_OBJECT.AT_LOCATION:
-		// 		responseMessage.order.fulfillments.forEach(
-		// 			(fulfillment: Fulfillment) => {
-		// 				fulfillment.state.descriptor.code =
-		// 					AGRI_HEALTHCARE_STATUS_OBJECT.AT_LOCATION;
-		// 				// fulfillment.stops.forEach((stop: Stop) =>
-		// 				// 	stop?.authorization
-		// 				// 		? (stop.authorization = {
-		// 				// 				...stop.authorization,
-		// 				// 				status: "valid",
-		// 				// 		  })
-		// 				// 		: undefined
-		// 				// );
-		// 			}
-		// 		);
-		// 		break;
-		// 	case AGRI_HEALTHCARE_STATUS_OBJECT.COLLECTED_BY_AGENT:
-		// 		responseMessage.order.fulfillments.forEach(
-		// 			(fulfillment: Fulfillment) => {
-		// 				fulfillment.state.descriptor.code =
-		// 					AGRI_HEALTHCARE_STATUS_OBJECT.COLLECTED_BY_AGENT;
-		// 			}
-		// 		);
-		// 		break;
-		// 	case AGRI_HEALTHCARE_STATUS_OBJECT.RECEIVED_AT_LAB:
-		// 		responseMessage.order.fulfillments.forEach(
-		// 			(fulfillment: Fulfillment) => {
-		// 				fulfillment.state.descriptor.code =
-		// 					AGRI_HEALTHCARE_STATUS_OBJECT.RECEIVED_AT_LAB;
-		// 			}
-		// 		);
-		// 		break;
-		// 	case AGRI_HEALTHCARE_STATUS_OBJECT.TEST_COMPLETED:
-		// 		responseMessage.order.fulfillments.forEach(
-		// 			(fulfillment: Fulfillment) => {
-		// 				fulfillment.state.descriptor.code =
-		// 					AGRI_HEALTHCARE_STATUS_OBJECT.TEST_COMPLETED;
-		// 				fulfillment.stops.forEach((stop: Stop) =>
-		// 					stop?.authorization ? (stop.authorization = undefined) : undefined
-		// 				);
-		// 			}
-		// 		);
-		// 		break;
-		// 	case AGRI_HEALTHCARE_STATUS_OBJECT.REPORT_GENERATED:
-		// 		responseMessage.order.fulfillments.forEach(
-		// 			(fulfillment: Fulfillment) => {
-		// 				fulfillment.state.descriptor.code =
-		// 					AGRI_HEALTHCARE_STATUS_OBJECT.REPORT_GENERATED;
-		// 			}
-		// 		);
-		// 		break;
-		// 	case AGRI_HEALTHCARE_STATUS_OBJECT.REPORT_SHARED:
-		// 		responseMessage.order.status = AGRI_HEALTHCARE_STATUS_OBJECT.COMPLETED;
-		// 		responseMessage.order.fulfillments.forEach(
-		// 			(fulfillment: Fulfillment) => {
-		// 				fulfillment.state.descriptor.code =
-		// 					AGRI_HEALTHCARE_STATUS_OBJECT.REPORT_SHARED;
-		// 			}
-		// 		);
-		// 		break;
-		// 	case AGRI_HEALTHCARE_STATUS_OBJECT.COMPLETED:
-		// 		responseMessage.order.status = AGRI_HEALTHCARE_STATUS_OBJECT.COMPLETED;
-		// 		responseMessage.order.fulfillments.forEach(
-		// 			(fulfillment: Fulfillment) => {
-		// 				fulfillment.state.descriptor.code =
-		// 					AGRI_HEALTHCARE_STATUS_OBJECT.REPORT_SHARED;
-		// 			}
-		// 		);
-		// 		break;
-		// 	case AGRI_HEALTHCARE_STATUS_OBJECT.PLACED:
-		// 		// responseMessage.order.status = AGRI_HEALTHCARE_STATUS_OBJECT.COMPLETED;
-		// 		responseMessage.order.fulfillments.forEach(
-		// 			(fulfillment: Fulfillment) => {
-		// 				fulfillment.state.descriptor.code =
-		// 					AGRI_HEALTHCARE_STATUS_OBJECT.PLACED;
-		// 			}
-		// 		);
-		// 		break;
-		// 	case AGRI_HEALTHCARE_STATUS_OBJECT.CANCEL:
-		// 		responseMessage.order.status = "Cancelled";
-		// 		break;
-		// 	default: //service started is the default case
-		// 		break;
-		// }
 		switch (scenario) {
 			case AGRI_STATUS_OBJECT.CREATED:
 				responseMessage.order.fulfillments.forEach(
 					(fulfillment: Fulfillment) => {
-						fulfillment.state.descriptor.code ="Pending";
+						fulfillment.state.descriptor.code = "Pending";
 						// fulfillment.stops.forEach((stop: Stop) =>
 						// 	stop?.authorization ? (stop.authorization = undefined) : undefined
 						// );
@@ -361,17 +264,16 @@ const statusRequest = async (
 			default: //service started is the default case
 				break;
 		}
-		
-		
-		responseBuilder(
+
+
+	return	responseBuilder(
 			res,
 			next,
 			req.body.context,
 			responseMessage,
-			`${req.body.context.bap_uri}${
-				req.body.context.bap_uri.endsWith("/")
-					? ON_ACTION_KEY.ON_STATUS
-					: `/${ON_ACTION_KEY.ON_STATUS}`
+			`${req.body.context.bap_uri}${req.body.context.bap_uri.endsWith("/")
+				? ON_ACTION_KEY.ON_STATUS
+				: `/${ON_ACTION_KEY.ON_STATUS}`
 			}`,
 			`${ON_ACTION_KEY.ON_STATUS}`,
 			"agri"
@@ -379,176 +281,269 @@ const statusRequest = async (
 
 		const onStatusCreated = {
 			...responseMessage, // spread the entire response
-			message: {
-			  ...responseMessage.message, // spread message to retain its content
-			  fulfillments: responseMessage.message.fulfillments.map((fulfillment:any) => ({
-				...fulfillment, // spread the fulfillment object
-				state: {
-				  ...fulfillment.state, // spread state to retain other state details
-				  descriptor: {
-					...fulfillment.state.descriptor, // spread descriptor to modify only the code
-					code: "Pending" // modify the code to "created"
-				  }
-				}
-			  }))
+			order: {
+				...responseMessage.order, // spread message to retain its content
+				fulfillments: responseMessage.order.fulfillments.map((fulfillment: any) => ({
+					...fulfillment, // spread the fulfillment object
+					state: {
+						...fulfillment.state, // spread state to retain other state details
+						descriptor: {
+							...fulfillment.state.descriptor, // spread descriptor to modify only the code
+							code: "Pending" // modify the code to "created"
+						}
+					}
+				}))
 			}
-		  };
-		const onStatusPacked={
+		};
+		const onStatusPacked = {
 			...responseMessage, // spread the entire response
-			message: {
-			  ...responseMessage.message, // spread message to retain its content
-			  fulfillments: responseMessage.message.fulfillments.map((fulfillment:any) => ({
-				...fulfillment, // spread the fulfillment object
-				state: {
-				  ...fulfillment.state, // spread state to retain other state details
-				  descriptor: {
-					...fulfillment.state.descriptor, // spread descriptor to modify only the code
-					code: "PACKED" // modify the code to "created"
-				  }
-				}
-			  }))
+			order: {
+				...responseMessage.order, // spread message to retain its content
+				fulfillments: responseMessage.order.fulfillments.map((fulfillment: any) => ({
+					...fulfillment, // spread the fulfillment object
+					state: {
+						...fulfillment.state, // spread state to retain other state details
+						descriptor: {
+							...fulfillment.state.descriptor, // spread descriptor to modify only the code
+							code: "PACKED" // modify the code to "created"
+						}
+					}
+				}))
 			}
 		}
-		const onStatusAgent_Assigned={
+		const onStatusAgent_Assigned = {
 			...responseMessage, // spread the entire response
-			message: {
-			  ...responseMessage.message, // spread message to retain its content
-			  fulfillments: responseMessage.message.fulfillments.map((fulfillment:any) => ({
-				...fulfillment, // spread the fulfillment object
-				state: {
-				  ...fulfillment.state, // spread state to retain other state details
-				  descriptor: {
-					...fulfillment.state.descriptor, // spread descriptor to modify only the code
-					code: "AGENT_ASSIGNED" // modify the code to "created"
-				  }
-				}
-			  }))
+			order: {
+				...responseMessage.order, // spread message to retain its content
+				fulfillments: responseMessage.order.fulfillments.map((fulfillment: any) => ({
+					...fulfillment, // spread the fulfillment object
+					state: {
+						...fulfillment.state, // spread state to retain other state details
+						descriptor: {
+							...fulfillment.state.descriptor, // spread descriptor to modify only the code
+							code: "AGENT_ASSIGNED" // modify the code to "created"
+						}
+					}
+				}))
 			}
 		}
-		const onStatusOrderPickedUp={
+		const onStatusOrderPickedUp = {
 			...responseMessage, // spread the entire response
-			message: {
-			  ...responseMessage.message, // spread message to retain its content
-			  fulfillments: responseMessage.message.fulfillments.map((fulfillment:any) => ({
-				...fulfillment, // spread the fulfillment object
-				state: {
-				  ...fulfillment.state, // spread state to retain other state details
-				  descriptor: {
-					...fulfillment.state.descriptor, // spread descriptor to modify only the code
-					code: "ORDER_PICKED_UP" // modify the code to "created"
-				  }
-				}
-			  }))
+			order: {
+				...responseMessage.order, // spread message to retain its content
+				fulfillments: responseMessage.order.fulfillments.map((fulfillment: any) => ({
+					...fulfillment, // spread the fulfillment object
+					state: {
+						...fulfillment.state, // spread state to retain other state details
+						descriptor: {
+							...fulfillment.state.descriptor, // spread descriptor to modify only the code
+							code: "ORDER_PICKED_UP" // modify the code to "created"
+						}
+					}
+				}))
 			}
 		}
-		const onStatusOrderOutForDelivery={
+		const onStatusOrderOutForDelivery = {
 			...responseMessage, // spread the entire response
-			message: {
-			  ...responseMessage.message, // spread message to retain its content
-			  fulfillments: responseMessage.message.fulfillments.map((fulfillment:any) => ({
-				...fulfillment, // spread the fulfillment object
-				state: {
-				  ...fulfillment.state, // spread state to retain other state details
-				  descriptor: {
-					...fulfillment.state.descriptor, // spread descriptor to modify only the code
-					code: "ORDER_OUT_FOR_DELIVERY" // modify the code to "created"
-				  }
-				}
-			  }))
+			order: {
+				...responseMessage.order, // spread message to retain its content
+				fulfillments: responseMessage.order.fulfillments.map((fulfillment: any) => ({
+					...fulfillment, // spread the fulfillment object
+					state: {
+						...fulfillment.state, // spread state to retain other state details
+						descriptor: {
+							...fulfillment.state.descriptor, // spread descriptor to modify only the code
+							code: "ORDER_OUT_FOR_DELIVERY" // modify the code to "created"
+						}
+					}
+				}))
 			}
 		}
-		const onStatusOrderDelivered={
+		const onStatusOrderDelivered = {
 			...responseMessage, // spread the entire response
-			message: {
-			  ...responseMessage.message, // spread message to retain its content
-			  fulfillments: responseMessage.message.fulfillments.map((fulfillment:any) => ({
-				...fulfillment, // spread the fulfillment object
-				state: {
-				  ...fulfillment.state, // spread state to retain other state details
-				  descriptor: {
-					...fulfillment.state.descriptor, // spread descriptor to modify only the code
-					code: "DELIVERED" // modify the code to "created"
-				  }
-				}
-			  }))
+			order: {
+				...responseMessage.order, // spread message to retain its content
+				fulfillments: responseMessage.order.fulfillments.map((fulfillment: any) => ({
+					...fulfillment, // spread the fulfillment object
+					state: {
+						...fulfillment.state, // spread state to retain other state details
+						descriptor: {
+							...fulfillment.state.descriptor, // spread descriptor to modify only the code
+							code: "DELIVERED" // modify the code to "created"
+						}
+					}
+				}))
 			}
 		}
-		
-		let i = 1;
-			let interval = setInterval(async () => {
-				if (i >= 6) {
-					clearInterval(interval);
-				}
-				// context.message_id = uuidv4();
-				childOrderResponseBuilder(
+
+		// let i = 1;
+		// let counter = 0; // Track number of requests sent
+		// const maxRequests = 5;
+		// let interval = setInterval(async () => {
+		// 	if (i >= 2) {
+		// 		clearInterval(interval);
+		// 	}
+		// 	// context.message_id = uuidv4();
+		// 	await childOrderResponseBuilder(
+		// 		i,
+		// 		res,
+		// 		context,
+		// 		onStatusCreated,
+		// 		`${req.body.context.bap_uri}${
+		// 			req.body.context.bap_uri.endsWith("/")
+		// 				? "on_status"
+		// 				: "/on_status"
+		// 		}`,
+		// 		"on_status"
+		// 	);
+
+		// 	await childOrderResponseBuilder(
+		// 		i,
+		// 		res,
+		// 		context,
+		// 		onStatusPacked,
+		// 		`${req.body.context.bap_uri}${
+		// 			req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
+		// 		}`,
+		// 		"on_status"
+		// 	);
+
+		// 	await childOrderResponseBuilder(
+		// 		i,
+		// 		res,
+		// 		context,
+		// 		onStatusAgent_Assigned,
+		// 		`${req.body.context.bap_uri}${
+		// 			req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
+		// 		}`,
+		// 		"on_status"
+		// 	);
+
+		// 	await childOrderResponseBuilder(
+		// 		i,
+		// 		res,
+		// 		context,
+		// 		onStatusOrderPickedUp,
+		// 		`${req.body.context.bap_uri}${
+		// 			req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
+		// 		}`,
+		// 		"on_status"
+		// 	);
+
+		// 	await childOrderResponseBuilder(
+		// 		i,
+		// 		res,
+		// 		context,
+		// 		onStatusOrderOutForDelivery,
+		// 		`${req.body.context.bap_uri}${
+		// 			req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
+		// 		}`,
+		// 		"on_status"
+		// 	);
+
+		// 	await childOrderResponseBuilder(
+		// 		i,
+		// 		res,
+		// 		context,
+		// 		onStatusOrderDelivered,
+		// 		`${req.body.context.bap_uri}${
+		// 			req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
+		// 		}`,
+		// 		"on_status"
+		// 	);
+		// 	i++;
+		// }, 1000);
+
+
+		let i = 1; // Start with 1
+		const maxRequests = 5; // Set the number of requests you want to make
+
+		// Create an async function to handle sending the requests
+		async function sendRequests() {
+			// Send the requests one after another
+			try {
+				// First request (onStatusCreated)
+				await childOrderResponseBuilder(
 					i,
 					res,
 					context,
 					onStatusCreated,
-					`${req.body.context.bap_uri}${
-						req.body.context.bap_uri.endsWith("/")
-							? "on_status"
-							: "/on_status"
+					`${req.body.context.bap_uri}${req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
 					}`,
 					"on_status"
 				);
 
+				// Second request (onStatusPacked)
+				i++; // Increment for the next request
 				await childOrderResponseBuilder(
 					i,
 					res,
 					context,
 					onStatusPacked,
-					`${req.body.context.bap_uri}${
-						req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
+					`${req.body.context.bap_uri}${req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
 					}`,
 					"on_status"
 				);
 
+				// Third request (onStatusAgent_Assigned)
+				i++; // Increment for the next request
 				await childOrderResponseBuilder(
 					i,
 					res,
 					context,
 					onStatusAgent_Assigned,
-					`${req.body.context.bap_uri}${
-						req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
+					`${req.body.context.bap_uri}${req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
 					}`,
 					"on_status"
 				);
 
+				// Fourth request (onStatusOrderPickedUp)
+				i++; // Increment for the next request
 				await childOrderResponseBuilder(
 					i,
 					res,
 					context,
 					onStatusOrderPickedUp,
-					`${req.body.context.bap_uri}${
-						req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
+					`${req.body.context.bap_uri}${req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
 					}`,
 					"on_status"
 				);
 
+				// Fifth request (onStatusOrderOutForDelivery)
+				i++; // Increment for the next request
 				await childOrderResponseBuilder(
 					i,
 					res,
 					context,
 					onStatusOrderOutForDelivery,
-					`${req.body.context.bap_uri}${
-						req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
+					`${req.body.context.bap_uri}${req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
 					}`,
 					"on_status"
 				);
 
+				// Sixth request (onStatusOrderDelivered)
+				i++; // Increment for the next request
 				await childOrderResponseBuilder(
 					i,
 					res,
 					context,
 					onStatusOrderDelivered,
-					`${req.body.context.bap_uri}${
-						req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
+					`${req.body.context.bap_uri}${req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
 					}`,
 					"on_status"
 				);
-				i++;
-			}, 1000);
+
+				console.log("All 5 requests have been sent successfully!");
+
+			} catch (error) {
+				// If any request fails, catch the error and log it
+				console.error("Error occurred while sending requests:", error);
+			}
+		}
+
+		// Call the function once to send all the requests
+		sendRequests();
+
 
 	} catch (error) {
 		next(error);
@@ -593,13 +588,15 @@ export const childOrderResponseBuilder = async (
 		var log: TransactionType = {
 			request: async,
 		};
-
+		console.log("urI sent at on_status", uri)
 		try {
-			const response = await axios.post(uri + "?mode=mock", async, {
-				headers: {
-					authorization: header,
-				},
-			});
+			const response = await axios.post(uri + "?mode=mock", async,
+				// 	{
+				// 	headers: {
+				// 		authorization: header,
+				// 	},
+				// }
+			);
 
 			log.response = {
 				timestamp: new Date().toISOString(),
@@ -607,7 +604,7 @@ export const childOrderResponseBuilder = async (
 			};
 
 			await redis.set(
-				`${(async.context! as any).transaction_id}-${action}-from-server-${id}-${ts.toISOString()}`, // saving ID with on_confirm child process (duplicate keys are not allowed)
+				`${(async.context! as any).transaction_id}-${action}-from-server-${id}-${ts.toISOString()}`, // saving ID with on_status child process (duplicate keys are not allowed)
 				JSON.stringify(log)
 			);
 		} catch (error) {
@@ -615,15 +612,15 @@ export const childOrderResponseBuilder = async (
 				error instanceof AxiosError
 					? error?.response?.data
 					: {
-							message: {
-								ack: {
-									status: "NACK",
-								},
+						message: {
+							ack: {
+								status: "NACK",
 							},
-							error: {
-								message: error,
-							},
-					  };
+						},
+						error: {
+							message: error,
+						},
+					};
 			log.response = {
 				timestamp: new Date().toISOString(),
 				response: response,
@@ -633,7 +630,7 @@ export const childOrderResponseBuilder = async (
 				JSON.stringify(log)
 			);
 
-			if (error instanceof AxiosError && id === 0 && action === "on_confirm") {
+			if (error instanceof AxiosError && id === 0 && action === "on_status") {
 				res.status(error.status || 500).json(error);
 			}
 

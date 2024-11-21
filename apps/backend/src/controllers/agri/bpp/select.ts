@@ -18,6 +18,7 @@ import { v4 as uuidv4 } from "uuid";
 import { ERROR_MESSAGES } from "../../../lib/utils/responseMessages";
 import { ON_ACTION_KEY } from "../../../lib/utils/actionOnActionKeys";
 import { SERVICES_DOMAINS } from "../../../lib/utils/apiConstants";
+import { error } from "console";
 
 export const selectController = async (
 	req: Request,
@@ -43,28 +44,14 @@ export const selectController = async (
 
 
 
-		const flowKey = await redis.keys(`${req.body.context.transaction_id}-flow*`)
-		const flow = flowKey[0].slice(-1)
-		logger.info(`flow is ${flow}`)
-
-		
 
 		const { scenario } = req.query;
 		switch (scenario) {
-			//SERVICES AND AGRI SCENARIOS
-			case "schedule_rejected":
-				selectConsultationRejectController(req, res, next);
-				break;
 
-			//HEALTHCARE
-			case "multi_collection":
-				selectMultiCollectionController(req, res, next);
-				break;
-
-			//EQUIPMENT HIRING SCENARIOS
-			case "no_equipment_avaliable":
-				onSelectNoEquipmentAvaliable(req, res, next);
-				break;
+			case "multi-items-successfull-order":
+				return onSelectMultiSuccessfullorder(req, res, next)
+			case "item-out-of-stock":
+				return onSelectItemoutofStock(req, res, next);
 			default:
 				return selectConsultationConfirmController(req, res, next);
 		}
@@ -74,6 +61,168 @@ export const selectController = async (
 		return next(error);
 	}
 };
+
+const onSelectMultiSuccessfullorder = (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const { context, message, providersItems } = req.body;
+		const { locations, ...provider } = message.order.provider;
+		const domain = context?.domain;
+
+
+		const updatedFulfillments =
+			domain === SERVICES_DOMAINS.BID_ACTION_SERVICES
+				? updateFulfillments(
+					message?.order?.fulfillments,
+					ON_ACTION_KEY?.ON_SELECT,
+					"",
+					"bid_auction_service"
+				)
+				: domain === SERVICES_DOMAINS.AGRI_INPUT
+					? updateFulfillments(
+						message?.order?.fulfillments,
+						ON_ACTION_KEY?.ON_SELECT,
+						"",
+						"agri_input"
+					)
+					: updateFulfillments(
+						message?.order?.fulfillments,
+						ON_ACTION_KEY?.ON_SELECT
+					);
+
+		const responseMessage = {
+				order: {
+					provider: {
+						...provider,
+						locations: [
+							{
+								id: "5009-L1",
+							},
+						],
+					},
+					items:[
+						{
+							id:message.order.items[0].id,
+							fulfillment_id: "5009-Delivery",
+						}
+					],
+					// items: message.order.items(({ id }: { id: any }) => ({
+					// 	id,
+					// 	fulfillment_id: "5009-Delivery",
+					// })),
+
+					fulfillments: updatedFulfillments,
+
+					quote: quoteCreatorAgri(
+						message?.order?.items,
+						providersItems?.items
+					),
+				}
+			
+		};
+
+		return responseBuilder(
+			res,
+			next,
+			context,
+			responseMessage,
+			`${req.body.context.bap_uri}${req.body.context.bap_uri.endsWith("/")
+				? ON_ACTION_KEY.ON_SELECT
+				: `/${ON_ACTION_KEY.ON_SELECT}`
+			}`,
+			`${ON_ACTION_KEY.ON_SELECT}`,
+			"agri"
+		);
+	}
+	catch (error) {
+		next(error)
+	}
+
+}
+
+const onSelectItemoutofStock = (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const { context, message, providersItems } = req.body;
+		const { locations, ...provider } = message.order.provider;
+		const domain = context?.domain;
+
+
+		const updatedFulfillments =
+			domain === SERVICES_DOMAINS.BID_ACTION_SERVICES
+				? updateFulfillments(
+					message?.order?.fulfillments,
+					ON_ACTION_KEY?.ON_SELECT,
+					"",
+					"bid_auction_service"
+				)
+				: domain === SERVICES_DOMAINS.AGRI_INPUT
+					? updateFulfillments(
+						message?.order?.fulfillments,
+						ON_ACTION_KEY?.ON_SELECT,
+						"",
+						"agri_input"
+					)
+					: updateFulfillments(
+						message?.order?.fulfillments,
+						ON_ACTION_KEY?.ON_SELECT
+					);
+
+		const responseMessage = {
+			error: {
+				"code": "40002",
+				"type": "DOMAIN-ERROR",
+				"message": "[{\"item_id\":\"16005\",\"error\":\"40002\"},{\"item_id\":\"13899\",\"error\":\"40002\"}]"
+			},
+			message: {
+				order: {
+					provider: {
+						...provider,
+						locations: [
+							{
+								id: "5009-L1",
+							},
+						],
+					},
+					items: message.order.items.map(({ id }: { id: any }) => ({
+						id,
+						fulfillment_id: "5009-Delivery",
+					})),
+
+					fulfillments: updatedFulfillments,
+
+					quote: quoteCreatorAgri(
+						message?.order?.items,
+						providersItems?.items
+					),
+				}
+			}
+		};
+
+		return responseBuilder(
+			res,
+			next,
+			context,
+			responseMessage,
+			`${req.body.context.bap_uri}${req.body.context.bap_uri.endsWith("/")
+				? ON_ACTION_KEY.ON_SELECT
+				: `/${ON_ACTION_KEY.ON_SELECT}`
+			}`,
+			`${ON_ACTION_KEY.ON_SELECT}`,
+			"agri"
+		);
+	}
+	catch (error) {
+		next(error)
+	}
+
+}
 
 const selectConsultationConfirmController = (
 	req: Request,
@@ -119,9 +268,7 @@ const selectConsultationConfirmController = (
 					id,
 					fulfillment_id: "5009-Delivery",
 				})),
-
 				fulfillments: updatedFulfillments,
-
 				quote: quoteCreatorAgri(
 					message?.order?.items,
 					providersItems?.items

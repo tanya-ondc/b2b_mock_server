@@ -1583,10 +1583,10 @@ export const updateFulfillments = (
 		} else {
 			fulfillmentObj = {
 				id: fulfillments[0]?.id ? fulfillments[0].id : "F1",
-				stops: fulfillments[0]?.stops.map((ele: any) => {
-					ele.time.label = FULFILLMENT_LABELS.CONFIRMED;
-					return ele;
-				}),
+				// stops: fulfillments[0]?.stops.map((ele: any) => {
+				// 	ele.time.label = FULFILLMENT_LABELS.CONFIRMED;
+				// 	return ele;
+				// }),
 				tags: {
 					descriptor: {
 						code: "schedule",

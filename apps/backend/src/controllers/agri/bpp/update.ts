@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 import {
+    AGRI_EXAMPLES_PATH,
 	quoteCreatorHealthCareService,
 	quoteCreatorService,
 	redisFetchToServer,
@@ -8,6 +9,8 @@ import {
 	send_nack,
 	updateFulfillments,
 } from "../../../lib/utils";
+import fs from "fs";
+import YAML from "yaml";
 import { ON_ACTION_KEY } from "../../../lib/utils/actionOnActionKeys";
 import { ERROR_MESSAGES } from "../../../lib/utils/responseMessages";
 import {
@@ -15,6 +18,7 @@ import {
 	FULFILLMENT_STATES,
 	SERVICES_DOMAINS,
 } from "../../../lib/utils/apiConstants";
+import path from "path";
 
 export const updateController = async (
 	req: Request,
@@ -57,13 +61,13 @@ export const updateController = async (
 		);
 		req.body.message.order.fulfillments = updatedFulfillments;
 		req.body.on_confirm = on_confirm;
-
+		console.log("scenario",scenario)
 		switch (scenario) {
 			case "reschedule":
 				updateRescheduleController(req, res, next);
 				break;
 			case "payments":
-				updatePaymentController(req, res, next);
+				updateRequoteController(req, res, next);
 				break;
 			case "modifyItems":
 				updateRescheduleAndItemsController(req, res, next);
@@ -86,19 +90,20 @@ export const updateRequoteController = (
 	try {
 		const { context, message, on_confirm } = req.body;
 		//CREATED COMMON RESPONSE MESSAGE FOR ALL SCENRIO AND UPDATE ACCORDENGLY IN FUNCTIONS
-
+		const file = fs.readFileSync(
+			path.join(
+				AGRI_EXAMPLES_PATH,
+				"on_update/on_update_status.yaml"
+			)
+		);
+		const response = YAML.parse(file.toString());
+		
 		const responseMessages = {
 			order: {
-				...message.order,
-				id: uuidv4(),
-				status: FULFILLMENT_STATES.PENDING,
-				ref_order_ids: [on_confirm?.message?.order?.id],
-				provider: {
-					id: on_confirm?.message?.order?.provider.id,
-				},
+				...response.value.message.order			
 			},
 		};
-
+		console.log("responseatUpdateBpp",JSON.stringify(responseMessages))
 		return responseBuilder(
 			res,
 			next,
@@ -110,7 +115,7 @@ export const updateRequoteController = (
 					: `/${ON_ACTION_KEY.ON_UPDATE}`
 			}`,
 			`${ON_ACTION_KEY.ON_UPDATE}`,
-			"services"
+			"agri"
 		);
 	} catch (error) {
 		next(error);
