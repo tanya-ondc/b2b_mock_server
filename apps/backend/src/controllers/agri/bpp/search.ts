@@ -17,8 +17,8 @@ export const searchController = (
 ) => {
 	try {
 		const domain = req?.body?.context?.domain;
-		// const {scenario}=req.query
-		let scenario = "incremental"
+		const {scenario}=req.query
+		logger.info(`scenario is ${scenario}`)
 		let onSearch, file;
 		const {
 			message: { intent },
@@ -59,7 +59,7 @@ export const searchController = (
 		}
 		
 
-		logger.info(`${JSON.stringify(response.value.message)}`)
+		logger.info(`${JSON.stringify(response.value.message.catalog)}`)
 		return responseBuilder(
 			res,
 			next,

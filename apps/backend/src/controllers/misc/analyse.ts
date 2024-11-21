@@ -73,15 +73,22 @@ export const analyseController = async (req: Request, res: Response) => {
 		  
 			// Step 2: Prioritize objects within each action group
 			for (const action in grouped) {
+				
 			  const group = grouped[action];
-			  // Find object with response
+			  if (action === 'on_status') {
+				// Keep all sorted objects for on_status
+				const withResponse = group.filter((obj:any) => obj.response);
+				prioritized.push(...withResponse);
+			  } 
+			  else
+			  {// Find object with response
 			  const withResponse = group.find((item:any) => item.response);
 			  if (withResponse) {
 				prioritized.push(withResponse);
 			  } else {
 				// Fallback to any object if none has a response
 				prioritized.push(group[0]);
-			  }
+			  }}
 			}
 		  
 			return prioritized;

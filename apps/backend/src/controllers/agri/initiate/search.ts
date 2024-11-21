@@ -59,7 +59,7 @@ export const initiateSearchController = async (
 				message_id: uuidv4(),
 			},
 		};
-
+		// logger.info(`scenario is ${scenario}`)
 		switch(scenario){
 			case "incremental-pull":
 					search={
@@ -90,9 +90,8 @@ export const initiateSearchController = async (
 				search={...search}
 				break;	
 		}
-
 		search.bpp_uri = bpp_uri;
-		await send_response(res, next, search, transaction_id, ACTTION_KEY.SEARCH);
+		await send_response(res, next, search, transaction_id, ACTTION_KEY.SEARCH,scenario);
 	} catch (error) {
 		return next(error);
 	}

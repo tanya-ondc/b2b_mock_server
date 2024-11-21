@@ -166,7 +166,7 @@ export const updateliquidateController = (
 		const file = fs.readFileSync(
 			path.join(
 				AGRI_EXAMPLES_PATH,
-				"on_update/on_update_return_initiated_seller_liquidates.json.yaml"
+				"on_update/on_update_return_initiated_seller_liquidates.yaml"
 			)
 		);
 		const response = YAML.parse(file.toString());

@@ -455,7 +455,7 @@ const statusRequest = async (
 		// }, 1000);
 
 
-		let i = 1; // Start with 1
+		let i = 0; // Start with 1
 		const maxRequests = 5; // Set the number of requests you want to make
 
 		// Create an async function to handle sending the requests
@@ -463,18 +463,18 @@ const statusRequest = async (
 			// Send the requests one after another
 			try {
 				// First request (onStatusCreated)
-				await childOrderResponseBuilder(
-					i,
-					res,
-					context,
-					onStatusCreated,
-					`${req.body.context.bap_uri}${req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
-					}`,
-					"on_status"
-				);
+				// await childOrderResponseBuilder(
+				// 	i,
+				// 	res,
+				// 	context,
+				// 	onStatusCreated,
+				// 	`${req.body.context.bap_uri}${req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
+				// 	}`,
+				// 	"on_status"
+				// );
 
 				// Second request (onStatusPacked)
-				i++; // Increment for the next request
+				 // Increment for the next request
 				await childOrderResponseBuilder(
 					i,
 					res,
@@ -486,7 +486,7 @@ const statusRequest = async (
 				);
 
 				// Third request (onStatusAgent_Assigned)
-				i++; // Increment for the next request
+				 // Increment for the next request
 				await childOrderResponseBuilder(
 					i,
 					res,
@@ -498,7 +498,7 @@ const statusRequest = async (
 				);
 
 				// Fourth request (onStatusOrderPickedUp)
-				i++; // Increment for the next request
+				 // Increment for the next request
 				await childOrderResponseBuilder(
 					i,
 					res,
@@ -510,7 +510,7 @@ const statusRequest = async (
 				);
 
 				// Fifth request (onStatusOrderOutForDelivery)
-				i++; // Increment for the next request
+				 // Increment for the next request
 				await childOrderResponseBuilder(
 					i,
 					res,
@@ -522,7 +522,7 @@ const statusRequest = async (
 				);
 
 				// Sixth request (onStatusOrderDelivered)
-				i++; // Increment for the next request
+				// Increment for the next request
 				await childOrderResponseBuilder(
 					i,
 					res,
@@ -532,8 +532,6 @@ const statusRequest = async (
 					}`,
 					"on_status"
 				);
-
-				console.log("All 5 requests have been sent successfully!");
 
 			} catch (error) {
 				// If any request fails, catch the error and log it

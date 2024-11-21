@@ -664,6 +664,7 @@ export const quoteCreatorAgri = (items: Item[], providersItems?: any) => {
 	});
 	items.forEach((item) => {
 		// console.log("itemsbreakup",item)
+		console.log("itemmsmsss",item)
 		breakup = [...breakup,
 			{
 				title: item.title,
@@ -675,7 +676,7 @@ export const quoteCreatorAgri = (items: Item[], providersItems?: any) => {
 				price: {
 					currency: "INR",
 					value: (
-						Number(item?.price?.value) * item?.quantity?.count?item?.quantity?.count:item?.quantity?.selected?.count
+						Number(item?.price?.value) * (item?.quantity?.count?Number(item?.quantity?.count):Number(item?.quantity?.selected?.count))
 					).toString(),
 				},
 				tags: item.tags,
@@ -706,6 +707,7 @@ export const quoteCreatorAgri = (items: Item[], providersItems?: any) => {
 		];
 		
 	});
+	console.log("breakuppp",breakup)
 
 	//MAKE DYNAMIC BREACKUP USING THE DYANMIC ITEMS
 	let totalPrice = 0;
