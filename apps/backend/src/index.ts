@@ -23,9 +23,11 @@ import {
 } from "./middlewares";
 import { retailRouter } from "./controllers/retail";
 import { sendUpsolicieatedOnStatus } from "./lib/utils/sendUpsolicieatedOnStatus";
+import { loadConfig } from "./lib/utils";
 
-const app: Express = express();
+export const app: Express = express();
 const port = process.env.PORT || 3000;
+loadConfig();
 app.use(cors());
 
 app.use("/api-docs/auth", swaggerUi.serve, authSwagger("/api-docs/auth"));

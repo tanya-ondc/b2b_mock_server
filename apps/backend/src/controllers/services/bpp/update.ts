@@ -135,7 +135,7 @@ export const updatePaymentController = (
 			},
 		},
 	};
-	
+
 	return responseBuilder(
 		res,
 		next,
@@ -149,17 +149,6 @@ export const updatePaymentController = (
 		`${ON_ACTION_KEY.ON_UPDATE}`,
 		"services"
 	);
-
-
-	return res.json({
-		sync: {
-			message: {
-				ack: {
-					status: "ACK",
-				},
-			},
-		},
-	});
 };
 
 //HANDLE FULFILLMENT TARGET (TIME SLOT RESCHEDULE,ITEMS AND PATIENTS)(MODIFY NUMBER OF PATIENTS AND NUMBER OF TEST)
@@ -184,14 +173,16 @@ export const updateRescheduleAndItemsController = (
 			on_confirm?.message?.order?.items[0]?.quantity?.selected?.count;
 
 		const update_item_quantity = Number(
-			order?.items[0]?.quantity?.unitized?.measure?.value?order?.items[0]?.quantity?.unitized?.measure?.value:"2"
+			order?.items[0]?.quantity?.unitized?.measure?.value
+				? order?.items[0]?.quantity?.unitized?.measure?.value
+				: "2"
 		);
 
-		if(order?.items[0]?.quantity?.unitized?.measure?.value){
+		if (order?.items[0]?.quantity?.unitized?.measure?.value) {
 			order.items[0].quantity.unitized.measure.value =
-			on_confirm_quantity + update_item_quantity;
+				on_confirm_quantity + update_item_quantity;
 		}
-		
+
 		//UPDATE PAYMENT OBJECT AND QUOTE ACCORDING TO ITEMS AND PERSONS
 		const quote =
 			domain === SERVICES_DOMAINS.SERVICES
@@ -287,19 +278,21 @@ export const updateRescheduleController = (
 	} = req.body;
 
 	const responseMessage = {
-		...order,
-		fulfillments: [
-			{
-				...order.fulfillments[0],
-				stops: order.fulfillments[0].stops.map((stop: any) => ({
-					...stop,
-					time:
-						stop.type === "end"
-							? { ...stop.time, label: FULFILLMENT_LABELS.CONFIRMED }
-							: stop.time,
-				})),
-			},
-		],
+		order: {
+			...order,
+			fulfillments: [
+				{
+					...order.fulfillments[0],
+					stops: order.fulfillments[0].stops.map((stop: any) => ({
+						...stop,
+						time:
+							stop.type === "end"
+								? { ...stop.time, label: FULFILLMENT_LABELS.CONFIRMED }
+								: stop.time,
+					})),
+				},
+			],
+		},
 	};
 
 	return responseBuilder(

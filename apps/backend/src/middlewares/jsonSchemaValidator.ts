@@ -4,7 +4,8 @@ import { subscriptionSchemaValidator } from "../lib/schema/subscription";
 import { logisticsSchemaValidator } from "../lib/schema/logistics";
 import { b2cSchemaValidator } from "../lib/schema/b2c";
 import { retailSchemaValidator } from "../lib/schema/retail";
-import { version } from "os";
+import { l2Validator, redis } from "../lib/utils";
+import { NextFunction, Request, Response } from "express";
 
 type AllActions =
 	| "search"
@@ -31,8 +32,6 @@ type LogisticsActions = Exclude<AllActions, "select" | "on_select" | "rating">;
 type B2BActions = Exclude<AllActions, "rating">;
 type B2CActions = Exclude<AllActions, "rating">;
 
-
-
 type Domain =
 	| "b2b"
 	| "b2c"
@@ -43,43 +42,49 @@ type Domain =
 
 type ActionType<T extends Domain> = T extends "logistics"
 	? LogisticsActions
-	:AllActions;
+	: AllActions;
 
-export type VersionType = 'b2b' | 'b2c'; // Include '1235' if it's a valid option
-
+export type VersionType = "b2b" | "b2c"; // Include '1235' if it's a valid option
 
 type JsonSchemaValidatorType<T extends Domain> = {
 	domain: T;
 	action: ActionType<T>;
-	VERSION?:VersionType|undefined
+	VERSION?: VersionType | undefined;
 };
 
 export const jsonSchemaValidator = <T extends Domain>({
-	domain,
-	action,
-	VERSION
+  domain,
+  action,
+  VERSION,
 }: JsonSchemaValidatorType<T>) => {
-	if(domain==='retail' && VERSION==='b2b'){
-		console.log("b2b")
-		return b2bSchemaValidator(action as AllActions);
-	}
-	else if(domain==='retail' && VERSION==='b2c'){
-		console.log("b2c")
-		return b2cSchemaValidator(action as AllActions);
-	}
-	else{
-		switch (domain) {			
-			case "services":
-				return srvSchemaValidator(action as AllActions);
-			case "retail":
-				return retailSchemaValidator(action as AllActions);
-			case "subscription":
-				return subscriptionSchemaValidator(action as AllActions);
-			case "logistics":
-				return logisticsSchemaValidator(action as LogisticsActions);
-			default:
-				throw new Error(`Unsupported domain: ${domain}`);
-		}
+  return async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const l2 = await redis.get("l2_validations");
+      if (l2 != null && JSON.parse(l2).includes(domain)) {
+        return l2Validator(domain)(req, res, next);
+      }
 
-	}
+      switch (domain) {
+        case "services":
+          return srvSchemaValidator(action as AllActions)(req, res, next);
+        case "retail":
+          if (VERSION === "b2b") {
+            return b2bSchemaValidator(action as AllActions)(req, res, next);
+          } else if (VERSION === "b2c") {
+            return b2cSchemaValidator(action as AllActions)(req, res, next);
+          } else {
+            return b2cSchemaValidator(action as AllActions)(req, res, next);
+          }
+        case "subscription":
+          return subscriptionSchemaValidator(action as AllActions)(req, res, next);
+        case "logistics":
+          return logisticsSchemaValidator(action as LogisticsActions)(req, res, next);
+        default:
+          throw new Error(`Unsupported domain: ${domain}`);
+      }
+    } catch (error) {
+      next(error);
+    }
+  };
 };
+

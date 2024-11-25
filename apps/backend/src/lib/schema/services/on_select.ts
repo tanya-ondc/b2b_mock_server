@@ -417,7 +417,7 @@ export const onSelectSchema = {
                         },
                       },
                     },
-                    required: ["title", "price", "item", "tags"],
+                    required: ["title", "price", "item"],
                   },
                 },
                 ttl: {
