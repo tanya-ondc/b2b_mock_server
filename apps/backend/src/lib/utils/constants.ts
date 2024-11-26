@@ -40,6 +40,12 @@ export const B2B_BAP_MOCKSERVER_URL = `${MOCK_API_BASE_URL}b2b/bap`;
 export const B2C_BPP_MOCKSERVER_URL = `${MOCK_API_BASE_URL}b2c/bpp`;
 export const B2C_BAP_MOCKSERVER_URL = `${MOCK_API_BASE_URL}b2c/bap`;
 
+export const VERSION = {
+	b2bexports: "b2b-exp",
+	b2b: "b2b",
+	b2c: "b2c"
+}
+
 export const REATIL_BPP_MOCKSERVER_URL = `${MOCK_API_BASE_URL}retail/bpp`;
 export const RETAIL_BAP_MOCKSERVER_URL = `${MOCK_API_BASE_URL}retail/bap`;
 

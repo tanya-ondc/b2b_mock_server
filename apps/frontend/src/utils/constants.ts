@@ -96,7 +96,7 @@ export const SERVICES_DOMAINS = {
 	AGRI_SERVICES: "ONDC:SRV14",
 	EQUIPMENT_HIRING_SERVICES: "ONDC:SRV17",
 	BID_AUCTION_SERVICE: "ONDC:SRV18",
-	PRINT_MEDIA:"ONDC:MEC10"
+	PRINT_MEDIA: "ONDC:MEC10"
 };
 
 export const ALL_DOMAINS = {
@@ -106,7 +106,7 @@ export const ALL_DOMAINS = {
 	Logistics: LOGISTICS_DOMAINS,
 };
 
-export const CITY_CODE = ["std:080", "std:011"];
+export const CITY_CODE = ["std:080", "std:011", "std:999"];
 
 export const B2C_CITY_CODE = ["UN:SIN"];
 export const INITIATE_FIELDS = {
@@ -137,10 +137,10 @@ export const INITIATE_FIELDS = {
 			type: "select",
 			domainDepended: true,
 			options: {
-				retail:B2B_DOMAINS,
+				retail: B2B_DOMAINS,
 				b2b: B2B_DOMAINS,
 				services: SERVICE_DOMAINS,
-				subscription:SUBSCRIPTION_DOMAINS,
+				subscription: SUBSCRIPTION_DOMAINS,
 				// services:SERVICE_DOMAINS_OBJECT,
 				b2c: B2C_DOMAINS,
 				logistics: LOGISTICS_DOMAINS,
@@ -164,10 +164,10 @@ export const INITIATE_FIELDS = {
 			type: "select",
 			domainDepended: true,
 			options: {
-				retail:CITY_CODE,
+				retail: CITY_CODE,
 				b2b: CITY_CODE,
 				services: CITY_CODE,
-				subscription:CITY_CODE,
+				subscription: CITY_CODE,
 				b2c: B2C_CITY_CODE,
 				logistics: [],
 			},
@@ -187,7 +187,7 @@ export const INITIATE_FIELDS = {
 			domainDepended: true,
 			options: {
 				retail: B2B_SCENARIOS["select"].map((each) => each.scenario),
-				subscription:PRINT_MEDIA_SCENARIOS["select"].map((each) => each.scenario),
+				subscription: PRINT_MEDIA_SCENARIOS["select"].map((each) => each.scenario),
 				b2b: B2B_SCENARIOS["select"].map((each) => each.scenario),
 			},
 		},
@@ -285,11 +285,11 @@ export const INITIATE_FIELDS = {
 			type: "text",
 			domainDepended: true,
 			options: {
-				services:["001"],
-				b2b:["001"],
-				b2c:["001"],
-				retail:["001"],
-				subscription:["001"],
+				services: ["001"],
+				b2b: ["001"],
+				b2c: ["001"],
+				retail: ["001"],
+				subscription: ["001"],
 				logistics: ["TAT Breach, 007"], // Follow this format if new options are added.
 			},
 		},

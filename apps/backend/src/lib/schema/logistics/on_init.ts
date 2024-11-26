@@ -307,7 +307,7 @@ export const onInitSchema = {
 											},
 											title: {
 												type: "string",
-												enum : QUOTE_TITLE
+												enum: QUOTE_TITLE
 											},
 											price: {
 												type: "object",
@@ -394,7 +394,7 @@ export const onInitSchema = {
 									},
 									collected_by: {
 										type: "string",
-										enum: ["BAP","BPP"]
+										enum: ["BAP", "BPP"]
 									},
 									params: {
 										type: "object",
@@ -532,7 +532,7 @@ export const onInitSchema = {
 						"quote",
 						"cancellation_terms",
 						"payments",
-						"xinput",
+						// "xinput",
 						"tags",
 					],
 				},
