@@ -10,6 +10,7 @@ import {
   B2C_EXAMPLES_PATH,
   B2B_EXAMPLES_PATH,
   RETAIL_BAP_MOCKSERVER_URL,
+  VERSION,
 } from "../../../lib/utils";
 import fs from "fs";
 import path from "path";
@@ -44,7 +45,7 @@ export const initiateInitController = async (
     }
 
     // console.log("parsedTransaction:::: ", parsedTransaction[0]);
-    return intializeRequest(res, next, request, scenario,version);
+    return intializeRequest(res, next, request, scenario, version);
   } catch (error) {
     return next(error);
   }
@@ -55,7 +56,7 @@ const intializeRequest = async (
   next: NextFunction,
   transaction: any,
   scenario: string,
-  version:any
+  version: any
 ) => {
   try {
     const {
@@ -67,17 +68,28 @@ const intializeRequest = async (
     let { payments } = transaction.message.order;
     const { transaction_id } = context;
 
-    let file:any;
-    if(version === "b2c"){
+    let file: any;
+    if (version === VERSION['b2c']) {
       file = fs.readFileSync(
         path.join(B2C_EXAMPLES_PATH, "init/init_exports.yaml")
       );
-    }else{
-      file = fs.readFileSync(
-        path.join(B2B_EXAMPLES_PATH, "init/init_domestic.yaml")
-      );
+    } else {
+      if (context.location.city.code === 'std:999') {
+        // scenario = "rfq"
+        version = VERSION['b2bexports']
+        file = fs.readFileSync(
+          path.join(B2B_EXAMPLES_PATH, "init/init_exports.yaml")
+        );
+
+      } else {
+        file = fs.readFileSync(
+          path.join(B2B_EXAMPLES_PATH, "init/init_domestic.yaml")
+        );
+
+      }
+
     }
-   
+
     const response = YAML.parse(file.toString());
 
     payments = payments.map((payment: Payment) => {

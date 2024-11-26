@@ -17,99 +17,101 @@ interface Item_id_name {
 }
 
 export const selectController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
+	req: Request,
+	res: Response,
+	next: NextFunction
 ) => {
-  try {
-    const { scenario, version } = req.query;
-    const { transaction_id } = req.body.context;
-	
-	const VERSION=await redis.keys(`${transaction_id}-version-*`)
-	const parts = VERSION[0].split('-');
-	const versionn = parts[parts.length - 1];
+	try {
+		const { scenario, version } = req.query;
+		const { transaction_id } = req.body.context;
 
-    const transactionKeys = await redis.keys(`${transaction_id}-*`);
+		// const VERSION=await redis.keys(`${transaction_id}-version-*`)
+		// const parts = VERSION[0].split('-');
+		// const versionn = parts[parts.length - 1];
 
-    const ifToTransactionExist = transactionKeys.filter((e) =>
-      e.includes("on_search-to-server")
-    );
-    const ifFromTransactionExist = transactionKeys.filter((e) =>
-      e.includes("on_search-from-server")
-    );
-	
-	
-    if (
-      ifFromTransactionExist.length === 0 &&
-      ifToTransactionExist.length === 0
-    ) {
-      return send_nack(res, ERROR_MESSAGES.ON_SEARCH_DOES_NOT_EXISTED);
-    }
+		const transactionKeys = await redis.keys(`${transaction_id}-*`);
 
-    const transaction = await redis.mget(
-      ifFromTransactionExist.length > 0
-        ? ifFromTransactionExist
-        : ifToTransactionExist
-    );
-    const parsedTransaction = transaction.map((ele) => {
-      return JSON.parse(ele as string);
-    });
+		const ifToTransactionExist = transactionKeys.filter((e) =>
+			e.includes("on_search-to-server")
+		);
+		const ifFromTransactionExist = transactionKeys.filter((e) =>
+			e.includes("on_search-from-server")
+		);
 
 
-    const providers = parsedTransaction[0].request.message.catalog.providers;
-    req.body.providersItems = providers[0];
+		if (
+			ifFromTransactionExist.length === 0 &&
+			ifToTransactionExist.length === 0
+		) {
+			return send_nack(res, ERROR_MESSAGES.ON_SEARCH_DOES_NOT_EXISTED);
+		}
 
-    const item_id_name: Item_id_name[] = providers.map((pro: any) => {
-      const mappedItems = pro.items.map((item: Item) => ({
-        id: item.id,
-        name: item.descriptor?.name,
-        available_qty: (item.quantity as Quantity).available.count,
-      }));
-      return mappedItems;
-    });
-    req.body.item_arr = item_id_name.flat();
+		const transaction = await redis.mget(
+			ifFromTransactionExist.length > 0
+				? ifFromTransactionExist
+				: ifToTransactionExist
+		);
+		const parsedTransaction = transaction.map((ele) => {
+			return JSON.parse(ele as string);
+		});
 
-    for (const itm of req.body.message.order.items) {
-      const item = req.body.item_arr.find(
-        (item: Item_id_name) => item.id == itm.id
-      );
 
-      if (
-        "selected" in itm.quantity &&
-        itm.quantity.selected.count > item.available_qty
-      ) {
-        return send_nack(
-          res,
-          `Required Quantity for Item:${item.name} is unavailable.`
-        );
-      }
-    }
+		const providers = parsedTransaction[0].request.message.catalog.providers;
+		req.body.providersItems = providers[0];
 
-    switch (scenario) {
-      case "non-serviceable":
-        return selectNonServiceableController(req, res, next);
-      case "quantity-unavailable":
-        return selectQuantityUnavailableController(req, res, next);
-      default:
-        return selectDomesticController(req, res, next);
-    }
-  } catch (error) {
-    return next(error);
-  }
+		const item_id_name: Item_id_name[] = providers.map((pro: any) => {
+			const mappedItems = pro.items.map((item: Item) => ({
+				id: item.id,
+				name: item.descriptor?.name,
+				available_qty: (item.quantity as Quantity).available.count,
+			}));
+			return mappedItems;
+		});
+		req.body.item_arr = item_id_name.flat();
+
+		for (const itm of req.body.message.order.items) {
+			const item = req.body.item_arr.find(
+				(item: Item_id_name) => item.id == itm.id
+			);
+
+			if (
+				"selected" in itm.quantity &&
+				itm.quantity.selected.count > item.available_qty
+			) {
+				return send_nack(
+					res,
+					`Required Quantity for Item:${item.name} is unavailable.`
+				);
+			}
+		}
+
+		switch (scenario) {
+			case "non-serviceable":
+				return selectNonServiceableController(req, res, next);
+			case "quantity-unavailable":
+				return selectQuantityUnavailableController(req, res, next);
+			default:
+				return await selectDomesticController(req, res, next);
+		}
+	} catch (error) {
+		return next(error);
+	}
 };
 
-export const selectDomesticController = (
+export const selectDomesticController = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
 ) => {
 	try {
 		const { version } = req.query;
+		// console.log("🚀 ~ version==========:", version)
 		const { context, message, providersItems } = req.body;
 		const { ttl, ...provider } = message.order.provider;
 
 		let responseMessage;
-		if(version==="b2b"){
+		if (version === "b2b" || version == "b2b-exp") {
+			//TODO in case of b2b exports , tags should contain  incoterms , creds liscence
 			let responseMessageB2B = {
 				order: {
 					provider,
@@ -145,9 +147,36 @@ export const selectDomesticController = (
 					quote: quoteCreator(message.order.items),
 				},
 			};
-			responseMessage=responseMessageB2B
+			const savedVersion = await redis.get(
+				`${context.transaction_id}-version`);
+			if (savedVersion == 'b2b-exp') {
+				responseMessageB2B.order.fulfillments[0].tags = [
+					{
+						"descriptor": {
+							"code": "DELIVERY_TERMS"
+						},
+						"list": [
+							{
+								"descriptor": {
+									"code": "INCOTERMS"
+								},
+								"value": "CIF"
+							},
+							{
+								"descriptor": {
+									"code": "NAMED_PLACE_OF_DELIVERY"
+								},
+								"value": "SGP"
+							}
+						]
+					}
+
+				]
+			}
+			responseMessage = responseMessageB2B
+
 		}
-		else{
+		else {
 			let responseMessageB2c = {
 				order: {
 					provider,
@@ -185,11 +214,11 @@ export const selectDomesticController = (
 							: quoteCreator(message.order.items),
 				},
 			};
-			responseMessage=responseMessageB2c
+			responseMessage = responseMessageB2c
 		}
-		
 
-		
+
+
 		try {
 			responseMessage.order.quote.breakup.forEach((element: Breakup) => {
 				if (element["@ondc/org/title_type"] === "item") {
@@ -209,8 +238,7 @@ export const selectDomesticController = (
 			next,
 			context,
 			responseMessage,
-			`${req.body.context.bap_uri}${
-				req.body.context.bap_uri.endsWith("/") ? "on_select" : "/on_select"
+			`${req.body.context.bap_uri}${req.body.context.bap_uri.endsWith("/") ? "on_select" : "/on_select"
 			}`,
 			`on_select`,
 			"retail"
@@ -273,8 +301,7 @@ export const selectNonServiceableController = (
 			next,
 			context,
 			responseMessage,
-			`${req.body.context.bap_uri}${
-				req.body.context.bap_uri.endsWith("/") ? "on_select" : "/on_select"
+			`${req.body.context.bap_uri}${req.body.context.bap_uri.endsWith("/") ? "on_select" : "/on_select"
 			}`,
 			`on_select`,
 			"retail",
@@ -341,8 +368,7 @@ export const selectQuantityUnavailableController = (
 			next,
 			context,
 			responseMessage,
-			`${req.body.context.bap_uri}${
-				req.body.context.bap_uri.endsWith("/") ? "on_select" : "/on_select"
+			`${req.body.context.bap_uri}${req.body.context.bap_uri.endsWith("/") ? "on_select" : "/on_select"
 			}`,
 			`on_select`,
 			"retail",
