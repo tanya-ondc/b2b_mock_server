@@ -5,6 +5,7 @@ import {
 	redis,
 	send_nack,
 	Item,
+	redisFetchFromServer,
 } from "../../../lib/utils";
 import { v4 as uuidv4 } from "uuid";
 
@@ -23,6 +24,9 @@ export const initiateInitController = async (
 		if (ifTransactionExist.length === 0) {
 			return send_nack(res, "On Search doesn't exist");
 		}
+		const searchreq = await redisFetchFromServer("search", transactionId)
+
+
 		const transaction = await redis.mget(ifTransactionExist);
 		const parsedTransaction = transaction.map((ele) => {
 			return JSON.parse(ele as string);
@@ -41,6 +45,11 @@ export const initiateInitController = async (
 			return send_nack(res, "No items available.");
 		}
 		var newTime = new Date().toISOString();
+		const locations = {
+			startLocation: searchreq.message.intent.fulfillment.stops.find((e: any) => e.type == "start"),
+			endLocation: searchreq.message.intent.fulfillment.stops.find((e: any) => e.type == "end")
+		}
+
 		init = {
 			context: {
 				...request.context,
@@ -77,7 +86,7 @@ export const initiateInitController = async (
 								{
 									type: "start",
 									location: {
-										gps: "12.4535445,77.9283792",
+										...locations.startLocation.location,
 										address: "My building #, My street name",
 										city: {
 											name: "Bengaluru",
@@ -88,7 +97,6 @@ export const initiateInitController = async (
 										country: {
 											code: "IND",
 										},
-										area_code: "560041",
 									},
 									contact: {
 										phone: "9886098860",
@@ -98,8 +106,7 @@ export const initiateInitController = async (
 								{
 									type: "end",
 									location: {
-										gps: "12.342769,77.9129423",
-										area_code: "560043",
+										...locations.endLocation.location,
 										address: "My house or building name, street name",
 										city: {
 											name: "Bengaluru",

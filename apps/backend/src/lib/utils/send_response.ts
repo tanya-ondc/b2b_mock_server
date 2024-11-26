@@ -24,7 +24,7 @@ async function send_response(
   let time_now = new Date().toISOString()
   try {
     const { context } = res_obj;
-    if(bpp_uri === "")
+    if (bpp_uri === "")
       bpp_uri = context.bpp_uri || res_obj.bpp_uri;
 
     // res_obj.context.bpp_uri = bpp_uri
@@ -33,22 +33,24 @@ async function send_response(
     const header = await createAuthHeader(res_obj);
     // res_obj.bpp_uri = bpp_uri
 
-  //Approach 1
-    if(version ==='b2b' || version === 'b2c'){
-      console.log("keys",`${transaction_id}-${action}-from-server-${version}-${id}-${time_now}`)
-    
+    //Approach 1
+    if (version === 'b2b' || version === 'b2c' || version === "b2b-exp") {
+      console.log("keys", `${transaction_id}-${action}-from-server-${version}-${id}-${time_now}`)
+      console.log("abs", `${transaction_id}-version`, version)
+      await redis.set(
+        `${transaction_id}-version`, version);
       await redis.set(
         `${transaction_id}-${action}-from-server-${version}-${id}-${time_now}`,
         JSON.stringify({ request: { ...res_obj } })
       );
     }
-    else{
+    else {
       await redis.set(
         `${transaction_id}-${action}-from-server-${id}-${time_now}`,
         JSON.stringify({ request: { ...res_obj } })
       );
     }
-    
+
 
     const headers: headers = {
       authorization: header,
@@ -61,20 +63,19 @@ async function send_response(
     let uri: any;
 
     if (scenario && version) {
-      uri = `${bpp_uri}/${action}${scenario ? `?scenario=${scenario}` : ""}${
-        version ? `&version=${version}` : ""
-      }`;
-    }else if (version){
+      uri = `${bpp_uri}/${action}${scenario ? `?scenario=${scenario}` : ""}${version ? `&version=${version}` : ""
+        }`;
+    } else if (version) {
       uri = `${bpp_uri}/${action}${version ? `?version=${version}` : ""}`;
-    }else{
+    } else {
       uri = `${bpp_uri}/${action}${scenario ? `?scenario=${scenario}` : ""}`;
 
     }
 
-    try{
+    try {
       const response = await axios.post(uri, res_obj, {
         headers: { ...headers },
-      });      
+      });
       await redis.set(
         `${transaction_id}-${action}-from-server-${id}-${time_now}`,
         JSON.stringify({
@@ -85,8 +86,8 @@ async function send_response(
           },
         })
       );
-    } catch(err: any) {
-      if(err instanceof AxiosError) {
+    } catch (err: any) {
+      if (err instanceof AxiosError) {
         res.status(err.response?.status || 500).json(err.response?.data || "")
         return;
       }

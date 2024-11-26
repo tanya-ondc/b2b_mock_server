@@ -9,6 +9,7 @@ import {
   quoteCreatorB2c,
   B2C_EXAMPLES_PATH,
   B2B_EXAMPLES_PATH,
+  VERSION,
 } from "../../../lib/utils";
 import fs from "fs";
 import path from "path";
@@ -23,9 +24,9 @@ export const initController = async (
 ) => {
   try {
     const { transaction_id } = req.body.context;
-    const VERSION = await redis.keys(`${transaction_id}-version-*`)
-    const parts = VERSION[0].split('-');
-    const versionn = parts[parts.length - 1];
+    const VERSION = await redis.get(`${transaction_id}-version`)
+    // const parts = VERSION[0].split('-');
+    const version = VERSION;
 
 
     const transactionKeys = await redis.keys(`${transaction_id}-*`);
@@ -73,14 +74,14 @@ export const initController = async (
     });
 
     req.body.item_arr = item_id_name.flat();
-    initDomesticController(req, res, next);
+    await initDomesticController(req, res, next);
 
   } catch (error) {
     return next(error);
   }
 };
 
-const initDomesticController = (
+const initDomesticController = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -95,15 +96,25 @@ const initDomesticController = (
       version = "b2c"
     }
 
+    version = await redis.get(
+      `${req.body.context.transaction_id}-version`);
+    // console.log("🚀 ~ version:", version)
+
     let file: any
     if (version === "b2c") {
       file = fs.readFileSync(
         path.join(B2C_EXAMPLES_PATH, "on_init/on_init_exports.yaml")
       );
-    } else {
+    } else if (version === VERSION['b2b']) {
       file = fs.readFileSync(
         path.join(B2B_EXAMPLES_PATH, "on_init/on_init_domestic.yaml")
       );
+    } else {
+      console.log('here on init')
+      file = fs.readFileSync(
+        path.join(B2B_EXAMPLES_PATH, "on_init/on_init_exports.yaml")
+      );
+
     }
 
 
@@ -136,7 +147,7 @@ const initDomesticController = (
 
     let responseMessage;
 
-    if (version === "b2b") {
+    if (version === "b2b" || version === "b2b-exp") {
       let responseMessageb2b = {
         order: {
           items: [
