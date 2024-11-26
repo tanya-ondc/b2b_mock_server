@@ -252,7 +252,7 @@ export const onSearchSchema = {
 													required: ["street", "city", "area_code", "state"],
 												},
 											},
-											required: ["id", "gps", "address"],
+											required: ["id", "gps"],
 										},
 									},
 									items: {

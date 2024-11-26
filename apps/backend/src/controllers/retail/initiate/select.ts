@@ -61,12 +61,10 @@ const intializeRequest = async (
 				file = fs.readFileSync(
 					path.join(B2C_EXAMPLES_PATH, "select/select_exports.yaml")
 				);
+				break;
 			case "b2b":
 
 				//Check if its exports or domestics
-				file = fs.readFileSync(
-					path.join(B2B_EXAMPLES_PATH, "select/select_domestic.yaml")
-				);
 				if (context.location.city.code === 'std:999') {
 
 					scenario = "rfq"
@@ -74,16 +72,23 @@ const intializeRequest = async (
 					file = fs.readFileSync(
 						path.join(B2B_EXAMPLES_PATH, "select/select_exports.yaml")
 					);
+					break;
+				}
+				else {
+					file = fs.readFileSync(
+						path.join(B2B_EXAMPLES_PATH, "select/select_domestic.yaml")
+					);
 
+					break;
 				}
 			default:
+
 				file = fs.readFileSync(
 					path.join(B2B_EXAMPLES_PATH, "select/select_domestic.yaml")
 				);
 		}
 
 		const response = YAML.parse(file.toString());
-		// console.log("Yaml",JSON.stringify(response))
 
 		if (scenario !== "rfq") {
 			delete response?.value?.message?.order?.items[0]?.tags;
@@ -132,40 +137,40 @@ const intializeRequest = async (
 
 								...response.value.message.order.fulfillments[0],
 								...message.catalog.fulfillments[0],
-								"customer": {
-									"person": {
-										"creds": [
-											{
-												"id": "ESG-12345678",
-												"type": "License",
-												"desc": "Import License No. ESG-12345678",
-												"icon": "https://abcd.cdn.com/images/license-img",
-												"url": "https://abcd.dnb.com/verify?id=ESG-1234"
-											}
-										]
-									}
-								},
-								"tags": [
-									{
-										"descriptor": {
-											"code": "DELIVERY_TERMS"
-										},
-										"list": [
-											{
-												"descriptor": {
-													"code": "INCOTERMS"
-												},
-												"value": "CIF"
-											},
-											{
-												"descriptor": {
-													"code": "NAMED_PLACE_OF_DELIVERY"
-												},
-												"value": "SGP"
-											}
-										]
-									}
-								]
+								// "customer": {
+								// 	"person": {
+								// 		"creds": [
+								// 			{
+								// 				"id": "ESG-12345678",
+								// 				"type": "License",
+								// 				"desc": "Import License No. ESG-12345678",
+								// 				"icon": "https://abcd.cdn.com/images/license-img",
+								// 				"url": "https://abcd.dnb.com/verify?id=ESG-1234"
+								// 			}
+								// 		]
+								// 	}
+								// },
+								// "tags": [
+								// 	{
+								// 		"descriptor": {
+								// 			"code": "DELIVERY_TERMS"
+								// 		},
+								// 		"list": [
+								// 			{
+								// 				"descriptor": {
+								// 					"code": "INCOTERMS"
+								// 				},
+								// 				"value": "CIF"
+								// 			},
+								// 			{
+								// 				"descriptor": {
+								// 					"code": "NAMED_PLACE_OF_DELIVERY"
+								// 				},
+								// 				"value": "SGP"
+								// 			}
+								// 		]
+								// 	}
+								// ]
 
 								// type: message.catalog.fulfillments[0][0],
 
