@@ -15,6 +15,7 @@ export const DomainContext = createContext<DomainContextType>({
 
 export const DomainProvider = ({ children }: DomainProviderType) => {
 	const [domain, setDomain] = useState("");
+	console.log("domainnnn",domain)
 	return (
 		<DomainContext.Provider value={{ domain, setDomain }}>
 			{children}

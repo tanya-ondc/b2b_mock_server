@@ -1,3 +1,4 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect } from "react";
 import Fade from "@mui/material/Fade";
@@ -72,9 +73,9 @@ export const InitiateRequestSection = () => {
 	const [allowSubmission, setAllowSubmission] = useState<boolean>(false);
 	const [transactionId, setTransactionId] = useState<string>("");
 	const [showCatalogSelect, setShowCatalogSelect] = useState<boolean>(false);
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const [matchingItems, setMatchingItems] = useState<any[]>([]);
 	const [selectedItemId, setSelectedItemId] = useState<string>("");
-	const [flow,setflow]=useState<string>("1")
 
 	useEffect(() => {
 		// setRenderActionFields(true);
@@ -92,6 +93,7 @@ export const InitiateRequestSection = () => {
 	const handleTransactionIdSubmit = async () => {
 		try {
 			const response = await axios.post<{
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				message: { matchingItems: any[] };
 			}>(
 				`${
@@ -162,9 +164,6 @@ export const InitiateRequestSection = () => {
 			setSelectedScenario(value as string);
 			/****Write the logic for changes the domain options based on version selection */
 		}
-		if(fieldName ==="flow"){
-			setflow(value)
-		}
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		setFormState((prev: any) => ({ ...prev, [fieldName]: value }));
 	};
@@ -174,7 +173,7 @@ export const InitiateRequestSection = () => {
 			const formKeys = INITIATE_FIELDS[
 				action as keyof typeof INITIATE_FIELDS
 			].map((e) => e.name);
-			
+
 			const scenarios = INITIATE_FIELDS[
 				action as keyof typeof INITIATE_FIELDS
 			].filter((e) => e.name === "scenario")[0];
@@ -274,6 +273,7 @@ export const InitiateRequestSection = () => {
 				);
 				setMessageType("error");
 			}
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} catch (error: any) {
 			// 	setMessageType("error");
 			// 	if (
@@ -399,7 +399,9 @@ export const InitiateRequestSection = () => {
 								INITIATE_FIELDS[action as keyof typeof INITIATE_FIELDS].map(
 									(field, index) => {
 										// Skip rendering `orderId` if action is "cancel" and domain is "logistics"
-										{console.log("action",action,domain)}
+										{
+											console.log("action", action, domain);
+										}
 										if (
 											domain === "logistics" &&
 											action === "cancel" &&
@@ -457,7 +459,7 @@ export const InitiateRequestSection = () => {
 												</React.Fragment>
 											);
 										}
-										
+
 										return (
 											<React.Fragment key={`field-${action}-${index}`}>
 												{field.type === "text" &&
@@ -475,8 +477,9 @@ export const InitiateRequestSection = () => {
 														field.name === "cancellationReasonId") ? (
 													field.domainDepended ? (
 														(() => {
+															// eslint-disable-next-line @typescript-eslint/no-explicit-any
 															const options = field.options as any;
-															console.log("options",options)
+															console.log("options", options);
 															// Special case for scenario field
 															if (field.name === "scenario") {
 																if (
@@ -669,7 +672,7 @@ export const InitiateRequestSection = () => {
 																);
 															}
 														})()
-													) : ( (domain==="agri" && field.name==="flow")? 
+													) : domain === "agri" && field.name === "flow" ? (
 														<Input
 															fullWidth
 															placeholder={field.placeholder}
@@ -677,8 +680,8 @@ export const InitiateRequestSection = () => {
 															onChange={(e) =>
 																handleFieldChange(field.name, e.target.value)
 															}
-														/>:null
-													)
+														/>
+													) : null
 												) : null}
 											</React.Fragment>
 										);
