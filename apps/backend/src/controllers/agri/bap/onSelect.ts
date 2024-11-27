@@ -70,7 +70,7 @@ const onSelectServiceCustomizedController = (
 	const {
 		context,
 		message: {
-			order: { provider, items, payments, fulfillments },
+			order: { provider, items, payments, billing,fulfillments },
 		},
 	} = req.body;
 
@@ -99,20 +99,7 @@ const onSelectServiceCustomizedController = (
 						};
 					}),
 			],
-			billing: {
-				name: "ONDC buyer",
-				address:
-					"22, Mahatma Gandhi Rd, Craig Park Layout, Ashok Nagar, Bengaluru, Karnataka 560001",
-				state: {
-					name: "Karnataka",
-				},
-				city: {
-					name: "Bengaluru",
-				},
-				tax_id: "XXXXXXXXXXXXXXX",
-				email: "nobody@nomail.com",
-				phone: "9886098860",
-			},
+			billing,
 			fulfillments: [
 				{
 					id,
