@@ -22,7 +22,7 @@ export const onInitController = async (req: Request, res: Response, next: NextFu
 
 const onInitConsultationController = (req: Request, res: Response, next: NextFunction) => {
 	try{
-		const { context, message: { order: { provider, locations, items, billing, fulfillments, payments,quote } } } = req.body;
+		const { context, message: { order: { provider,items, billing, fulfillments, payments,quote } } } = req.body;
 		const { stops, ...remainingfulfillments } = fulfillments[0]
 	
 		const file = fs.readFileSync(
@@ -37,7 +37,6 @@ const onInitConsultationController = (req: Request, res: Response, next: NextFun
 				status: "Created",
 				provider: {
 					...provider,
-					...locations
 				},
 				items,
 				billing,
@@ -67,9 +66,8 @@ const onInitConsultationController = (req: Request, res: Response, next: NextFun
 };
 
 const onInitServiceCustomizedController = (req: Request, res: Response, next: NextFunction) => {
-	const { context, providersItems, message: { order: { provider, locations, items, billing, fulfillments, payments } } } = req.body;
+	const { context, providersItems, message: { order: { provider, items, billing, fulfillments, payments } } } = req.body;
 	const { stops, ...remainingfulfillments } = fulfillments[0]
-	console.log("noooooooooo")
 	const file = fs.readFileSync(
 		path.join(SERVICES_EXAMPLES_PATH, "confirm/confirm_consultation.yaml")
 	);
@@ -81,7 +79,6 @@ const onInitServiceCustomizedController = (req: Request, res: Response, next: Ne
 			status: response.value.message.order.status,
 			provider: {
 				...provider,
-				locations: [locations[0]]
 			},
 			items,
 			billing,

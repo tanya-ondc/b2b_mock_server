@@ -21,8 +21,8 @@ export const SRV_FULFILLMENT_STATE = [
 	"REPORT_GENERATED",
 	"REPORT_SHARED",
 	"COMPLETED",
-	"Placed",
-	"cancel"
+	"PLACED",
+	"CAMCEL"
 ];
 
 export const SRV_ORDER_STATE = [
@@ -31,7 +31,6 @@ export const SRV_ORDER_STATE = [
 	"In-progress",
 	"Completed",
 	"Cancelled",
-	"COMPLETED",
 	"Pending",
 ];
  

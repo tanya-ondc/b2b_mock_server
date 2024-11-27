@@ -92,7 +92,6 @@ const initConsultationController = (
 		const responseMessage = {
 			order: {
 				provider,
-				locations,
 				items,
 				billing,
 				fulfillments: updatedFulfillments,

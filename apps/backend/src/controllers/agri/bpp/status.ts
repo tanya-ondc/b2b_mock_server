@@ -27,6 +27,7 @@ import {
 import { ON_ACTION_KEY } from "../../../lib/utils/actionOnActionKeys";
 import { ERROR_MESSAGES } from "../../../lib/utils/responseMessages";
 import axios, { AxiosError } from "axios";
+import { update } from "lodash";
 
 export const statusController = async (
 	req: Request,
@@ -279,6 +280,11 @@ const statusRequest = async (
 			"agri"
 		);
 
+		const createdate=new Date(message.order.created_at)
+		createdate.setSeconds(createdate.getSeconds() + 10);
+
+		const updatedate=new Date(message.order.updated_at)
+		updatedate.setSeconds(updatedate.getSeconds() + 10);
 		const onStatusCreated = {
 			...responseMessage, // spread the entire response
 			order: {
@@ -292,10 +298,16 @@ const statusRequest = async (
 							code: "Pending" // modify the code to "created"
 						}
 					}
-				}))
+				})),
+				created_at:createdate.toISOString(),
+				updated_at:updatedate.toISOString()
 
 			}
 		};
+
+		createdate.setSeconds(createdate.getSeconds() + 20);
+		updatedate.setSeconds(updatedate.getSeconds() + 20);
+
 		const onStatusPacked = {
 			...responseMessage, // spread the entire response
 			order: {
@@ -309,9 +321,16 @@ const statusRequest = async (
 							code: "PACKED" // modify the code to "created"
 						}
 					}
-				}))
+				})),
+				created_at:createdate.toISOString(),
+				updated_at:updatedate.toISOString()
 			}
 		}
+
+		createdate.setSeconds(createdate.getSeconds() + 30);
+		updatedate.setSeconds(updatedate.getSeconds() + 30);
+
+
 		const onStatusAgent_Assigned = {
 			...responseMessage, // spread the entire response
 			order: {
@@ -325,9 +344,15 @@ const statusRequest = async (
 							code: "AGENT_ASSIGNED" // modify the code to "created"
 						}
 					}
-				}))
+				})),
+				created_at:createdate.toISOString(),
+				updated_at:updatedate.toISOString()
 			}
 		}
+
+		createdate.setSeconds(createdate.getSeconds() + 40);
+		updatedate.setSeconds(updatedate.getSeconds() + 40);
+
 		const onStatusOrderPickedUp = {
 			...responseMessage, // spread the entire response
 			order: {
@@ -341,9 +366,16 @@ const statusRequest = async (
 							code: "ORDER_PICKED_UP" // modify the code to "created"
 						}
 					}
-				}))
+				})),
+				created_at:createdate.toISOString(),
+				updated_at:updatedate.toISOString()
 			}
 		}
+
+		createdate.setSeconds(createdate.getSeconds() + 50);
+		updatedate.setSeconds(updatedate.getSeconds() + 50);
+
+
 		const onStatusOrderOutForDelivery = {
 			...responseMessage, // spread the entire response
 			order: {
@@ -357,9 +389,15 @@ const statusRequest = async (
 							code: "ORDER_OUT_FOR_DELIVERY" // modify the code to "created"
 						}
 					}
-				}))
+				})),
+				created_at:createdate.toISOString(),
+				updated_at:updatedate.toISOString()
 			}
 		}
+
+		createdate.setSeconds(createdate.getSeconds() + 60);
+		updatedate.setSeconds(updatedate.getSeconds() + 60);
+
 		const onStatusOrderDelivered = {
 			...responseMessage, // spread the entire response
 			order: {
@@ -373,175 +411,175 @@ const statusRequest = async (
 							code: "DELIVERED" // modify the code to "created"
 						}
 					}
-				}))
+				})),
+				created_at:createdate.toISOString(),
+				updated_at:updatedate.toISOString()
 			}
 		}
 
-		let i = 1;
-		let counter = 0; // Track number of requests sent
-		const maxRequests = 5;
-		let interval = setInterval(async () => {
-			if (i >= 2) {
-				clearInterval(interval);
-			}
-			// context.message_id = uuidv4();
-			await childOrderResponseBuilder(
-				i,
-				res,
-				context,
-				onStatusCreated,
-				`${req.body.context.bap_uri}${
-					req.body.context.bap_uri.endsWith("/")
-						? "on_status"
-						: "/on_status"
-				}`,
-				"on_status"
-			);
-
-			await childOrderResponseBuilder(
-				i,
-				res,
-				context,
-				onStatusPacked,
-				`${req.body.context.bap_uri}${
-					req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
-				}`,
-				"on_status"
-			);
-
-			await childOrderResponseBuilder(
-				i,
-				res,
-				context,
-				onStatusAgent_Assigned,
-				`${req.body.context.bap_uri}${
-					req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
-				}`,
-				"on_status"
-			);
-
-			await childOrderResponseBuilder(
-				i,
-				res,
-				context,
-				onStatusOrderPickedUp,
-				`${req.body.context.bap_uri}${
-					req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
-				}`,
-				"on_status"
-			);
-
-			await childOrderResponseBuilder(
-				i,
-				res,
-				context,
-				onStatusOrderOutForDelivery,
-				`${req.body.context.bap_uri}${
-					req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
-				}`,
-				"on_status"
-			);
-
-			await childOrderResponseBuilder(
-				i,
-				res,
-				context,
-				onStatusOrderDelivered,
-				`${req.body.context.bap_uri}${
-					req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
-				}`,
-				"on_status"
-			);
-			i++;
-		}, 1000);
-
-
-		// let i = 0; // Start with 1
-		// const maxRequests = 5; // Set the number of requests you want to make
-
-		// // Create an async function to handle sending the requests
-		// async function sendRequests() {
-		// 	// Send the requests one after another
-		// 	try {
-		// 		// First request (onStatusCreated)
-		// 		// await childOrderResponseBuilder(
-		// 		// 	i,
-		// 		// 	res,
-		// 		// 	context,
-		// 		// 	onStatusCreated,
-		// 		// 	`${req.body.context.bap_uri}${req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
-		// 		// 	}`,
-		// 		// 	"on_status"
-		// 		// );
-
-		// 		// Second request (onStatusPacked)
-		// 		 // Increment for the next request
-		// 		await childOrderResponseBuilder(
-		// 			i,
-		// 			res,
-		// 			context,
-		// 			onStatusPacked,
-		// 			`${req.body.context.bap_uri}${req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
-		// 			}`,
-		// 			"on_status"
-		// 		);
-
-		// 		// Third request (onStatusAgent_Assigned)
-		// 		 // Increment for the next request
-		// 		await childOrderResponseBuilder(
-		// 			i,
-		// 			res,
-		// 			context,
-		// 			onStatusAgent_Assigned,
-		// 			`${req.body.context.bap_uri}${req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
-		// 			}`,
-		// 			"on_status"
-		// 		);
-
-		// 		// Fourth request (onStatusOrderPickedUp)
-		// 		 // Increment for the next request
-		// 		await childOrderResponseBuilder(
-		// 			i,
-		// 			res,
-		// 			context,
-		// 			onStatusOrderPickedUp,
-		// 			`${req.body.context.bap_uri}${req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
-		// 			}`,
-		// 			"on_status"
-		// 		);
-
-		// 		// Fifth request (onStatusOrderOutForDelivery)
-		// 		 // Increment for the next request
-		// 		await childOrderResponseBuilder(
-		// 			i,
-		// 			res,
-		// 			context,
-		// 			onStatusOrderOutForDelivery,
-		// 			`${req.body.context.bap_uri}${req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
-		// 			}`,
-		// 			"on_status"
-		// 		);
-
-		// 		// Sixth request (onStatusOrderDelivered)
-		// 		// Increment for the next request
-		// 		await childOrderResponseBuilder(
-		// 			i,
-		// 			res,
-		// 			context,
-		// 			onStatusOrderDelivered,
-		// 			`${req.body.context.bap_uri}${req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
-		// 			}`,
-		// 			"on_status"
-		// 		);
-
-		// 	} catch (error) {
-		// 		// If any request fails, catch the error and log it
-		// 		console.error("Error occurred while sending requests:", error);
+		// let i = 1;
+		// let interval = setInterval(async () => {
+		// 	if (i >= 2) {
+		// 		clearInterval(interval);
 		// 	}
-		// }
+		// 	// context.message_id = uuidv4();
+		// 	await childOrderResponseBuilder(
+		// 		i,
+		// 		res,
+		// 		context,
+		// 		onStatusCreated,
+		// 		`${req.body.context.bap_uri}${
+		// 			req.body.context.bap_uri.endsWith("/")
+		// 				? "on_status"
+		// 				: "/on_status"
+		// 		}`,
+		// 		"on_status"
+		// 	);
 
-		// // Call the function once to send all the requests
-		// sendRequests();
+		// 	await childOrderResponseBuilder(
+		// 		i,
+		// 		res,
+		// 		context,
+		// 		onStatusPacked,
+		// 		`${req.body.context.bap_uri}${
+		// 			req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
+		// 		}`,
+		// 		"on_status"
+		// 	);
+
+		// 	await childOrderResponseBuilder(
+		// 		i,
+		// 		res,
+		// 		context,
+		// 		onStatusAgent_Assigned,
+		// 		`${req.body.context.bap_uri}${
+		// 			req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
+		// 		}`,
+		// 		"on_status"
+		// 	);
+
+		// 	await childOrderResponseBuilder(
+		// 		i,
+		// 		res,
+		// 		context,
+		// 		onStatusOrderPickedUp,
+		// 		`${req.body.context.bap_uri}${
+		// 			req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
+		// 		}`,
+		// 		"on_status"
+		// 	);
+
+		// 	await childOrderResponseBuilder(
+		// 		i,
+		// 		res,
+		// 		context,
+		// 		onStatusOrderOutForDelivery,
+		// 		`${req.body.context.bap_uri}${
+		// 			req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
+		// 		}`,
+		// 		"on_status"
+		// 	);
+
+		// 	await childOrderResponseBuilder(
+		// 		i,
+		// 		res,
+		// 		context,
+		// 		onStatusOrderDelivered,
+		// 		`${req.body.context.bap_uri}${
+		// 			req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
+		// 		}`,
+		// 		"on_status"
+		// 	);
+		// 	i++;
+		// }, 1000);
+
+
+		let i = 0; // Start with 1
+		const maxRequests = 5; // Set the number of requests you want to make
+
+		// Create an async function to handle sending the requests
+		async function sendRequests() {
+			// Send the requests one after another
+			try {
+				// First request (onStatusCreated)
+				// await childOrderResponseBuilder(
+				// 	i,
+				// 	res,
+				// 	context,
+				// 	onStatusCreated,
+				// 	`${req.body.context.bap_uri}${req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
+				// 	}`,
+				// 	"on_status"
+				// );
+
+				// Second request (onStatusPacked)
+				 // Increment for the next request
+				await childOrderResponseBuilder(
+					i,
+					res,
+					context,
+					onStatusPacked,
+					`${req.body.context.bap_uri}${req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
+					}`,
+					"on_status"
+				);
+
+				// Third request (onStatusAgent_Assigned)
+				 // Increment for the next request
+				await childOrderResponseBuilder(
+					i,
+					res,
+					context,
+					onStatusAgent_Assigned,
+					`${req.body.context.bap_uri}${req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
+					}`,
+					"on_status"
+				);
+
+				// Fourth request (onStatusOrderPickedUp)
+				 // Increment for the next request
+				await childOrderResponseBuilder(
+					i,
+					res,
+					context,
+					onStatusOrderPickedUp,
+					`${req.body.context.bap_uri}${req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
+					}`,
+					"on_status"
+				);
+
+				// Fifth request (onStatusOrderOutForDelivery)
+				 // Increment for the next request
+				await childOrderResponseBuilder(
+					i,
+					res,
+					context,
+					onStatusOrderOutForDelivery,
+					`${req.body.context.bap_uri}${req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
+					}`,
+					"on_status"
+				);
+
+				// Sixth request (onStatusOrderDelivered)
+				// Increment for the next request
+				await childOrderResponseBuilder(
+					i,
+					res,
+					context,
+					onStatusOrderDelivered,
+					`${req.body.context.bap_uri}${req.body.context.bap_uri.endsWith("/") ? "on_status" : "/on_status"
+					}`,
+					"on_status"
+				);
+
+			} catch (error) {
+				// If any request fails, catch the error and log it
+				console.error("Error occurred while sending requests:", error);
+			}
+		}
+
+		// Call the function once to send all the requests
+		sendRequests();
 
 
 	} catch (error) {
