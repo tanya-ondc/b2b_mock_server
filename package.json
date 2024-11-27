@@ -15,7 +15,7 @@
 	],
 	"devDependencies": {
 		"tsup": "^8.2.4",
-		"turbo": "2.0.11"
+		"turbo": "^2.3.0"
 	},
 	"dependencies": {
 		"iso8601-duration": "^2.1.2"

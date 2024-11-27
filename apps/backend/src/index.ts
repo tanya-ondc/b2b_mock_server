@@ -7,6 +7,7 @@ import {
 	servicesRouter,
 	subscriptionRouter,
 	logisticsRouter,
+	agriRouter,
 } from "./controllers";
 import cors from "cors";
 import {
@@ -67,6 +68,7 @@ app.use("/auth", errorHandlingWrapper(authRouter));
 app.use("/services", errorHandlingWrapper(servicesRouter));
 app.use("/subscription", errorHandlingWrapper(subscriptionRouter));
 app.use("/logistics", errorHandlingWrapper(logisticsRouter));
+app.use("/agri", errorHandlingWrapper(agriRouter));
 app.use("/detect_app_installation", (req: Request, res: Response) => {
 	const headers = req.headers;
 	return res.json({

@@ -95,3 +95,11 @@
 	path = packages/openapi/domain-repos/@logistics/draft-2.x
 	url = https://github.com/ONDC-Official/ONDC-LOG-Specifications.git
 	branch = draft-2.x
+[submodule "apps/backend/domain-repos/@agri/draft-agri_input"]
+	path = apps/backend/domain-repos/@agri/draft-agri_input
+	url = https://github.com/ONDC-Official/ONDC-AGR-Specifications
+	branch = draft-agri_input
+[submodule "packages/openapi/domain-repos/@agri/draft-agri_input"]
+	path = packages/openapi/domain-repos/@agri/draft-agri_input
+	url = https://github.com/ONDC-Official/ONDC-AGR-Specifications
+	branch = draft-agri_input

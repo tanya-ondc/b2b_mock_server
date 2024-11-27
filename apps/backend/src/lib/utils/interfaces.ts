@@ -166,6 +166,8 @@ export interface Fulfillment {
   stops: Stop[];
   rateable?: boolean;
   tags: Tag[];
+  end?:{},
+  start?:{}
 }
 interface Params {
   amount: string;

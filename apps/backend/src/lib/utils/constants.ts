@@ -32,6 +32,9 @@ export const LOGISTICS_EXAMPLES_PATH =
 export const SUBSCRIPTION_EXAMPLES_PATH =
 	"./domain-repos/@mec/draft-print_media/api/components/Examples/Print_Content_yaml";
 
+export const AGRI_EXAMPLES_PATH =
+	"./domain-repos/@agri/draft-agri_input/api/components/Examples/Agri_Products_yaml";
+
 export const MOCKSERVER_ID = "mock.ondc.org/api";
 // export const B2B_BPP_MOCKSERVER_URL = `https://${MOCKSERVER_ID}/b2b/bpp`;
 // export const B2B_BAP_MOCKSERVER_URL = `https://${MOCKSERVER_ID}/b2b/bap`;
@@ -58,6 +61,9 @@ export const SERVICES_BAP_MOCKSERVER_URL = `${MOCK_API_BASE_URL}services/bap`;
 
 export const AGRI_SERVICES_BPP_MOCKSERVER_URL = `${MOCK_API_BASE_URL}agri-services/bpp`;
 export const AGRI_SERVICES_BAP_MOCKSERVER_URL = `${MOCK_API_BASE_URL}agri-services/bap`;
+
+export const AGRI_BPP_MOCKSERVER_URL = `${MOCK_API_BASE_URL}agri/bpp`;
+export const AGRI_BAP_MOCKSERVER_URL = `${MOCK_API_BASE_URL}agri/bap`;
 // export const AGRI_SERVICES_BPP_MOCKSERVER_URL = `https://${MOCKSERVER_ID}/agri-services/bpp`;
 // export const AGRI_SERVICES_BAP_MOCKSERVER_URL = `https://${MOCKSERVER_ID}/agri-services/bap`;
 

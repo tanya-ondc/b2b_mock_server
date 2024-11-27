@@ -28,6 +28,8 @@ export const l2Validator = (domain: string) => async (req: Request, res: Respons
   console.log("ACTION and REQ DOMAIN", action, reqDomain)
 
   const specString = await redis.get(`${domain}_${(reqDomain as string).toLowerCase().replace(":", "_")}_l2_validation`);
+  console.log("ACTION SCHEMA", specString)
+
   const spec = JSON.parse(specString as string);
   const actionSchema = spec['paths'][`/${action}`]['post']['requestBody']['content']['application/json']['schema']
   console.log("ACTION SCHEMA", actionSchema)
