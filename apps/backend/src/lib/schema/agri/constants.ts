@@ -22,7 +22,7 @@ export const SRV_FULFILLMENT_STATE = [
 	"REPORT_SHARED",
 	"COMPLETED",
 	"PLACED",
-	"CAMCEL"
+	"CANCEL"
 ];
 
 export const SRV_ORDER_STATE = [
