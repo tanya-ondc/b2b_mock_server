@@ -14,7 +14,7 @@ export const initiateUpdateController = async (
 	next: NextFunction
 ) => {
 	try {
-		const {  transactionId } = req.body;
+		const { transactionId } = req.body;
 		const onConfirm = await redisFetchToServer("on_confirm", transactionId);
 		if (!onConfirm) {
 			return send_nack(res, "On Confirm doesn't exist");
@@ -107,8 +107,15 @@ export const initiateUpdateController = async (
 											descriptor: {
 												code: "Eway_Bill_No",
 											},
-											value: "1227262193237777",
+											value: "387757382938",
 										},
+										{
+											"descriptor": {
+												"code": "Invoice_Number"
+											},
+											"value": "94395859020203"
+										}
+
 									],
 								},
 							],
@@ -119,7 +126,7 @@ export const initiateUpdateController = async (
 				},
 			},
 		};
-    await send_response(res, next, update, transactionId, "update");
+		await send_response(res, next, update, transactionId, "update");
 	} catch (error) {
 		return next(error);
 	}

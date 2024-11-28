@@ -13,10 +13,17 @@ export const SERVICES_DOMAINS = {
 	AGRI_EQUIPMENT: "ONDC:SRV17",
 	BID_ACTION_SERVICES: "ONDC:SRV18",
 	SUBSCRIPTION_PRINT_MEDIA:"ONDC:MEC10",
-	SUBSCRIPTION_AUDIO_VIDEO: "ONDC:MEC11"
+	SUBSCRIPTION_AUDIO_VIDEO: "ONDC:MEC11",
+	AGRI_INPUT:"ONDC:AGR10",
+	AGRI_OUTPUT:"ONDC:AGRI11"
 };
 
 export const SUBSCRIPTION_DOMAINS = {
+	PRINT_MEDIA: "ONDC:MEC10",
+	AUDIO_VIDEO: "ONDC:MEC11"
+};
+
+export const AGRI_DOMAINS = {
 	PRINT_MEDIA: "ONDC:MEC10",
 	AUDIO_VIDEO: "ONDC:MEC11"
 };
@@ -79,6 +86,23 @@ export const AGRI_HEALTHCARE_STATUS_OBJECT = {
 	PLACED: "Placed",
 	CANCEL: "cancel",
 };
+
+export const AGRI_STATUS_OBJECT={
+	CREATED:"Created",
+	PACKED:"Packed",
+	AGENT_ASSIGNED:"Agent_Assigned",
+	ORDER_PICKED_UP:"Order_Picked_Up",
+	OUT_FOR_DELIVERY:"Out_For_Delivery",
+	DELIVERED:"Delivered"
+}
+export const AGRI_STATUS=[
+	"Created",
+	"Packed",
+	"Agent_Assigned",
+	"Order_Picked_Up",
+	"Out_For_Delivery",
+	"Delivered"
+]
 
 export const EQUIPMENT_HIRING_STATUS = [
 	"IN_TRANSIT",

@@ -7,6 +7,7 @@ import {
   redisFetchToServer,
   B2C_BAP_MOCKSERVER_URL,
   RETAIL_BAP_MOCKSERVER_URL,
+  VERSION,
 } from "../../../lib/utils";
 import { v4 as uuidv4 } from "uuid";
 
@@ -61,6 +62,15 @@ const intializeRequest = async (
 
     let confirm;
     if(version==="b2b"){
+      if (context.location.city.code === 'std:999') {
+        // scenario = "rfq"
+        version = VERSION['b2bexports']
+        // file = fs.readFileSync(
+        //   path.join(B2B_EXAMPLES_PATH, "init/init_exports.yaml")
+        // );
+
+      } 
+
       const confirmb2b = {
         context: {
           ...context,
@@ -155,6 +165,30 @@ const intializeRequest = async (
           },
         },
       };
+      if(version==VERSION['b2bexports']){
+        confirmb2b.message.order.fulfillments.tags = [
+          {
+            "descriptor": {
+              "code": "DELIVERY_TERMS"
+            },
+            "list": [
+              {
+                "descriptor": {
+                  "code": "INCOTERMS"
+                },
+                "value": "CIF"
+              },
+              {
+                "descriptor": {
+                  "code": "NAMED_PLACE_OF_DELIVERY"
+                },
+                "value": "SGP"
+              }
+            ]
+          }
+
+        ]
+      }
       confirm=confirmb2b
     }
     else{

@@ -24,6 +24,8 @@ import { B2CMock } from "./pages/mock/domains/b2c";
 import { B2CSandbox } from "./pages/sandbox/domains/b2c";
 import { LogisticsMock } from "./pages/mock/domains/logistics";
 import { LogisticsSwagger } from "./pages/swagger/domains/logistics";
+import { AgriSandbox } from "./pages/sandbox/domains/agri";
+import { AgriMock } from "./pages/mock/domains/agri";
 // log
 
 const router = createBrowserRouter([
@@ -67,6 +69,10 @@ const router = createBrowserRouter([
 						path: "logistics",
 						Component: LogisticsMock,
 					},
+					{
+						path: "agri",
+						Component: AgriMock,
+					},
 				],
 			},
 			{
@@ -92,6 +98,10 @@ const router = createBrowserRouter([
 					{
 						path: "logistics",
 						Component: LogisticsSandbox,
+					},
+					{
+						path: "agri",
+						Component: AgriSandbox,
 					},
 				],
 			},

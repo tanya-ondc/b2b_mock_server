@@ -89,21 +89,21 @@ export const initiateConfirmController = async (
 						email: "xyz.efgh@gmail.com",
 					},
 				},
-				// tags: [
-				// 	{
-				// 		descriptor: {
-				// 			code: "Delivery_Terms",
-				// 		},
-				// 		list: [
-				// 			{
-				// 				descriptor: {
-				// 					code: "RTO_Action",
-				// 				},
-				// 				value: "no",
-				// 			},
-				// 		],
-				// 	},
-				// ],
+				tags: [
+					{
+						descriptor: {
+							code: "Delivery_Terms",
+						},
+						list: [
+							{
+								descriptor: {
+									code: "RTO_Action",
+								},
+								value: "no",
+							},
+						],
+					},
+				],
 			},
 		];
 		let confirm = {

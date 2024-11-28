@@ -18,7 +18,7 @@ export const initiateSearchController = async (
 	next: NextFunction
 ) => {
 	try {
-		const { bpp_uri, city, domain,version } = req.body;
+		let { bpp_uri, city, domain, version } = req.body;
 		let file: any = "";
 		switch (version) {
 			case "b2c":
@@ -26,8 +26,12 @@ export const initiateSearchController = async (
 					path.join(B2C_EXAMPLES_PATH, "search/search_by_item.yaml")
 				);
 			case "b2b":
+				//Check if its exports or domestics
+				if (city == "std:999") {
+					version = "b2b-exp"
+				}
 				file = fs.readFileSync(
-					path.join(B2B_EXAMPLES_PATH, "search/search_by_item.yaml")
+					path.join(B2B_EXAMPLES_PATH, "search/search_by_category.yaml")
 				);
 		}
 
@@ -53,7 +57,7 @@ export const initiateSearchController = async (
 			},
 		};
 		search.bpp_uri = bpp_uri;
-		await send_response(res, next, search, transaction_id, "search","",version);
+		await send_response(res, next, search, transaction_id, "search", "", version);
 	} catch (error) {
 		return next(error);
 	}
