@@ -88,8 +88,7 @@ export const searchController = (
 				break;
 		}
 		const response = YAML.parse(file.toString());
-		console.log("ON SEARCH RESPONSE HOLIDAYS: ", response.value.message.catalog.providers[0].items[1].time.schedule.holidays);
-		// fs.writeFileSync("temp-on_search.json", JSON.stringify(response.value.message, null, 2));
+			// fs.writeFileSync("temp-on_search.json", JSON.stringify(response.value.message, null, 2));
 		return responseBuilder(
 			res,
 			next,

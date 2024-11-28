@@ -464,6 +464,7 @@ paths:
                                           - id
                                   required:
                                     - id
+                                    - locations
                               required:
                                 - provider
                           required:
@@ -2171,8 +2172,60 @@ paths:
                                                 - email
                                           required:
                                             - contact
+                                      locations:
+                                        type: array
+                                        items:
+                                          type: object
+                                          properties:
+                                            id:
+                                              type: string
+                                            gps:
+                                              type: string
+                                            address:
+                                              type: string
+                                            city:
+                                              type: object
+                                              properties:
+                                                code:
+                                                  type: string
+                                                name:
+                                                  type: string
+                                              required:
+                                              - code
+                                              - name
+                                            state:
+                                              type: object
+                                              properties:
+                                                code:
+                                                  type: string
+                                              required:
+                                              - code
+                                            country:
+                                              type: object
+                                              properties:
+                                                code:
+                                                  type: string
+                                              required:
+                                              - code
+                                            area_code:
+                                              type: string
+                                          required:
+                                          - id
+                                          - gps
+                                          - address
+                                          - city
+                                          - state
+                                          - country
+                                          - area_code
+                                      creds:
+                                        type: array
+                                        items:
+                                          type: object
+                                          required:
+                                            - url
                                     required:
                                       - fulfillments
+                                      - locations
       responses:
         default:
           $ref: '#/paths/~1init/post/responses/default'

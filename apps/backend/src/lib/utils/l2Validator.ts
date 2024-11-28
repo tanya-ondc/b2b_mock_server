@@ -10,7 +10,6 @@ export const l2Validator = (domain: string) => async (req: Request, res: Respons
   const action = url.pathname.split("/")[url.pathname.split("/").length - 1]
 
   const {domain: reqDomain} = req.body.context;
-  console.log("REQ Context", req.body.context)
   const ajv = new Ajv({
     allErrors: true,
     strict: false,

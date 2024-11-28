@@ -71,9 +71,9 @@ const selectConsultationConfirmController = (
 	next: NextFunction
 ) => {
 	try {
-		console.log("confirmation")
+		console.log("confirmation");
 		const { context, message, providersItems } = req.body;
-		const { locations, ...provider } = message.order.provider;
+		const provider = message.order.provider;
 		const domain = context?.domain;
 
 		const updatedFulfillments =
@@ -88,8 +88,6 @@ const selectConsultationConfirmController = (
 						message?.order?.fulfillments,
 						ON_ACTION_KEY?.ON_SELECT
 				  );
-
-		console.log("providersItemsssssssssssssss",providersItems,)
 		const responseMessage = {
 			order: {
 				provider,
@@ -99,9 +97,37 @@ const selectConsultationConfirmController = (
 				})),
 
 				items: message.order.items.map(
-					({ ...remaining }: { location_ids: any; remaining: any }) => ({
-						...remaining,
-					})
+					({ location_ids, ...remaining }: { location_ids: any }) => {
+						if (!(remaining as any).parent_item_id) {
+							return {
+								location_ids,
+								...remaining,
+							};
+						} else {
+							return {
+								location_ids,
+								...remaining,
+								category_ids: [
+									uuidv4(),
+								],
+								tags: [
+									{
+										descriptor: {
+											code: "attribute",
+										},
+										list: [
+											{
+												descriptor: {
+													code: "type",
+												},
+												value: "customization",
+											},
+										],
+									},
+								],
+							};
+						}
+					}
 				),
 
 				fulfillments: updatedFulfillments,
@@ -133,9 +159,7 @@ const selectConsultationConfirmController = (
 						  ),
 			},
 		};
-		responseMessage.order.items[0].fulfillment_ids = [
-			"F1"
-		]
+		responseMessage.order.items[0].fulfillment_ids = ["F1"];
 
 		return responseBuilder(
 			res,
@@ -182,7 +206,7 @@ const onSelectNoEquipmentAvaliable = (
 			ON_ACTION_KEY?.ON_SELECT
 		);
 
-		const { locations, ...provider } = message.order.provider;
+		const provider = message.order.provider;
 
 		const responseMessage = {
 			order: {
@@ -230,7 +254,7 @@ const selectMultiCollectionController = (
 	next: NextFunction
 ) => {
 	try {
-		console.log("multicollection")
+		console.log("multicollection");
 		const { context, message, providersItems } = req.body;
 		const updatedFulfillments = updateFulfillments(
 			req.body?.message?.order?.fulfillments,
@@ -238,7 +262,7 @@ const selectMultiCollectionController = (
 			"multi_collection"
 		);
 
-		const { locations, ...provider } = message.order.provider;
+		const provider = message.order.provider;
 
 		const responseMessage = {
 			order: {
@@ -287,7 +311,7 @@ const selectConsultationRejectController = (
 ) => {
 	try {
 		const { context, message, providersItems } = req.body;
-		const { locations, ...provider } = message.order.provider;
+		const provider = message.order.provider;
 
 		const domain = context?.domain;
 		const responseMessage = {
@@ -371,7 +395,7 @@ const selectServiceCustomizationConfirmedController = async (
 ) => {
 	try {
 		const { context, message } = req.body;
-		const { locations, ...provider } = message.order.provider;
+		const provider = message.order.provider;
 		const { id, parent_item_id, location_ids, quantity, ...item } =
 			message?.order?.items[0];
 		const transactionKeys = await redis.keys(`${context.transaction_id}-*`);
