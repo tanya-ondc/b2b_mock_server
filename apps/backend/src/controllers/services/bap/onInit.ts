@@ -95,10 +95,7 @@ const onInitServiceCustomizedController = (req: Request, res: Response, next: Ne
 		order: {
 			id: uuidv4(),
 			status: response.value.message.order.status,
-			provider: {
-				...provider,
-				locations: [locations[0]]
-			},
+			provider,
 			items,
 			billing,
 			fulfillments: [{

@@ -28,11 +28,6 @@
 	url = https://github.com/ONDC-Official/ONDC-SRV-Specifications
 	branch = draft-agri_services
 
-[submodule "apps/backend/domain-repos/@services/draft-healthcare-service"]
-	path = apps/backend/domain-repos/@services/draft-healthcare-service
-	url = https://github.com/ONDC-Official/ONDC-SRV-Specifications
-	branch = draft-healthcare
-
 
 [submodule "apps/backend/domain-repos/@services/draft-agri_equipment"]
 	path = apps/backend/domain-repos/@services/draft-agri_equipment
@@ -103,3 +98,7 @@
 	path = packages/openapi/domain-repos/@agri/draft-agri_input
 	url = https://github.com/ONDC-Official/ONDC-AGR-Specifications
 	branch = draft-agri_input
+[submodule "apps/backend/domain-repos/@services/draft-healthcare-service"]
+	path = apps/backend/domain-repos/@services/draft-healthcare-service
+	url = https://github.com/ONDC-Official/ONDC-SRV-Specifications
+	branch = draft-healthcare

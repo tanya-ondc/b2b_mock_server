@@ -21,11 +21,6 @@ export const initiateConfirmController = async (
 ) => {
 	try {
 		const { scenario, transactionId } = req.body;
-		const on_search = await redisFetchToServer(
-			ON_ACTION_KEY.ON_SEARCH,
-			transactionId
-		);
-		const providersItems = on_search?.message?.catalog?.providers[0]?.items;
 		const on_init = await redisFetchToServer(
 			ON_ACTION_KEY.ON_INIT,
 			transactionId
@@ -33,7 +28,7 @@ export const initiateConfirmController = async (
 		if (!on_init) {
 			return send_nack(res, ERROR_MESSAGES.ON_INIT_DOES_NOT_EXISTED);
 		}
-		return intializeRequest(res, next, on_init, scenario, providersItems);
+		return intializeRequest(res, next, on_init, scenario);
 	} catch (error) {
 		return next(error);
 	}
@@ -44,13 +39,12 @@ const intializeRequest = async (
 	next: NextFunction,
 	transaction: any,
 	scenario: string,
-	providersItems: any
 ) => {
 	try {
 		const {
 			context,
 			message: {
-				order: { provider, locations, payments, fulfillments, xinput, items },
+				order: { provider, payments, fulfillments, xinput },
 			},
 		} = transaction;
 		const { transaction_id } = context;
@@ -72,10 +66,7 @@ const intializeRequest = async (
 					...transaction.message.order,
 					id: uuidv4(),
 					status: ORDER_STATUS.CREATED.toUpperCase(),
-					provider: {
-						...provider,
-						locations,
-					},
+					provider,
 					fulfillments: [
 						{
 							...remainingfulfillments,

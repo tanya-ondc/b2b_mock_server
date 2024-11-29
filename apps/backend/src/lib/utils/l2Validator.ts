@@ -5,12 +5,11 @@ import addFormats from "ajv-formats";
 import { redis } from "./redis";
 
 export const l2Validator = (domain: string) => async (req: Request, res: Response, next: NextFunction) => {
-  console.log("URL ::", req.url, req.originalUrl, req.hostname)
+  // console.log("URL ::", req.url, req.originalUrl, req.hostname)
   const url = new URL(`https://www.google.com${req.originalUrl}`)
   const action = url.pathname.split("/")[url.pathname.split("/").length - 1]
 
   const {domain: reqDomain} = req.body.context;
-  console.log("REQ Context", req.body.context)
   const ajv = new Ajv({
     allErrors: true,
     strict: false,
@@ -25,10 +24,10 @@ export const l2Validator = (domain: string) => async (req: Request, res: Respons
       [x: string]: {};
     } | unknown>,
     isValid: boolean;
-  console.log("ACTION and REQ DOMAIN", action, reqDomain)
+  // console.log("ACTION and REQ DOMAIN", action, reqDomain)
 
   const specString = await redis.get(`${domain}_${(reqDomain as string).toLowerCase().replace(":", "_")}_l2_validation`);
-  console.log("ACTION SCHEMA", specString)
+  // console.log("ACTION SCHEMA", specString)
 
   const spec = JSON.parse(specString as string);
   const actionSchema = spec['paths'][`/${action}`]['post']['requestBody']['content']['application/json']['schema']
