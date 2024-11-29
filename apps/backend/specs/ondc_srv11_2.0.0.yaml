@@ -81,6 +81,11 @@ paths:
                             - bap_uri
                             - ttl
                             - version
+                        message:
+                          type: object
+                      required:
+                        - context
+                        - message
                     - properties:
                         message:
                           properties:
@@ -100,6 +105,8 @@ paths:
                                       type: string
                                   required:
                                     - id
+                          required:
+                            - intent
                     - properties:
                         message:
                           properties:
