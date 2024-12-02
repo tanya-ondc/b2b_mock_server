@@ -747,6 +747,48 @@ export const onConfirmSchema = {
 								required: ["descriptor", "list"],
 							},
 						},
+						cancellation_terms: {
+							type: "array",
+							items: {
+								type: "object",
+								properties: {
+									fulfillment_state: {
+										type: "object",
+										properties: {
+											descriptor: {
+												type: "object",
+												properties: {
+													code: { type: "string" },
+												},
+												required: ["code"],
+											},
+										},
+										required: ["descriptor"],
+									},
+									reason_required: { type: "boolean" },
+									cancellation_fee: {
+										type: "object",
+										properties: {
+											percentage: { type: "string" },
+											amount: {
+												type: "object",
+												properties: {
+													currency: { type: "string" },
+													value: { type: "string" },
+												},
+												required: ["currency", "value"],
+											},
+										},
+										required: ["percentage", "amount"],
+									},
+								},
+								required: [
+									"fulfillment_state",
+									"reason_required",
+									"cancellation_fee",
+								],
+							},
+						},
 						created_at: {
 							type: "string",
 							format: "date-time",
@@ -760,7 +802,6 @@ export const onConfirmSchema = {
 								" should be updated as per context/timestamp - ${3/context/timestamp}",
 						},
 					},
-					additionalProperties: false,
 					required: [
 						"id",
 						"state",
@@ -773,6 +814,7 @@ export const onConfirmSchema = {
 						"tags",
 						"created_at",
 						"updated_at",
+						"cancellation_terms"
 					],
 				},
 			},

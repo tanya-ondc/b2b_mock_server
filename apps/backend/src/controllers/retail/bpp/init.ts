@@ -148,6 +148,7 @@ const initDomesticController = async (
     let responseMessage;
 
     if (version === "b2b" || version === "b2b-exp") {
+      
       let responseMessageb2b = {
         order: {
           items: [
@@ -163,7 +164,7 @@ const initDomesticController = async (
 
             tracking: true,
           })),
-
+          cancellation_terms: response.value.message.order.cancellation_terms,
           billing,
           provider: {
             id: remainingMessage.provider.id,
@@ -174,10 +175,21 @@ const initDomesticController = async (
             ...staticPaymentInfo,
           })),
           tags: message.order.tags,
-          quote: quoteCreatorB2c(message?.order?.items, providersItems?.items),
-        },
+          quote: quoteCreatorB2c(message?.order?.items, providersItems?.items), 
+      
+        } 
       };
+
+      if(context.location.city.code==="std:999"){
+        (responseMessageb2b.order as any).documents = [
+          {
+            url: "https://seller_terms_url",
+            label: "SELLER_TERMS"
+          }
+        ];
+      }
       responseMessage = responseMessageb2b
+      
     }
     else {
       let responseMessageb2c = {
@@ -195,7 +207,7 @@ const initDomesticController = async (
             type: each.type,
             tracking: true,
           })),
-          cancelation_terms: response.value.message.order.cancelation_terms,
+          cancellation_terms: response.value.message.order.cancellation_terms,
           tags: [
             {
               descriptor: {
