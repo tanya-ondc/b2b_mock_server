@@ -130,7 +130,7 @@ export const confirmServiceCustomizationController = (
     const responseMessage = {
       order: {
         ...order,
-        status: "Accepted",
+        status: ORDER_STATUS.ACCEPTED.toUpperCase(),
         provider: {
           ...order?.provider,
           rateable: true,

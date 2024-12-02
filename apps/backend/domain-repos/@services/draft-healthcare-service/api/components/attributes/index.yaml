@@ -1,3 +1,0 @@
-Healthcare Services:
-  attribute_set:
-    $ref: "./Healthcare_Services/index.yaml"
