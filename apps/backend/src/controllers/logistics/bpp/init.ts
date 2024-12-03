@@ -107,7 +107,7 @@ export const initController = async (
 						quote: {
 							price: {
 								currency: "INR",
-								value: "6000.0",
+								value: "5980.0",
 							},
 							breakup: [
 								{
@@ -225,7 +225,7 @@ export const initController = async (
 								id: "P1",
 								collected_by: req.body.message.order.payments[0].collected_by,
 								params: {
-									amount: "6000",
+									amount: "5980",
 									currency: "INR",
 									bank_account_number: "xxxxxxxx",
 									virtual_payment_address: "xxx@xxxx",

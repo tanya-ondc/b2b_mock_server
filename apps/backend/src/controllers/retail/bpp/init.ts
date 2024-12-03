@@ -148,7 +148,6 @@ const initDomesticController = async (
     let responseMessage;
 
     if (version === "b2b" || version === "b2b-exp") {
-      
       let responseMessageb2b = {
         order: {
           items: [

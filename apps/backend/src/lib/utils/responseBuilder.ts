@@ -1534,6 +1534,16 @@ export const checkIfCustomized = (items: Item[]) => {
 	);
 };
 
+export const quoteLogistics=(data:any)=>{
+	const price=data.breakup.reduce((acc:any,cur:any)=>{
+		acc=acc+Number(cur.price.value)
+		return acc
+	},0)
+	console.log(price)
+	data.price.value=`${price}`
+	return data
+}
+
 //Function for check selected items are existed in onsearch or not
 export const checkSelectedItems = async (data: any) => {
 	try {

@@ -5,6 +5,8 @@ import {
 	responseBuilder,
 	LOGISTICS_EXAMPLES_PATH,
 	Item,
+	quoteLogistics,
+	logger,
 } from "../../../lib/utils";
 import fs from "fs";
 import path from "path";
@@ -154,6 +156,9 @@ export const updateController = async (
 					},
 				})
 			);
+			mockOnUpdate.value.message.order.quote.breakup.splice(2,2)
+			const quotedata=quoteLogistics(mockOnUpdate.value.message.order.quote)
+			 
 			const tags = [
 				...onConfirm.message.order.tags,
 				{
@@ -260,9 +265,26 @@ export const updateController = async (
 					updated_at: newTime,
 					billing: onConfirm.message.order.billing,
 					payments: onConfirm.message.order.payments,
-					tags: tags,
+					// tags: tags,
 				},
 			};
+
+			try{
+				const delivery=await redis.get(`${transactionId}-deliveryType`)
+				if(delivery==='surface'){
+					onConfirm.message.order.fulfillments[0].tags[0].list.push( {
+						descriptor: {
+							code: "LR_No"
+						},
+						value: "1209878992826353"
+					},)
+				}			
+			}
+			catch(error){
+				logger.error(error)
+			}
+
+			console.log("response",response)
 			return responseBuilder(
 				res,
 				next,

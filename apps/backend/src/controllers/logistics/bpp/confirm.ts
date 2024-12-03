@@ -7,10 +7,13 @@ import {
 	Stop,
 	redisFetchToServer,
 	redisFetchFromServer,
+	logger,
+	quoteLogistics,
 } from "../../../lib/utils";
 import fs from "fs";
 import path from "path";
 import YAML from "yaml";
+import { log } from "winston";
 
 export const confirmController = async (
 	req: Request,
@@ -109,10 +112,13 @@ export const confirmController = async (
 			(stop: Stop) => {
 				// Add the instructions to both start and end stops
 				const instructions = {
-					name: "Proof of pickup",
+					// name: "Proof of pickup",
 					short_desc: "Proof of pickup details",
 					long_desc: "Proof of pickup details",
-					images: ["https://image1_url.png"],
+					additional_desc: {
+                  content_type: "text/html",
+                  url: "URL for instructions"
+                }
 				};
 				// Check if the stop type is "end"
 				if (stop.type === "end") {
@@ -131,21 +137,21 @@ export const confirmController = async (
 						},
 						instructions: {
 							...instructions,
-							name: "Proof of delivery",
+							// name: "Proof of delivery",
 							short_desc: "Proof of delivery details",
 							long_desc: "Proof of delivery details",
 						},
 						location: {
 							...stop.location,
 						},
-						agent: {
-							person: {
-								name: "Ramu",
-							},
-							contact: {
-								phone: "9886098860",
-							},
-						},
+						// agent: {
+						// 	person: {
+						// 		name: "Ramu",
+						// 	},
+						// 	contact: {
+						// 		phone: "9886098860",
+						// 	},
+						// },
 					};
 				} else if (stop.type === "start") {
 
@@ -163,10 +169,6 @@ export const confirmController = async (
 						},
 						location: {
 							...stop.location,
-							descriptor: {
-								...stop.location?.descriptor,
-								images: ["https://gf-integration/images/5.png"],
-							},
 						},
 					};
 				} else {
@@ -179,6 +181,7 @@ export const confirmController = async (
 			}
 		);
 
+		const quotedata=quoteLogistics(req.body.message.order.quote)
 
 
 			let onConfirm = {
@@ -193,7 +196,7 @@ export const confirmController = async (
 						status: "Accepted",
 						provider: req.body.message.order.provider,
 						items: onConfirmItems,
-						quote: req.body.message.order.quote,
+						quote: quotedata,
 						fulfillments: [
 							{
 								...req.body.message.order.fulfillments[0],
@@ -203,6 +206,20 @@ export const confirmController = async (
 									descriptor: {
 										code: "Pending",
 									},
+								},
+								agent: {
+									person: {
+										name: "Ramu"
+									}
+								},
+								customer: {
+									person: {
+										name: "xyz"
+									},
+									contact: {
+										phone: "9886098860",
+										email: "xyz.efgh@gmail.com"
+									}
 								},
 								tracking: false,
 								stops: onConfirmFulfilmentsStop,
@@ -220,12 +237,6 @@ export const confirmController = async (
 											},
 											{
 												descriptor: {
-													code: "LR_No",
-												},
-												value: "1209878992826353",
-											},
-											{
-												descriptor: {
 													code: "Transporter_Id",
 												},
 												value: "1209878992826353",
@@ -236,6 +247,12 @@ export const confirmController = async (
 												},
 												value: "1209567899003",
 											},
+											{
+												descriptor: {
+													code: "RTO_Action"
+												},
+												value: "no"
+											}
 										],
 									},
 								],
@@ -251,7 +268,22 @@ export const confirmController = async (
 				},
 			};
 
+			try{
+				const delivery=await redis.get(`${transactionId}-deliveryType`)
+				if(delivery==='surface'){
+					onConfirm.message.order.fulfillments[0].tags[0].list.push( {
+						descriptor: {
+							code: "LR_No"
+						},
+						value: "1209878992826353"
+					},)
+				}			
+			}
+			catch(error){
+				logger.error(error)
+			}
 
+			delete onConfirm.message.order.quote.ttl
 
 		return responseBuilder(
 			res,

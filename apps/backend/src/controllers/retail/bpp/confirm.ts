@@ -161,7 +161,7 @@ const confirmDomesticRejected = (
     );
 
     const response = YAML.parse(file.toString());
-    
+
     const responseMessage = {
       order: {
         ...message.order,
@@ -192,7 +192,6 @@ const confirmDomesticRejected = (
             ],
           })
         ),
-        //  cancellation_terms:response.value.message.order.cancellation_terms
       },
     };
     return responseBuilder(

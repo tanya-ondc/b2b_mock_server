@@ -204,6 +204,7 @@ export const LOG_ORDER_TAGS = [
 	"Transit_Risk_Owner",
 	"type",
 	"url",
+	"Package_Count"
 ];
 
 export const LOG_BPP_TERMS = [

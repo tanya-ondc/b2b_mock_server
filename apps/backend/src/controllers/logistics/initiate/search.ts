@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import {
+	logger,
 	LOGISTICS_BAP_MOCKSERVER_URL,
 	LOGISTICS_EXAMPLES_PATH,
 	MOCKSERVER_ID,
+	redis,
 	send_response,
 } from "../../../lib/utils";
 import fs from "fs";
@@ -35,6 +37,7 @@ export const initiateSearchController = async (
 ) => {
 	try {
 		const { bpp_uri, city, domain, deliveryType } = req.body;
+
 		var search;
 		switch (domain) {
 			case "ONDC:LOG10":
@@ -154,6 +157,14 @@ export const initiateSearchController = async (
 				},
 			},
 		};
+
+		try{
+			await redis.set(`${transaction_id}-deliveryType`,deliveryType)
+		}
+		catch(error){
+			logger.error(error)
+		}
+		
 
 		await send_response(
 			res,
