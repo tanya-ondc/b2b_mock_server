@@ -732,7 +732,6 @@ export const confirmSchema = {
 							type: "string",
 						},
 					},
-					additionalProperties: false,
 					required: [
 						"id",
 						"state",
