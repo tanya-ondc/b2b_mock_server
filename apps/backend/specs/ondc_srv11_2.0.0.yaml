@@ -2137,29 +2137,40 @@ paths:
                                               required:
                                                 - label
                                                 - schedule
+                                 
                                           allOf:
                                             - if:
                                                 properties:
-                                                  parent_item_id:
-                                                    const: ""
+                                                  tags:
+                                                    contains:
+                                                      properties:
+                                                        descriptor:
+                                                          properties:
+                                                            code:
+                                                              const: attribute
+                                                        list:
+                                                          contains:
+                                                            properties:
+                                                              descriptor:
+                                                                properties:
+                                                                  code:
+                                                                    const: type
+                                                              value:
+                                                                const: customization
+                                                            required:
+                                                              - descriptor
+                                                              - value
+                                                      required:
+                                                        - descriptor
+                                                        - list
                                               then:
                                                 required:
-                                                  - id
+                                                  - category_ids
+                                                  - parent_item_id
                                                   - descriptor
                                                   - price
-                                                  - category_ids
+                                                  - quantity
                                                   - tags
-                                              else:
-                                                required:
-                                                  - id
-                                                  - descriptor
-                                                  - price
-                                                  - fulfillment_ids
-                                                  - category_ids
-                                                  - payment_ids
-                                                  - cancellation_terms
-                                                  - tags
-
                     - properties:
                         message:
                           properties:
