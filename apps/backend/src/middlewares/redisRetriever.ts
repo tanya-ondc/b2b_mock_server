@@ -8,10 +8,11 @@ export const redisRetriever = async (
 	_res: Response,
 	next: NextFunction
 ) => {
-	if (req.headers["mode"] === "mock") {
-		next();
-		return;
-	}
+	console.log("MODE:", req.headers["mode"])
+	// if (req.headers["mode"] === "mock") {
+	// 	next();
+	// 	return;
+	// }
 	const {
 		context: { transaction_id, action },message
 	} = req.body;
