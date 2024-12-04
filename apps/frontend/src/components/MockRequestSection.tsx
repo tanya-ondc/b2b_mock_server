@@ -80,11 +80,13 @@ export const MockRequestSection = () => {
 		  ${url} \\
 		-H 'accept: application/json' \\
 		-H 'Content-Type: application/json' \\
+		-H 'mode: mock' \\
 		-d '${log}'`);
 		try {
 			const response = await axios.post(url, JSON.parse(log as string), {
 				headers: {
 					"Content-Type": "application/json",
+					"mode": "mock"
 				},
 			});
 			
