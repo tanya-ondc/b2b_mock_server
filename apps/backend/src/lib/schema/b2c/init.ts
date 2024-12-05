@@ -499,7 +499,7 @@ export const initSchema = {
 							},
 						},
 					},
-					additionalProperties: false,
+					additionalProperties: true,
 					required: [
 						"provider",
 						"items",

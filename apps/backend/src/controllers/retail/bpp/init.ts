@@ -148,6 +148,7 @@ const initDomesticController = async (
     let responseMessage;
 
     if (version === "b2b" || version === "b2b-exp") {
+      
       let responseMessageb2b = {
         order: {
           items: [
@@ -178,7 +179,6 @@ const initDomesticController = async (
       
         } 
       };
-
       if(context.location.city.code==="std:999"){
         (responseMessageb2b.order as any).documents = [
           {
@@ -251,10 +251,14 @@ const initDomesticController = async (
             id: remainingMessage.provider.id,
             location: remainingMessage.provider.locations[0]
           },
+          provider_location: remainingMessage.provider.locations[0],
+
           //  payments:response.value.message.order.payments,
           payments: remainingMessage.payments.map((each: any) => ({
             ...each,
             ...staticPaymentInfo,
+            type:"PRE-FULFILLMENT"
+
           })),
           quote: quoteCreatorB2c(message?.order?.items, providersItems?.items),
         },

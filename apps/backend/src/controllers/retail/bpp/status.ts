@@ -150,7 +150,7 @@ const statusRequest = async (
 							settlement_reference: "XXXX",
 							settlement_status: "PAID",
 							settlement_timestamp: "2023-02-04T10:00:00.000Z",
-							settlement_type: "OPGSP",
+							settlement_type: "upi",
 							upi_address: "gft@oksbi",
 							settlement_bank_account_no: "XXXXXXXXXX",
 							settlement_ifsc_code: "XXXXXXXXX",

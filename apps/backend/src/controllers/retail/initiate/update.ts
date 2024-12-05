@@ -39,9 +39,9 @@ export const initiateUpdateController = async (
     }
 
     // const onConfirm = parsedTransaction[0].request;
-
+   console.log("paymentsssssss",JSON.stringify(onConfirm.message.order.payments))
     if (
-      onConfirm.context.ttl !== "1D" ||
+      // onConfirm.context.ttl !== "1D" ||
       !onConfirm.message.order.payments.every(
         (p: { type: string }) => p.type === "PRE-FULFILLMENT"
       )
@@ -87,8 +87,10 @@ async function intializeRequest(
       ({
         tags,
         params,
+        
         ...remainingPayments
       }: {
+        uri:string,
         tags: object;
         params: object;
       }) => ({
@@ -96,6 +98,7 @@ async function intializeRequest(
         params: { ...params, transaction_id: uuidv4() },
         tl_method: "http/get",
         status: "PAID",
+        uri: "https://ondc.transaction.com/payment"
       })
     );
 
@@ -109,7 +112,7 @@ async function intializeRequest(
         message_id: uuidv4(),
       },
       message: {
-        update_target,
+        update_target:"payments",
         order: {
           id: message.order.id,
           state: message.order.state,
@@ -121,6 +124,9 @@ async function intializeRequest(
         },
       },
     };
+
+    console.log("updateeeresponse init",JSON.stringify(update))
+
     await send_response(res, next, update, transaction_id, "update");
     // const header = await createAuthHeader(update);
 

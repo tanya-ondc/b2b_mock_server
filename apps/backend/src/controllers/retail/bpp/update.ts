@@ -151,6 +151,8 @@ export const updateController = async (
         on_update = await updateFulfillment(res, next, on_update);
         break;
     }
+
+    console.log("updateeeresponse",JSON.stringify(on_update))
     return res.status(200).json({
       message: {
         ack: {
@@ -223,7 +225,7 @@ const updateFulfillment = async (
                 }
               : stop.instructions,
         })),
-        tags: result[fulfillment.id].concat([
+        tags:(Array.isArray(result[fulfillment.id]) ? result[fulfillment.id] : []).concat([
           {
             descriptor: {
               code: "MEASURE_UNIT",

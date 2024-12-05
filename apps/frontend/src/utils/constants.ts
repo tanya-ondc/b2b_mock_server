@@ -478,6 +478,7 @@ export const INITIATE_FIELDS = {
 				// subscription:PRINT_MEDIA_SCENARIOS["init"].map((each) => each.scenario),
 				// agrioutput:AGRI_OUTPUT_SCENARIOS["init"].map((each)=>each.scenario),
 				b2b: B2B_SCENARIOS["init"].map((each) => each.scenario),
+				b2c:["prepaid-bpp-payment"]
 				// retail: B2B_SCENARIOS["init"].map((each) => each.scenario),
 				// services: SERVICES_SCENARIOS["init"].map((each) => each.scenario),
 			},
@@ -534,6 +535,7 @@ export const INITIATE_FIELDS = {
 				b2b: ["payments", "fulfillments", "items"],
 				b2c: ["payments", "fulfillments", "items"],
 				logistics: ["fulfillments"],
+				retail:["payments"],
 				agri: AGRI_SCENARIOS["update"].map((each) => each.scenario),
 				// agrioutput:AGRI_OUTPUT_SCENARIOS["update"].map((each)=>each.scenario)
 			},
