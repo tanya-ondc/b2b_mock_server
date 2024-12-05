@@ -81,7 +81,7 @@ export const jsonSchemaValidator = <T extends Domain>({
       }
 
 
-
+      console.log("intit",action,JSON.stringify(req.body))
 
       switch (domain) {
         case "services":

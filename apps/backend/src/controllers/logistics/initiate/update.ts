@@ -43,6 +43,20 @@ export const initiateUpdateController = async (
 									code: "Pending",
 								},
 							},
+							agent: {
+								person: {
+									name: "Ramu"
+								}
+							},
+							customer: {
+								person: {
+									name: "xyz"
+								},
+								contact: {
+									phone: "9886098860",
+									email: "xyz.efgh@gmail.com"
+								}
+							},
 							tracking: false,
 							stops: [
 								{
@@ -110,10 +124,10 @@ export const initiateUpdateController = async (
 											value: "387757382938",
 										},
 										{
-											"descriptor": {
-												"code": "Invoice_Number"
+											descriptor: {
+												code: "Invoice_Number"
 											},
-											"value": "94395859020203"
+											value: "94395859020203"
 										}
 
 									],
@@ -121,11 +135,15 @@ export const initiateUpdateController = async (
 							],
 						},
 					],
-					tags: onConfirm.message.order.tags,
+					// tags: onConfirm.message.order.tags,
 					updated_at: newTime,
 				},
 			},
 		};
+		
+		
+		delete update.message.order.items[0].time
+
 		await send_response(res, next, update, transactionId, "update");
 	} catch (error) {
 		return next(error);

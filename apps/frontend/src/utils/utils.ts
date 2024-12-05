@@ -313,6 +313,9 @@ export const checker = (
 
 	if (domain === "agrioutput")
 		target = target.filter((item) => item !== "version");
+
+	if (domain === "agrioutput")
+		target = target.filter((item) => item !== "version");
 	console.log("array",arr,target,domain)
 	return target.every((v) => arr.includes(v));
 };
