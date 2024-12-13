@@ -25,12 +25,11 @@ import {
 import { retailRouter } from "./controllers/retail";
 import { sendUpsolicieatedOnStatus } from "./lib/utils/sendUpsolicieatedOnStatus";
 import { loadConfig } from "./lib/utils";
-
+import 'dotenv/config' 
 export const app: Express = express();
 const port = process.env.PORT || 3000;
 loadConfig();
 app.use(cors());
-
 app.use("/api-docs/auth", swaggerUi.serve, authSwagger("/api-docs/auth"));
 app.use("/api-docs/misc", swaggerUi.serve, miscSwagger("/api-docs/misc"));
 app.use("/api-docs/b2b", swaggerUi.serve, b2bSwagger("/api-docs/b2b"));

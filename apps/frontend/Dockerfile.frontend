@@ -26,9 +26,6 @@ RUN npm run build
 
 # Stage 2: Production Image
 FROM nginx:alpine AS ondc-mock-web
-# RUN addgroup --system --gid 1001 vite
-# RUN adduser --system --uid 1001 react
-# USER react
 
 # Copy the build output to the nginx html directory
 COPY --from=builder /app/apps/frontend/dist /usr/share/nginx/html
@@ -40,13 +37,3 @@ EXPOSE 80
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]
 
-# FROM base AS ondc-mock-web
-
-# WORKDIR /app
-# RUN npm i -g serve
-
-# COPY --from=builder /app/apps/frontend/dist .
-
-# EXPOSE 5173
-
-# CMD [ "serve", "-s", "dist" ]

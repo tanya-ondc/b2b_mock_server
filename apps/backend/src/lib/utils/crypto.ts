@@ -29,8 +29,11 @@ export const signMessage = async (
 	signing_string: string,
 	privateKey: string
 ) => {
+	console.log("signing_string",signing_string)
+	console.log("privateKey",privateKey)
 	await _sodium.ready;
 	const sodium = _sodium;
+	console.log(sodium)
 	const signedMessage = sodium.crypto_sign_detached(
 		signing_string,
 		sodium.from_base64(privateKey, base64_variants.ORIGINAL)

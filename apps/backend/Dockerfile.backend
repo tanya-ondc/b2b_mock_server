@@ -21,40 +21,24 @@ COPY --from=pruner /app/out/package-lock.json ./package-lock.json
 RUN npm i --force
 COPY --from=pruner /app/out/full/ .
 
-
-# Generate the Prisma Client
-RUN npx prisma generate --schema=./apps/backend/prisma/schema.prisma
-
 # Builds the Express Project
 ENV NODE_OPTIONS=--max_old_space_size=4096
 RUN npm run build
 
 
-# # Verify the openapi-specs package is accessible
-# RUN ls -l node_modules/openapi-specs
-# RUN ls -l node_modules/openapi-specs/openapi/auth
-# RUN node -e "require('openapi-specs/constants'); require('openapi-specs/auth.json'); console.log('openapi-specs package is installed and accessible');"
-
-
-
 FROM base AS ondc-mock-api
 RUN apk update
 RUN apk add --no-cache bash git openssh
-# RUN addgroup --system --gid 1001 expressjs
-# RUN adduser --system --uid 1001 expressjs
-# USER expressjs
 
 WORKDIR /app
 
 # Copy only the necessary files from the build environment
 COPY --from=builder /app/apps/backend/dist /app/dist
-COPY --from=builder /app/apps/backend/prisma /app/prisma
 # COPY --from=builder /app/packages/openapi /app/packages/openapi
 COPY --from=builder /app/node_modules /app/node_modules
 COPY ./apps/backend/config /app/config
 COPY ./apps/backend/specs /app/specs
 # COPY ./apps/backend/domain-repos /app/domain-repos
-# COPY --from=builder /app/app/backend/prisma /app/prisma
 COPY init_submodules.sh ./
 RUN chmod +x init_submodules.sh
 RUN ./init_submodules.sh

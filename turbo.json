@@ -10,7 +10,7 @@
 			"persistent": false
 		},
 		"dev": {
-			"dependsOn": ["db:migrate:dev","start:nginx"],
+			"dependsOn": ["start:nginx"],
 			"cache": false,
 			"persistent": true
 		},
@@ -19,13 +19,6 @@
 			"persistent": false
 		},
 		"swagger:gen": {
-			"cache": false
-		},
-		"db:migrate:dev": {
-			"dependsOn": ["db:up"],
-			"cache": false
-		},
-		"db:up": {
 			"cache": false
 		},
 		"build": {

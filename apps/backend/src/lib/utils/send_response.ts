@@ -5,6 +5,7 @@ import axios from "axios";
 import { createAuthHeader, redis } from "./index";
 import { AxiosError } from "axios";
 
+
 interface headers {
   authorization: string;
   "X-Gateway-Authorization"?: string;
@@ -29,8 +30,10 @@ async function send_response(
 
     // res_obj.context.bpp_uri = bpp_uri
     if (res_obj.bpp_uri) delete res_obj.bpp_uri;
-
+  console.log("here")
     const header = await createAuthHeader(res_obj);
+    console.log("here1")
+
     // res_obj.bpp_uri = bpp_uri
 
     //Approach 1
